@@ -77,23 +77,26 @@ export function useAuth() {
     return null;
   };
 
-  const verifyToken = useCallback(async (token: string): Promise<User> => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/verify`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  const verifyToken = useCallback(
+    async (token: string): Promise<User> => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/verify`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    if (!res.ok) {
-      clearAuthCache();
-      throw new Error("Invalid token");
-    }
+      if (!res.ok) {
+        clearAuthCache();
+        throw new Error("Invalid token");
+      }
 
-    const data = await res.json();
-    return {
-      ...data.user,
-      departments: data.user.departments || [],
-      managedDepts: data.user.managedDepts || [],
-    };
-  }, [clearAuthCache]);
+      const data = await res.json();
+      return {
+        ...data.user,
+        departments: data.user.departments || [],
+        managedDepts: data.user.managedDepts || [],
+      };
+    },
+    [clearAuthCache]
+  );
 
   useEffect(() => {
     if (initialized) return;
@@ -160,13 +163,14 @@ export function useAuth() {
         throw new Error("Please verify your email before logging in");
       }
 
-       setToken(accessToken);
-       setUser({
-         ...user,
-         name: user.name || "", // Ensure the name property is included
-         departments: user.departments || [],
-         managedDepts: user.managedDepts || [],
-       });
+      setToken(accessToken);
+      setUser({
+        ...user,
+        name: user.name || "",
+        departments: user.departments || [],
+        managedDepts: user.managedDepts || [],
+      });
+
       if (typeof window !== "undefined") {
         localStorage.setItem(
           "auth_user",
@@ -178,6 +182,7 @@ export function useAuth() {
         );
       }
 
+      // Return the response and let the component handle redirection
       return { accessToken, user };
     } catch (error) {
       handleLogout();
