@@ -21,8 +21,8 @@ interface User {
   name: string;
   role: string;
   isVerified: boolean;
-  departments: Department[];
-  managedDepts: Department[];
+  department: Department | null;
+  managedDepartment: Department | null;
 }
 
 export function useAuth() {
@@ -65,13 +65,13 @@ export function useAuth() {
     if (!user) return null;
 
     // Managers should see their managed department
-    if (user.managedDepts?.length) {
-      return user.managedDepts[0];
+    if (user.managedDepartment) {
+      return user.managedDepartment;
     }
 
     // Regular users see their first department
-    if (user.departments?.length) {
-      return user.departments[0];
+    if (user.department) {
+      return user.department;
     }
 
     return null;
@@ -91,8 +91,8 @@ export function useAuth() {
       const data = await res.json();
       return {
         ...data.user,
-        departments: data.user.departments || [],
-        managedDepts: data.user.managedDepts || [],
+        department: data.user.department || "",
+        managedDepartment: data.user.managedDepartment || "",
       };
     },
     [clearAuthCache]
@@ -167,8 +167,12 @@ export function useAuth() {
       setUser({
         ...user,
         name: user.name || "",
-        departments: user.departments || [],
-        managedDepts: user.managedDepts || [],
+        department: Array.isArray(user.department)
+          ? null
+          : user.department || null,
+        managedDepartment: Array.isArray(user.managedDepartment)
+          ? null
+          : user.managedDepartment || null,
       });
 
       if (typeof window !== "undefined") {
@@ -176,8 +180,8 @@ export function useAuth() {
           "auth_user",
           JSON.stringify({
             ...user,
-            departments: user.departments || [],
-            managedDepts: user.managedDepts || [],
+            department: user.department || "",
+            managedDepartment: user.managedDepartment || "",
           })
         );
       }

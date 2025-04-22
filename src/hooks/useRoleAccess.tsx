@@ -52,28 +52,27 @@ export function useRoleAccess() {
       return ALL_MODULES;
     }
 
-    const userDeptNames = user.departments?.map((dept) => dept.name) || [];
-    const managedDeptNames = user.managedDepts?.map((dept) => dept.name) || [];
+   const userDepartment = user.department?.name || "";
+   const managedDepartment = user.managedDepartment?.name || "";
 
-    if (user.role === AccessLevel.MANAGER) {
-      return ALL_MODULES.filter(
-        (module) =>
-          !module.department || // Modules available to all
-          userDeptNames.includes(module.department) ||
-          managedDeptNames.includes(module.department) ||
-          module.id === "analytics" // Cross-department module
-      );
-    }
+   if (user.role === AccessLevel.MANAGER) {
+     return ALL_MODULES.filter(
+       (module) =>
+         !module.department || // Modules available to all
+         userDepartment === module.department ||
+         managedDepartment === module.department ||
+         module.id === "analytics" // Cross-department module
+     );
+   }
 
-    // For regular users
-    return ALL_MODULES.filter(
-      (module) =>
-        !module.department || userDeptNames.includes(module.department)
-    );
+   // For regular users
+   return ALL_MODULES.filter(
+     (module) => !module.department || userDepartment === module.department
+   );
   };
-  const modules = getAccessibleModules();
-  console.log("Accessible modules:", modules);
-  console.log("User department:", user.departments);
+  // const modules = getAccessibleModules();
+  // console.log("Accessible modules:", modules);
+  // console.log("User department:", user.department);
 
   return {
     userRole: user.role as AccessLevel,
