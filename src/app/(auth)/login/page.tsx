@@ -13,21 +13,13 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login, token, isLoading } = useAuth();
   const router = useRouter();
-console.log("Router instance:", router);
 
   // Handle redirect when authenticated
   useEffect(() => {
-    console.log("Redirect useEffect triggered");
-    console.log("Token:", token);
-    console.log("Is loading:", isLoading);
-
     if (token && !isLoading) {
-      console.log("Conditions met, attempting redirect...");
       router.refresh();
-      router.push("/dashboard?authed=true");
+      router.push("/dashboard");
       // window.location.href = "/dashboard"; // Fallback for older browsers
-      console.log("Redirected to /dashboard");
-      console.log("Router push called");
     }
   }, [token, isLoading, router]);
 
@@ -38,7 +30,6 @@ console.log("Router instance:", router);
 
     try {
       await login(email, password);
-      // The useEffect will handle the redirect automatically
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
       console.error("Login error:", err);
