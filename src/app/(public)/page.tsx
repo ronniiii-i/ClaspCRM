@@ -15,14 +15,11 @@ import {
   Cog,
   PlusCircle,
 } from "lucide-react";
-import Navbar from "@/components/navbar/PublicNavbar";
-import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Navbar */}
-      <Navbar />
 
       {/* Hero Section */}
       <div className="relative bg-white dark:bg-gray-800 overflow-hidden">
@@ -361,7 +358,6 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <Footer />
     </div>
   );
 }

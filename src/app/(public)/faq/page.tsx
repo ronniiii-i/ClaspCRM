@@ -1,6 +1,4 @@
 import Link from "next/link";
-import Navbar from "@/components/navbar/PublicNavbar";
-import Footer from "@/components/Footer";
 
 const faqs = [
   {
@@ -48,7 +46,6 @@ const faqs = [
 export default function FAQ() {
   return (
     <>
-      <Navbar />
       <main className="min-h-screen bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
           <div className="text-center">
@@ -94,7 +91,6 @@ export default function FAQ() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   );
 }
