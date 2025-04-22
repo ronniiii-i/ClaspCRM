@@ -111,8 +111,8 @@ export default function Contact() {
                     </svg>
                   </div>
                   <div className="ml-3 text-base text-gray-500 dark:text-gray-400">
-                    <p>support@enterprisecrm.com</p>
-                    <p className="mt-1">sales@enterprisecrm.com</p>
+                    <p>support@ClaspCRM.com</p>
+                    <p className="mt-1">sales@ClaspCRM.com</p>
                   </div>
                 </div>
                 <div className="flex items-start">

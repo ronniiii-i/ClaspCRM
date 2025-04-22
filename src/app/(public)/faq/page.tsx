@@ -4,9 +4,9 @@ import Footer from "@/components/Footer";
 
 const faqs = [
   {
-    question: "What is EnterpriseCRM?",
+    question: "What is ClaspCRM?",
     answer:
-      "EnterpriseCRM is a comprehensive business management platform that integrates all aspects of your operations including contact management, project tracking, HR, inventory, and more into one unified system.",
+      "ClaspCRM is a comprehensive business management platform that integrates all aspects of your operations including contact management, project tracking, HR, inventory, and more into one unified system.",
   },
   {
     question: "How does the pricing work?",

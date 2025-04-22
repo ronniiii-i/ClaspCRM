@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "EnterpriseCRM",
+  title: "ClaspCRM",
   description: "Complete Business Management Solution",
 };
 

@@ -5,7 +5,7 @@ import { geistSans, geistMono } from "@/lib/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "EnterpriseCRM Intranet",
+  title: "ClaspCRM Intranet",
   description: "Complete Business Management Solution",
 };
 
@@ -25,7 +25,7 @@ export default function RootLayout({
       >
         {/* <CaptchaProvider> */}
         {children}
-      {/* </CaptchaProvider> */}
+        {/* </CaptchaProvider> */}
       </body>
     </html>
   );
