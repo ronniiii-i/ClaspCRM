@@ -13,6 +13,16 @@ const publicRoutes = [
   "/reset-password",
   "/terms",
   "/privacy",
+  "/about",
+  "/contact",
+  "/pricing",
+  "/faq",
+  "/blog",
+  "/features",
+  "/demo",
+  "/docs",
+  "/support",
+  "/features",
 ];
 
 const roleBasedRoutes = {
