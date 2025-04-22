@@ -151,7 +151,7 @@ export function useAuth() {
   const login = async (email: string, password: string) => {
     try {
       const response = await loginAPI(email, password);
-      console.log("Login API response:", response);
+      // console.log("Login API response:", response);
 
       if (!response.accessToken || !response.user) {
         throw new Error("Login failed: Invalid response from server");

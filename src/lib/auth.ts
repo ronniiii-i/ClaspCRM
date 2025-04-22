@@ -77,7 +77,7 @@ export async function login(
     localStorage.setItem("auth_user", JSON.stringify(formattedResponse.user));
   }
 
-  console.log(formattedResponse);
+  // console.log(formattedResponse);
   return formattedResponse;
 }
 
