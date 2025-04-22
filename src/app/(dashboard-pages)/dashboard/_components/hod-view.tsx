@@ -1,0 +1,28 @@
+// src/app/(dashboard-pages)/dashboard/_components/hod-view.tsx
+"use client";
+
+import { useDashboardData } from "../_hooks/use-dashboard-data";
+import { DepartmentMetrics } from "./department_metrics";
+// import { TeamPerformanceWidget } from "./team-performance-widget";
+// import { BudgetAlerts } from "./budget-alerts";
+
+export function HodDashboard({ department }: { department: string }) {
+  const { data, isLoading } = useDashboardData({
+    scope: "department",
+    department,
+  });
+
+  if (isLoading) return <div>Loading department data...</div>;
+  if (!data) return <div>No department data available</div>;
+
+  return (
+    <>
+      <DepartmentMetrics metrics={data.metrics} />
+      {/* <TeamPerformanceWidget
+        teams={data.teamMetrics || []}
+        showIndividual={false}
+      /> */}
+      {/* <BudgetAlerts alerts={data.alerts || []} /> */}
+    </>
+  );
+}

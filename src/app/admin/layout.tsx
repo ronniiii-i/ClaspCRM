@@ -4,6 +4,8 @@
 import { useAuth } from "@/hooks/useAuth";
 import { redirect } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import Navbar from "@/components/navbar/Navbar";
+import Sidebar from "@/components/sidebar/Sidebar";
 
 export default function AdminLayout({
   children,
@@ -26,14 +28,13 @@ export default function AdminLayout({
   }
 
   return (
-    <div>
-      {/* Admin sidebar & layout */}
-      <div className="flex">
-        <div className="w-64 bg-gray-800 text-white p-4 min-h-screen">
-          <h2 className="text-xl font-bold mb-6">Admin Panel</h2>
-          {/* Admin navigation links */}
-        </div>
-        <div className="flex-1 p-6">{children}</div>
+    <div className="flex h-screen overflow-hidden">
+      <Sidebar />
+      <div className="flex flex-col w-full overflow-hidden">
+        <Navbar />
+        <main className="flex-1 overflow-auto p-4 bg-gray-100 dark:bg-gray-900">
+          {children}
+        </main>
       </div>
     </div>
   );

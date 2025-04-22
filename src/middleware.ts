@@ -26,7 +26,7 @@ const publicRoutes = [
 ];
 
 const roleBasedRoutes = {
-  adminOnly: ["/admin", "/settings"],
+  adminOnly: ["/admin"],
   managerPlus: ["/reports", "/analytics"],
 };
 
@@ -57,7 +57,14 @@ export default async function middleware(request: NextRequest) {
   }
 
   // Handle authenticated access to auth routes
-  if (token && (pathname === "/login" || pathname === "/register")) {
+  if (
+    token &&
+    (pathname === "/login" ||
+      pathname === "/register" ||
+      pathname === "/forgot-password" ||
+      pathname === "/reset-password" ||
+      pathname === "/verify-email")
+  ) {
     const dashboardUrl = new URL("/dashboard", request.url);
     dashboardUrl.searchParams.set("authed", "true");
     return NextResponse.redirect(dashboardUrl);

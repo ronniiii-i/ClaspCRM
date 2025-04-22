@@ -10,16 +10,16 @@ import {
 
 export enum AccessLevel {
   ADMIN = "ADMIN",
-  MANAGER = "MANAGER",
-  USER = "USER",
-  GUEST = "GUEST",
+  HOD = "HOD",
+  LEAD = "LEAD",
+  STAFF = "STAFF",
 }
 
 const roleHierarchy = {
   [AccessLevel.ADMIN]: 3,
-  [AccessLevel.MANAGER]: 2,
-  [AccessLevel.USER]: 1,
-  [AccessLevel.GUEST]: 0,
+  [AccessLevel.HOD]: 2,
+  [AccessLevel.LEAD]: 1,
+  [AccessLevel.STAFF]: 0,
 };
 
 export function useRoleAccess() {
@@ -55,7 +55,7 @@ export function useRoleAccess() {
    const userDepartment = user.department?.name || "";
    const managedDepartment = user.managedDepartment?.name || "";
 
-   if (user.role === AccessLevel.MANAGER) {
+   if (user.role === AccessLevel.HOD) {
      return ALL_MODULES.filter(
        (module) =>
          !module.department || // Modules available to all
