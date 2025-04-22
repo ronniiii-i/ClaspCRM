@@ -15,7 +15,7 @@ import {
   Cog,
   PlusCircle,
 } from "lucide-react";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/navbar/PublicNavbar";
 import Footer from "@/components/Footer";
 
 export default function Home() {
