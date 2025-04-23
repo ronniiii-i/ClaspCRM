@@ -3,8 +3,8 @@
 
 import { useDashboardData } from "../_hooks/use-dashboard-data";
 import { DepartmentMetrics } from "./department_metrics";
-// import { TeamPerformanceWidget } from "./team-performance-widget";
-// import { BudgetAlerts } from "./budget-alerts";
+import { TeamPerformanceWidget } from "./team-performance-widget";
+import { BudgetAlerts } from "./budget-alerts";
 
 export function HodDashboard({ department }: { department: string }) {
   const { data, isLoading } = useDashboardData({
@@ -16,13 +16,13 @@ export function HodDashboard({ department }: { department: string }) {
   if (!data) return <div>No department data available</div>;
 
   return (
-    <>
+    <div className="space-y-6">
       <DepartmentMetrics metrics={data.metrics} />
-      {/* <TeamPerformanceWidget
-        teams={data.teamMetrics || []}
+      <TeamPerformanceWidget
+        teams={data.teamMetric || []}
         showIndividual={false}
-      /> */}
-      {/* <BudgetAlerts alerts={data.alerts || []} /> */}
-    </>
+      />
+      <BudgetAlerts alerts={data.alerts || []} />
+    </div>
   );
 }
