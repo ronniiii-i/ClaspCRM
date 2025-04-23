@@ -1,51 +1,29 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { DollarSign } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-
-// Define missing types
-interface Metric {
-  id: string;
-  title: string;
-  value: string;
-  change: string;
-  icon: React.FC<React.SVGProps<SVGSVGElement>>;
-}
-
-interface DepartmentPerformance {
-  name: string;
-  revenue: number;
-}
-
-interface AuditLogItem {
-  id: string;
-  user: string;
-  action: string;
-  timestamp: string;
-}
-
-interface Alert {
-  id: string;
-  title: string;
-  priority: "low" | "medium" | "high";
-  message: string;
-}
-
-interface TeamMetric {
-  team: string;
-  performance: number;
-  members: number;
-}
+import type {
+  DashboardData,
+  Metric,
+  DepartmentPerformance,
+  AuditLogItem,
+  TeamMetric,
+  Alert,
+  PersonalMetric,
+  Task,
+} from "../types";
 
 // Define the dashboard data structure
-export interface DashboardData {
-  metrics: Metric[];
-  departmentPerformance?: DepartmentPerformance[];
-  auditLog?: AuditLogItem[];
-  teamMetrics?: TeamMetric[];
-  alerts?: Alert[];
-}
+// export interface DashboardData {
+//   metrics: Metric[];
+//   departmentPerformance?: DepartmentPerformance[];
+//   auditLog?: AuditLogItem[];
+//   teamMetrics?: TeamMetric[];
+//   alerts?: Alert[];
+//   personalMetrics?: PersonalMetric[];
+//   tasks?: Task[];
+// }
 
 type DashboardScope =
   | { scope: "organization" }
@@ -58,17 +36,11 @@ export function useDashboardData(params: DashboardScope) {
   const [data, setData] = useState<DashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Create stable references for complex params
-  const scope = params.scope;
+  // Extract primitive values from params
+  const { scope } = params;
   const department = params.scope === "department" ? params.department : null;
   const teamId = params.scope === "team" ? params.teamId : null;
   const userId = params.scope === "individual" ? params.userId : null;
-
-  // Memoize params to prevent unnecessary re-renders
-  const memoizedParams = useMemo(
-    () => params,
-    [scope, department, teamId, userId]
-  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,14 +48,18 @@ export function useDashboardData(params: DashboardScope) {
       try {
         // Mock data - replace with actual API call
         const mockData: DashboardData = {
-          metrics: getMockMetrics(memoizedParams.scope),
-          ...(memoizedParams.scope === "organization" && {
+          metrics: getMockMetrics(scope),
+          ...(scope === "organization" && {
             departmentPerformance: getMockDepartmentPerformance(),
             auditLog: getMockAuditLog(),
           }),
-          ...(memoizedParams.scope === "department" && {
+          ...(scope === "department" && {
             teamMetrics: getMockTeamMetrics(),
             alerts: getMockAlerts(),
+          }),
+          ...(scope === "individual" && {
+            personalMetrics: getMockPersonalMetrics(),
+            tasks: getMockTasks(),
           }),
         };
         setData(mockData);
@@ -95,7 +71,7 @@ export function useDashboardData(params: DashboardScope) {
     };
 
     fetchData();
-  }, [memoizedParams, user?.role, params]); // Added params as dependency
+  }, [scope, department, teamId, userId, user?.role]);
 
   return { data, isLoading };
 }
@@ -110,6 +86,20 @@ function getMockMetrics(scope: string): Metric[] {
       change: "12% ↑",
       icon: DollarSign,
     },
+    {
+      id: "new_clients",
+      title: "New Clients",
+      value: (scope === "organization" ? "150" : "30"),
+      change: "5% ↓",
+      icon: DollarSign,
+    },
+    {
+      id: "team_performance",
+      title: "Team Performance",
+      value: (scope === "organization" ? "85%" : "90%"),
+      change: "3% ↑",
+      icon: DollarSign,
+    },
     // ... other metrics
   ];
 }
@@ -118,24 +108,32 @@ function getMockDepartmentPerformance(): DepartmentPerformance[] {
   return [
     { name: "Sales", revenue: 500000 },
     { name: "Finance", revenue: 300000 },
+    { name: "Marketing", revenue: 200000 },
+    { name: "HR", revenue: 100000 },
+    { name: "IT", revenue: 150000 },
     // ...
   ];
 }
 
-// Added missing mock functions
 function getMockAuditLog(): AuditLogItem[] {
   return [
     {
       id: "1",
-      user: "John Doe",
+      initiator: "John Doe",
       action: "Updated client profile",
-      timestamp: "2025-04-20T10:30:00Z",
+      timestamp: new Date("2025-04-20T10:30:00Z"),
     },
     {
       id: "2",
-      user: "Jane Smith",
+      initiator: "Jane Smith",
       action: "Closed deal #1234",
-      timestamp: "2025-04-21T14:15:00Z",
+      timestamp: new Date("2025-04-21T14:15:00Z"),
+    },
+    {
+      id: "3",
+      initiator: "Alice Johnson",
+      action: "Created new project",
+      timestamp: new Date("2025-04-22T09:00:00Z"),
     },
     // ...
   ];
@@ -164,5 +162,50 @@ function getMockAlerts(): Alert[] {
       message: "Schedule meeting with Enterprise clients",
     },
     // ...
+  ];
+}
+
+
+function getMockPersonalMetrics(): PersonalMetric[] {
+  return [
+    {
+      icon: DollarSign,
+      id: "personal_metric_1",
+      title: "Personal Revenue",
+      value: "$50,000",
+      change: "10% ↑",
+    },
+    {
+      icon: DollarSign,
+      id: "personal_metric_2",
+      title: "Personal Clients",
+      value: "20",
+      change: "10% ↑",
+    },
+    // ... other personal metrics
+  ];
+}
+
+function getMockTasks(): Task[] {
+  return [
+    {
+      id: "task1",
+      title: "Complete project report",
+      dueDate: "2025-04-30",
+      dueSoon: true,
+      status: "in-progress",
+      progress: 50,
+      project: "Project A",
+    },
+    {
+      id: "task2",
+      title: "Prepare for client meeting",
+      dueDate: "2025-05-05",
+      dueSoon: false,
+      status: "not-started",
+      progress: 0,
+      project: "Client B",
+    },
+    // ... other tasks
   ];
 }
