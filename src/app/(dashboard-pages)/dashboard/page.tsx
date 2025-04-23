@@ -6,7 +6,7 @@ import { useRoleAccess } from "@/hooks/useRoleAccess";
 import { AdminDashboard } from "./_components/admin_view";
 import {HodDashboard} from "./_components/hod-view";
 // import LeadDashboard from "./_components/lead-view";
-// import StaffDashboard from "./_components/staff-view";
+import StaffDashboard from "./_components/staff-view";
 import { DashboardSkeleton } from "./_components/skeleton";
 
 export default function DashboardPage() {
@@ -26,7 +26,7 @@ export default function DashboardPage() {
         <HodDashboard department={user.department?.name || ""} />
       )}
       {/* {userRole === "LEAD" && <LeadDashboard teamId={user.teamId || ""} />} */}
-      {/* {userRole === "STAFF" && <StaffDashboard userId={user.id} />} */}
+      {userRole === "STAFF" && <StaffDashboard userId={user.id} />}
     </div>
   );
 }
