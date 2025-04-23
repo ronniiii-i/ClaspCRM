@@ -22,7 +22,6 @@ const publicRoutes = [
   "/demo",
   "/docs",
   "/support",
-  "/features",
 ];
 
 const roleBasedRoutes = {
