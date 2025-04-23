@@ -1,10 +1,6 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-
 export default function Privacy() {
   return (
     <>
-      <Navbar />
       <main className="min-h-screen bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
           <div className="text-center">
@@ -21,11 +17,12 @@ export default function Privacy() {
               Introduction
             </h2>
             <p>
-              EnterpriseCRM (&quot;us&quot;, &quot;we&quot;, or &quot;our&quot;) operates the EnterpriseCRM
-              website and platform (the &quot;Service&quot;). This page informs you of our
-              policies regarding the collection, use, and disclosure of personal
-              data when you use our Service and the choices you have associated
-              with that data.
+              ClaspCRM (&quot;us&quot;, &quot;we&quot;, or &quot;our&quot;)
+              operates the ClaspCRM website and platform (the
+              &quot;Service&quot;). This page informs you of our policies
+              regarding the collection, use, and disclosure of personal data
+              when you use our Service and the choices you have associated with
+              that data.
             </p>
 
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-8">
@@ -42,9 +39,9 @@ export default function Privacy() {
             <p>
               <strong>Personal Data:</strong> While using our Service, we may
               ask you to provide us with certain personally identifiable
-              information that can be used to contact or identify you (&quot;Personal
-              Data&quot;). Personally identifiable information may include, but is
-              not limited to:
+              information that can be used to contact or identify you
+              (&quot;Personal Data&quot;). Personally identifiable information
+              may include, but is not limited to:
             </p>
             <ul className="list-disc pl-5">
               <li>Email address</li>
@@ -59,17 +56,18 @@ export default function Privacy() {
             </h3>
             <p>
               We may also collect information how the Service is accessed and
-              used (&quot;Usage Data&quot;). This Usage Data may include information such
-              as your computer&apos;s Internet Protocol address (e.g. IP address),
-              browser type, browser version, the pages of our Service that you
-              visit, the time and date of your visit, the time spent on those
-              pages, unique device identifiers and other diagnostic data.
+              used (&quot;Usage Data&quot;). This Usage Data may include
+              information such as your computer&apos;s Internet Protocol address
+              (e.g. IP address), browser type, browser version, the pages of our
+              Service that you visit, the time and date of your visit, the time
+              spent on those pages, unique device identifiers and other
+              diagnostic data.
             </p>
 
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-8">
               Use of Data
             </h2>
-            <p>EnterpriseCRM uses the collected data for various purposes:</p>
+            <p>ClaspCRM uses the collected data for various purposes:</p>
             <ul className="list-disc pl-5">
               <li>To provide and maintain our Service</li>
               <li>To notify you about changes to our Service</li>
@@ -103,8 +101,8 @@ export default function Privacy() {
             <p>
               We may update our Privacy Policy from time to time. We will notify
               you of any changes by posting the new Privacy Policy on this page
-              and updating the &quot;effective date&quot; at the top of this Privacy
-              Policy.
+              and updating the &quot;effective date&quot; at the top of this
+              Privacy Policy.
             </p>
             <p className="mt-4">
               You are advised to review this Privacy Policy periodically for any
@@ -117,12 +115,11 @@ export default function Privacy() {
             </h2>
             <p>
               If you have any questions about this Privacy Policy, please
-              contact us at privacy@enterprisecrm.com.
+              contact us at privacy@ClaspCRM.com.
             </p>
           </div>
         </div>
       </main>
-      <Footer />
     </>
   );
 }

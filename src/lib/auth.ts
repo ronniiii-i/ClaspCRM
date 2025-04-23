@@ -33,14 +33,14 @@ export async function login(
     name: string;
     role: string;
     isVerified: boolean;
-    departments: {
+    department: {
       id: string;
       name: string;
-    }[];
-    managedDepts: {
+    };
+    managedDepartment: {
       id: string;
       name: string;
-    }[];
+    };
   };
 }> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/login`, {
@@ -66,8 +66,8 @@ export async function login(
       name: data.user.name,
       role: data.user.role,
       isVerified: data.user.isVerified,
-      departments: data.user.departments || [],
-      managedDepts: data.user.managedDepts || [],
+      department: data.user.department || "",
+      managedDepartment: data.user.managedDepartment || "",
     },
   };
 
@@ -77,6 +77,7 @@ export async function login(
     localStorage.setItem("auth_user", JSON.stringify(formattedResponse.user));
   }
 
+  // console.log(formattedResponse);
   return formattedResponse;
 }
 

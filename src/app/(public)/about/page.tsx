@@ -1,16 +1,13 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import Image from "next/image";
 
 export default function About() {
   return (
     <>
-      <Navbar />
       <main className="min-h-screen bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl lg:text-6xl">
-              About EnterpriseCRM
+              About ClaspCRM
             </h1>
             <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-500 dark:text-gray-300">
               Revolutionizing business management since 2023.
@@ -24,9 +21,9 @@ export default function About() {
                   Our Story
                 </h2>
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  Founded in 2023, EnterpriseCRM was born out of frustration
-                  with existing business management solutions that were either
-                  too simplistic or overly complex.
+                  Founded in 2023, ClaspCRM was born out of frustration with
+                  existing business management solutions that were either too
+                  simplistic or overly complex.
                 </p>
                 <p className="text-gray-600 dark:text-gray-300">
                   We set out to create a platform that would give businesses
@@ -80,7 +77,6 @@ export default function About() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   );
 }

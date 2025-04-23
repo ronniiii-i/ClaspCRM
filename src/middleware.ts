@@ -2,9 +2,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "./lib/auth";
-import { jwtDecode } from "jwt-decode"; // You'll need to install this package
+import { jwtDecode } from "jwt-decode";
 
-// Public routes that don't require authentication
 const publicRoutes = [
   "/",
   "/login",
@@ -16,42 +15,68 @@ const publicRoutes = [
   "/privacy",
   "/about",
   "/contact",
-  "/faq",
   "/pricing",
+  "/faq",
+  "/blog",
+  "/features",
+  "/demo",
+  "/docs",
+  "/support",
+  "/features",
 ];
 
-// Role-based route access
 const roleBasedRoutes = {
-  adminOnly: ["/admin", "/settings"],
+  adminOnly: ["/admin"],
   managerPlus: ["/reports", "/analytics"],
-  userPlus: ["/dashboard", "/projects", "/tasks"],
 };
 
 export default async function middleware(request: NextRequest) {
   const token = getToken(request);
-  const { pathname } = request.nextUrl;
+  const { pathname, searchParams } = request.nextUrl;
 
-  // Check if the current route is public
+  // Skip middleware for static files and API routes
+  if (pathname.startsWith("/_next/") || pathname.startsWith("/api/")) {
+    return NextResponse.next();
+  }
+
+  // Special case: allow post-login redirects
+  if (searchParams.get("authed") === "true") {
+    return NextResponse.next();
+  }
+
+  // Check public routes
   const isPublicRoute = publicRoutes.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   );
 
-  // Redirect to login if trying to access non-public route without token
+  // Handle unauthenticated access to protected routes
   if (!isPublicRoute && !token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  // If we have a token, decode it to check the role
-  if (token) {
+  // Handle authenticated access to auth routes
+  if (
+    token &&
+    (pathname === "/login" ||
+      pathname === "/register" ||
+      pathname === "/forgot-password" ||
+      pathname === "/reset-password" ||
+      pathname === "/verify-email")
+  ) {
+    const dashboardUrl = new URL("/dashboard", request.url);
+    dashboardUrl.searchParams.set("authed", "true");
+    return NextResponse.redirect(dashboardUrl);
+  }
+
+  // Verify token and check roles for protected routes
+  if (token && !isPublicRoute) {
     try {
-      interface DecodedToken {
-        role: string;
-        [key: string]: unknown; // Add other properties if needed
-      }
-      const decoded = jwtDecode<DecodedToken>(token);
+      const decoded = jwtDecode<{ role: string }>(token);
       const userRole = decoded.role;
 
-      // Check role-based access
+      // Admin-only routes
       if (
         roleBasedRoutes.adminOnly.some(
           (route) => pathname === route || pathname.startsWith(`${route}/`)
@@ -61,30 +86,20 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL("/dashboard", request.url));
       }
 
+      // Manager+ routes
       if (
         roleBasedRoutes.managerPlus.some(
           (route) => pathname === route || pathname.startsWith(`${route}/`)
         ) &&
-        userRole !== "ADMIN" &&
-        userRole !== "MANAGER"
+        !["ADMIN", "MANAGER"].includes(userRole)
       ) {
         return NextResponse.redirect(new URL("/dashboard", request.url));
       }
     } catch (error) {
-      // Handle invalid token error, e.g., expired token
       console.error("Token verification failed:", error);
-      // Token is invalid, clear it
-      console.log("Invalid token, redirecting to login");
-      // Optionally, you can clear the token here if you're using cookies or local storage
-      // request.cookies.set("token", "", { expires: new Date(0) });
-      // router.push("/login");
-      // Or redirect to login page
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-
-    // Redirect to dashboard if logged in and trying to access auth routes
-    if (pathname === "/login" || pathname === "/register") {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("error", "invalid_token");
+      return NextResponse.redirect(loginUrl);
     }
   }
 
@@ -92,6 +107,5 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Match all routes except:
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.).*)"],
 };

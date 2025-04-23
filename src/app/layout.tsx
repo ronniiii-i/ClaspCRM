@@ -2,11 +2,11 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { geistSans, geistMono } from "@/lib/fonts";
-// import { CaptchaProvider } from "@/providers/captcha-provider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "EnterpriseCRM Intranet",
+  title: "ClaspCRM Intranet",
   description: "Complete Business Management Solution",
 };
 
@@ -24,9 +24,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        {/* <CaptchaProvider> */}
-        {children}
-      {/* </CaptchaProvider> */}
+        <ThemeProvider>{children} </ThemeProvider>
       </body>
       <Analytics />
     </html>

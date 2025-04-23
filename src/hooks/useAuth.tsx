@@ -20,9 +20,10 @@ interface User {
   email: string;
   name: string;
   role: string;
+  avatar?: string;
   isVerified: boolean;
-  departments: Department[];
-  managedDepts: Department[];
+  department: Department | null;
+  managedDepartment: Department | null;
 }
 
 export function useAuth() {
@@ -65,35 +66,38 @@ export function useAuth() {
     if (!user) return null;
 
     // Managers should see their managed department
-    if (user.managedDepts?.length) {
-      return user.managedDepts[0];
+    if (user.managedDepartment) {
+      return user.managedDepartment;
     }
 
     // Regular users see their first department
-    if (user.departments?.length) {
-      return user.departments[0];
+    if (user.department) {
+      return user.department;
     }
 
     return null;
   };
 
-  const verifyToken = useCallback(async (token: string): Promise<User> => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/verify`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  const verifyToken = useCallback(
+    async (token: string): Promise<User> => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/verify`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    if (!res.ok) {
-      clearAuthCache();
-      throw new Error("Invalid token");
-    }
+      if (!res.ok) {
+        clearAuthCache();
+        throw new Error("Invalid token");
+      }
 
-    const data = await res.json();
-    return {
-      ...data.user,
-      departments: data.user.departments || [],
-      managedDepts: data.user.managedDepts || [],
-    };
-  }, [clearAuthCache]);
+      const data = await res.json();
+      return {
+        ...data.user,
+        department: data.user.department || "",
+        managedDepartment: data.user.managedDepartment || "",
+      };
+    },
+    [clearAuthCache]
+  );
 
   useEffect(() => {
     if (initialized) return;
@@ -148,7 +152,7 @@ export function useAuth() {
   const login = async (email: string, password: string) => {
     try {
       const response = await loginAPI(email, password);
-      console.log("Login API response:", response);
+      // console.log("Login API response:", response);
 
       if (!response.accessToken || !response.user) {
         throw new Error("Login failed: Invalid response from server");
@@ -160,24 +164,30 @@ export function useAuth() {
         throw new Error("Please verify your email before logging in");
       }
 
-       setToken(accessToken);
-       setUser({
-         ...user,
-         name: user.name || "", // Ensure the name property is included
-         departments: user.departments || [],
-         managedDepts: user.managedDepts || [],
-       });
+      setToken(accessToken);
+      setUser({
+        ...user,
+        name: user.name || "",
+        department: Array.isArray(user.department)
+          ? null
+          : user.department || null,
+        managedDepartment: Array.isArray(user.managedDepartment)
+          ? null
+          : user.managedDepartment || null,
+      });
+
       if (typeof window !== "undefined") {
         localStorage.setItem(
           "auth_user",
           JSON.stringify({
             ...user,
-            departments: user.departments || [],
-            managedDepts: user.managedDepts || [],
+            department: user.department || "",
+            managedDepartment: user.managedDepartment || "",
           })
         );
       }
 
+      // Return the response and let the component handle redirection
       return { accessToken, user };
     } catch (error) {
       handleLogout();

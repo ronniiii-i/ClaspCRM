@@ -15,14 +15,11 @@ import {
   Cog,
   PlusCircle,
 } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Navbar */}
-      <Navbar />
 
       {/* Hero Section */}
       <div className="relative bg-white dark:bg-gray-800 overflow-hidden">
@@ -346,7 +343,7 @@ export default function Home() {
         <div className="max-w-2xl mx-auto text-center py-16 px-4 sm:py-20 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
             <span className="block">Ready to transform your business?</span>
-            <span className="block">Start using EnterpriseCRM today.</span>
+            <span className="block">Start using ClaspCRM today.</span>
           </h2>
           <p className="mt-4 text-lg leading-6 text-blue-200">
             Join forward-thinking companies that trust us with their operations.
@@ -361,7 +358,6 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <Footer />
     </div>
   );
 }
