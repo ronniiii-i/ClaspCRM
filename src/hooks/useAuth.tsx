@@ -20,6 +20,7 @@ interface User {
   email: string;
   name: string;
   role: string;
+  avatar?: string;
   isVerified: boolean;
   department: Department | null;
   managedDepartment: Department | null;
