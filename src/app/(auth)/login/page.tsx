@@ -1,7 +1,7 @@
 // src/app/login/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
@@ -11,8 +11,17 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login, isLoading } = useAuth();
+  const { login, token, isLoading } = useAuth();
   const router = useRouter();
+
+  // Handle redirect when authenticated
+  useEffect(() => {
+    if (token && !isLoading) {
+      router.refresh();
+      router.push("/dashboard");
+      // window.location.href = "/dashboard"; // Fallback for older browsers
+    }
+  }, [token, isLoading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,9 +29,7 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      const { user } = await login(email, password);
-      console.log("Logged in as:", user.role); // Log role for debugging
-      router.push("/dashboard");
+      await login(email, password);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
       console.error("Login error:", err);

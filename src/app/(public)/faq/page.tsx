@@ -1,12 +1,10 @@
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 const faqs = [
   {
-    question: "What is EnterpriseCRM?",
+    question: "What is ClaspCRM?",
     answer:
-      "EnterpriseCRM is a comprehensive business management platform that integrates all aspects of your operations including contact management, project tracking, HR, inventory, and more into one unified system.",
+      "ClaspCRM is a comprehensive business management platform that integrates all aspects of your operations including contact management, project tracking, HR, inventory, and more into one unified system.",
   },
   {
     question: "How does the pricing work?",
@@ -48,7 +46,6 @@ const faqs = [
 export default function FAQ() {
   return (
     <>
-      <Navbar />
       <main className="min-h-screen bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
           <div className="text-center">
@@ -94,7 +91,6 @@ export default function FAQ() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   );
 }

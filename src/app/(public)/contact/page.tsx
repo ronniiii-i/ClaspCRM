@@ -1,10 +1,6 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-
 export default function Contact() {
   return (
     <>
-      <Navbar />
       <main className="min-h-screen bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
           <div className="text-center">
@@ -111,8 +107,8 @@ export default function Contact() {
                     </svg>
                   </div>
                   <div className="ml-3 text-base text-gray-500 dark:text-gray-400">
-                    <p>support@enterprisecrm.com</p>
-                    <p className="mt-1">sales@enterprisecrm.com</p>
+                    <p>support@ClaspCRM.com</p>
+                    <p className="mt-1">sales@ClaspCRM.com</p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -220,7 +216,6 @@ export default function Contact() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   );
 }

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import ThemeToggle from "./ThemeToggle";
+import ThemeToggle from "../ThemeToggle";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -35,7 +35,7 @@ const Navbar = () => {
                 />
               </svg>
               <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">
-                EnterpriseCRM
+                ClaspCRM
               </span>
             </div>
           </div>
