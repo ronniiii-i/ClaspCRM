@@ -43,23 +43,27 @@ export function VerifyEmailForm() {
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <Loader2 className="h-8 w-8 animate-spin" />
-        <p className="ml-2">Verifying your email...</p>
+        <p className="ml-2 text-gray-900 dark:text-white">Verifying your email...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
       {status === "success" ? (
         <div className="text-center">
           <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto" />
-          <h1 className="text-2xl font-bold mt-4">Email Verified!</h1>
-          <p className="mt-2">You can now log in to your account.</p>
+          <h1 className="text-2xl font-bold mt-4 text-gray-900 dark:text-white">
+            Email Verified!
+          </h1>
+          <p className="mt-2 text-gray-600 dark:text-gray-300">
+            You can now log in to your account.
+          </p>
           <button
             onClick={() => router.push("/login")}
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+            className="mt-6 w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition cursor-pointer"
           >
             Go to Login
           </button>
@@ -67,11 +71,15 @@ export function VerifyEmailForm() {
       ) : (
         <div className="text-center">
           <XCircle className="h-12 w-12 text-red-500 mx-auto" />
-          <h1 className="text-2xl font-bold mt-4">Verification Failed</h1>
-          <p className="mt-2">The link is invalid or has expired.</p>
+          <h1 className="text-2xl font-bold mt-4 text-gray-900 dark:text-white">
+            Verification Failed
+          </h1>
+          <p className="mt-2  text-gray-600 dark:text-gray-300">
+            The link is invalid or has expired.
+          </p>
           <button
             onClick={() => router.push("/")}
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+            className="mt-6 w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition cursor-pointer"
           >
             Return Home
           </button>
