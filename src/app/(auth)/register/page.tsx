@@ -35,9 +35,12 @@ export default function RegisterPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
           <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Registration Successful!</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Registration Successful!
+          </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-300">
-            We&apos;ve sent a verification email to {email}. Please check your inbox.
+            We&apos;ve sent a verification email to {email}. Please check your
+            inbox.
           </p>
           <button
             onClick={() => router.push("/login")}
@@ -51,7 +54,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-[90svh] px-6 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-lg shadow-md"
