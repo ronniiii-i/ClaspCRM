@@ -1,0 +1,9 @@
+{
+  "name": "ClaspCRM",
+  "short_name": "ClaspCRM",
+  "description": "ClaspCRM is a complete business management solution built by Roni Egbu.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff"
+}

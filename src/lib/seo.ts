@@ -64,18 +64,18 @@ export const defaultMetadata: Metadata = {
       "Manage your business smarter with ClaspCRM — built by Roni Egbu.",
     images: ["https://claspcrm.vercel.app/og-image.png"],
   },
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
-    other: [
-      {
-        rel: "mask-icon",
-        url: "/safari-pinned-tab.svg",
-        color: "#5bbad5",
-      },
-    ],
-  },
+//   icons: {
+//     icon: "/favicon.ico",
+//     shortcut: "/favicon-16x16.png",
+//     apple: "/apple-touch-icon.png",
+//     other: [
+//       {
+//         rel: "mask-icon",
+//         url: "/safari-pinned-tab.svg",
+//         color: "#5bbad5",
+//       },
+//     ],
+//   },
   manifest: "/site.webmanifest",
   category: "Portfolio",
   applicationName: "ClaspCRM",
@@ -113,20 +113,25 @@ export function generatePageMetadata({
   description,
   image,
   url,
+  type = "WebPage",
 }: {
   title?: string;
   description?: string;
   image?: string;
   url?: string;
+  type?: "WebPage" | "AboutPage" | "ContactPage" | "FAQPage" | "Service";
 }) {
   return {
     title: title ? `${title} | ClaspCRM by Roni Egbu` : defaultMetadata.title,
     description: description || defaultMetadata.description,
     openGraph: {
       ...defaultMetadata.openGraph,
-      title: title ? `${title} | ClaspCRM by Roni Egbu` : defaultMetadata.openGraph?.title,
+      title: title
+        ? `${title} | ClaspCRM by Roni Egbu`
+        : defaultMetadata.openGraph?.title,
       description: description || defaultMetadata.openGraph?.description,
       url: url || defaultMetadata.openGraph?.url,
+      type: "website",
       images: image
         ? [
             {
@@ -140,9 +145,20 @@ export function generatePageMetadata({
     },
     twitter: {
       ...defaultMetadata.twitter,
-      title: title ? `${title} | ClaspCRM by Roni Egbu` : defaultMetadata.twitter?.title,
+      title: title
+        ? `${title} | ClaspCRM by Roni Egbu`
+        : defaultMetadata.twitter?.title,
       description: description || defaultMetadata.twitter?.description,
       images: image ? [image] : defaultMetadata.twitter?.images,
+    },
+    other: {
+      "application/ld+json": JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": type,
+        name: title,
+        url,
+        description,
+      }),
     },
   };
 }
