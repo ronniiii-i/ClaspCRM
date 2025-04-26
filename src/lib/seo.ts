@@ -49,8 +49,8 @@ export const defaultMetadata: Metadata = {
     images: [
       {
         url: "https://claspcrm.vercel.app/og-image.png",
-        width: 1200,
-        height: 630,
+        width: 1905,
+        height: 870,
         alt: "Screenshot of ClaspCRM dashboard built by Roni Egbu",
       },
     ],
