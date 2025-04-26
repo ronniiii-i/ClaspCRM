@@ -1,6 +1,7 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { geistSans, geistMono } from "@/lib/fonts";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
@@ -27,6 +28,7 @@ export default function RootLayout({
         <ThemeProvider>{children} </ThemeProvider>
       </body>
       <Analytics />
+      <SpeedInsights />
     </html>
   );
 }
