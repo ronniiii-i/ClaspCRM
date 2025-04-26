@@ -1,6 +1,7 @@
 // src/app/(dashboard-pages)/layout.tsx
 "use client";
 
+import Head from "next/head";
 import Navbar from "@/components/navbar/Navbar";
 import Sidebar from "@/components/sidebar/Sidebar";
 
@@ -11,6 +12,9 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="flex h-screen overflow-hidden">
+      <Head>
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
       <Sidebar />
       <div className="flex flex-col w-full overflow-hidden">
         <Navbar />

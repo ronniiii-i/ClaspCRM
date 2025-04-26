@@ -7,6 +7,7 @@ export const metadata: Metadata = generatePageMetadata({
   description:
     "Learn more about ClaspCRM, a project crafted by frontend developer Roni Egbu.",
   url: "https://claspcrm.vercel.app/about",
+  type: "AboutPage",
 });
 
 export default function About() {

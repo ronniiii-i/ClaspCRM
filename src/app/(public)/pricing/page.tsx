@@ -5,6 +5,7 @@ export const metadata: Metadata = generatePageMetadata({
   title: "Pricing",
   description: "See ClaspCRM's flexible pricing options built by Roni Egbu.",
   url: "https://claspcrm.vercel.app/pricing",
+  type: "Service",
 });
 
 
