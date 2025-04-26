@@ -1,4 +1,4 @@
-// src/app/(public)/layout.tsx
+// src/app/(auth)/layout.tsx
 export default function PublicLayout({
   children,
 }: {
