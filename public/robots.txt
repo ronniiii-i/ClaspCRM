@@ -1,6 +1,5 @@
 # *
 User-agent: *
-Allow: /
 Disallow: /login
 Disallow: /register
 Disallow: /forgot-password
@@ -10,6 +9,7 @@ Disallow: /dashboard
 Disallow: /profile
 Disallow: /admin
 Disallow: /api
+Allow: /
 
 # Host
 Host: https://claspcrm.vercel.app

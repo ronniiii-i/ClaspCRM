@@ -22,9 +22,7 @@ export const defaultMetadata: Metadata = {
     "NestJS Projects",
     "Fullstack Portfolio",
   ],
-  authors: [
-    { name: "Roni Egbu", url: "https://claspcrm.vercel.app/about" },
-  ],
+  authors: [{ name: "Roni Egbu", url: "https://roniegbu.vercel.app" }],
   creator: "Roni Egbu",
   publisher: "Roni Egbu",
   robots: {
@@ -81,6 +79,32 @@ export const defaultMetadata: Metadata = {
   manifest: "/site.webmanifest",
   category: "Portfolio",
   applicationName: "ClaspCRM",
+
+  other: {
+    "application/ld+json": JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "ClaspCRM",
+      url: "https://claspcrm.vercel.app",
+      author: {
+        "@type": "Person",
+        name: "Roni Egbu",
+        url: "https://roniegbu.vercel.app",
+      },
+      description:
+        "ClaspCRM is a business management solution built by Roni Egbu, a frontend developer passionate about scalable software.",
+      publisher: {
+        "@type": "Person",
+        name: "Roni Egbu",
+      },
+      inLanguage: "en-US",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: "https://claspcrm.vercel.app/search?q={search_term_string}",
+        "query-input": "required name=search_term_string",
+      },
+    }),
+  },
 };
 
 
