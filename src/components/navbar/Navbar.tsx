@@ -1,4 +1,3 @@
-// components/navbar.tsx
 "use client";
 
 import { useState } from "react";
@@ -20,7 +19,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
 
-export default function Navbar() {
+export default function Navbar({ children }: { children?: React.ReactNode }) {
   const { user, logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState("");
@@ -43,6 +42,7 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-14 items-center justify-between px-4">
+        {children}
         <div className="hidden lg:block">
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
