@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "../ThemeToggle";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const pathname = usePathname();
+  const router = useRouter();
 
   const links = [
     { name: "Home", href: "/" },
@@ -19,7 +21,7 @@ const Navbar = () => {
     <nav className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center">
+          <Link href="/" className="flex items-center">
             <div className="flex-shrink-0 flex items-center">
               <svg
                 className="h-8 w-8 text-blue-600"
@@ -38,7 +40,7 @@ const Navbar = () => {
                 ClaspCRM
               </span>
             </div>
-          </div>
+          </Link>
           <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-8">
             {links.map((link) => (
               <Link
@@ -56,12 +58,12 @@ const Navbar = () => {
           </div>
           <div className="flex items-center space-x-4">
             <ThemeToggle />
-            <Link
-              href="/login"
+            <button
+              onClick={() => router.push("/login")}
               className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700"
             >
               Login
-            </Link>
+            </button>
           </div>
         </div>
       </div>
