@@ -17,16 +17,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} bg-gray-50 dark:bg-gray-900`}>
-        <ThemeProvider>
-          <>
-            <PublicNavbar />
-            {children}
-            <Footer />
-          </>
-        </ThemeProvider>
-      </body>
-    </html>
+    <>
+      <ThemeProvider>
+        <PublicNavbar />
+        <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
+          {children}
+        </main>
+        <Footer />
+      </ThemeProvider>
+    </>
   );
 }
