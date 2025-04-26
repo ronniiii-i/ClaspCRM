@@ -3,12 +3,13 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { geistSans, geistMono } from "@/lib/fonts";
+import { defaultMetadata } from "@/lib/seo";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
+
 export const metadata: Metadata = {
-  title: "ClaspCRM Intranet",
-  description: "Complete Business Management Solution",
+  ...defaultMetadata,
 };
 
 export default function RootLayout({

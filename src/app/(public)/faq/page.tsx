@@ -1,4 +1,12 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = generatePageMetadata({
+  title: "FAQ",
+  description: "Frequently Asked Questions about ClaspCRM, built by Roni Egbu.",
+  url: "https://claspcrm.vercel.app/faq",
+});
 
 const faqs = [
   {

@@ -1,0 +1,18 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /verify-email
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /admin
+Disallow: /api
+
+# Host
+Host: https://claspcrm.vercel.app
+
+# Sitemaps
+Sitemap: https://claspcrm.vercel.app/sitemap.xml

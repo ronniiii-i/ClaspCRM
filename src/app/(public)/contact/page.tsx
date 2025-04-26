@@ -1,3 +1,13 @@
+import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = generatePageMetadata({
+  title: "Contact Us",
+  description:
+    "Get in touch with ClaspCRM's support team. Built by Roni Egbu.",
+  url: "https://claspcrm.vercel.app/contact",
+});
+
 export default function Contact() {
   return (
     <>
