@@ -66,8 +66,8 @@ export async function login(
       name: data.user.name,
       role: data.user.role,
       isVerified: data.user.isVerified,
-      department: data.user.department || "",
-      managedDepartment: data.user.managedDepartment || "",
+      department: data.user.department || null,
+      managedDepartment: data.user.managedDepartment || null,
     },
   };
 

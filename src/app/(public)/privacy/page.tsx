@@ -1,3 +1,12 @@
+import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = generatePageMetadata({
+  title: "Privacy Policy",
+  description: "Privacy Policy for ClaspCRM, built by Roni Egbu.",
+  url: "https://claspcrm.vercel.app/privacy",
+});
+
 export default function Privacy() {
   return (
     <>

@@ -1,4 +1,4 @@
-# CRM Frontend
+# ClaspCRM
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Next.js](https://img.shields.io/badge/Next.js-14.0+-black?logo=next.js)](https://nextjs.org/)
@@ -13,16 +13,15 @@ Modern CRM frontend built with Next.js, TypeScript, and Tailwind CSS.
 - ✅ JWT-based authentication
 - ✅ Email verification flow
 - ✅ Password reset functionality
-- ✅ Role-based access control (Admin/Manager/User)
+- ✅ Role-based access control (Admin/Head of Department/Manager(Lead)/User)
 - ✅ Secure cookie management
 
 ### Modules
 
-- [ ] Dashboard
+- [x] Dashboard
 - [ ] Contact Management
 - [ ] Project Management
 - [ ] HR Management
-- [ ] Reporting
 
 ## 🚀 Getting Started
 
@@ -46,7 +45,6 @@ Create `.env.local` file:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3030
-NEXT_PUBLIC_RECAPTCHA_SITE_KEY=your_key_here
 ```
 
 ### Running the App

@@ -1,3 +1,13 @@
+import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = generatePageMetadata({
+  title: "Terms and Conditions",
+  description: "Terms and Conditions for ClaspCRM, built by Roni Egbu.",
+  url: "https://claspcrm.vercel.app/terms",
+});
+
+
 export default function Terms() {
   return (
     <>

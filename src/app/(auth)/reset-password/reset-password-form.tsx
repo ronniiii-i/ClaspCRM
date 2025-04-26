@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader2, CheckCircle2 } from "lucide-react";
 import { PasswordStrength } from "@/components/password-strength";
 
 export function ResetPasswordForm() {
@@ -54,12 +54,17 @@ export function ResetPasswordForm() {
   if (success) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">Password Reset Successful!</h1>
-          <p className="mt-2">You can now log in with your new password.</p>
+        <div className="text-center max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+          <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Password Reset Successful!
+          </h1>
+          <p className="mt-2 text-gray-600 dark:text-gray-300">
+            You can now log in with your new password.
+          </p>
           <button
             onClick={() => router.push("/login")}
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+            className="mt-6 w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition cursor-pointer"
           >
             Go to Login
           </button>
@@ -69,45 +74,49 @@ export function ResetPasswordForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-[90svh] px-6 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md"
+        className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-lg shadow-md"
       >
-        <h1 className="text-2xl font-bold text-center">Reset Password</h1>
+        <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-white">
+          Reset Password
+        </h1>
         {error && (
-          <div className="p-3 bg-red-50 text-red-600 rounded-md">{error}</div>
+          <div className="p-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-300 rounded-md">
+            {error}
+          </div>
         )}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             New Password
           </label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 w-full p-2 border rounded-md"
+            className="mt-1 w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
             required
             minLength={8}
           />
           <PasswordStrength password={password} />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Confirm Password
           </label>
           <input
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="mt-1 w-full p-2 border rounded-md"
+            className="mt-1 w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
             required
           />
         </div>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-blue-500 text-white p-2 rounded disabled:opacity-50"
+          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
           {isSubmitting ? (
             <Loader2 className="h-4 w-4 animate-spin mx-auto" />

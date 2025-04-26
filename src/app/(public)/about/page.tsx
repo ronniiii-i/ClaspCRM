@@ -1,4 +1,14 @@
 import Image from "next/image";
+import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = generatePageMetadata({
+  title: "About ClaspCRM",
+  description:
+    "Learn more about ClaspCRM, a project crafted by frontend developer Roni Egbu.",
+  url: "https://claspcrm.vercel.app/about",
+  type: "AboutPage",
+});
 
 export default function About() {
   return (
