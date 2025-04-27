@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
-// import { Department } from "@/lib/modules";
+// import { Department } from "../_hooks/use-dashboard-data";;
 import type {
   DashboardData,
   Metric,
@@ -32,7 +32,7 @@ import type {
 } from "../types";
 import { CheckCircleIcon, ClockIcon, FolderIcon } from "lucide-react";
 
-enum Department {
+export enum Department {
   FINANCE = "Finance",
   IT = "IT",
   SALES = "Sales",
@@ -230,7 +230,9 @@ function getMockEmployees(): Employee[] {
     name: `Employee ${i + 1}`,
     position: ["Manager", "Developer", "Analyst", "Designer"][i % 4],
     department: ["Finance", "IT", "HR", "Sales"][i % 4],
-    status: ["active" as const, "on-leave" as const, "terminated" as const][i % 3],
+    status: ["active" as const, "on-leave" as const, "terminated" as const][
+      i % 3
+    ],
     avatar: `https://i.pravatar.cc/150?img=${i + 1}`,
   }));
 }
@@ -252,7 +254,11 @@ function getMockJobOpenings(): JobOpening[] {
     title: `Job Title ${i + 1}`,
     department: ["Finance", "IT", "HR", "Sales"][i % 4],
     applicants: Math.floor(Math.random() * 100), // Add applicants property
-    status: ["sourcing", "interviewing", "offer", "filled"][i % 4] as "sourcing" | "interviewing" | "offer" | "filled", // Adjust status to match the interface
+    status: ["sourcing", "interviewing", "offer", "filled"][i % 4] as
+      | "sourcing"
+      | "interviewing"
+      | "offer"
+      | "filled", // Adjust status to match the interface
     location: ["Remote", "On-site"][i % 2],
   }));
 }
@@ -264,7 +270,10 @@ function getMockTrainings(): Training[] {
     participants: Math.floor(Math.random() * 50) + 10,
     completionRate: Math.floor(Math.random() * 100),
     department: ["Finance", "IT", "HR", "Sales"][i % 4],
-    status: ["upcoming", "in-progress", "completed"][i % 3] as "upcoming" | "in-progress" | "completed",
+    status: ["upcoming", "in-progress", "completed"][i % 3] as
+      | "upcoming"
+      | "in-progress"
+      | "completed",
   }));
 }
 
@@ -273,8 +282,13 @@ function getMockInventory(): InventoryItem[] {
     id: `item${i}`,
     name: `Item ${i + 1}`,
     type: i % 2 === 0 ? "hardware" : "software",
-    status: ["active", "maintenance", "retired"][i % 3] as "active" | "maintenance" | "retired",
-    lastUpdated: new Date(Date.now() - Math.random() * 10000000000).toLocaleDateString(),
+    status: ["active", "maintenance", "retired"][i % 3] as
+      | "active"
+      | "maintenance"
+      | "retired",
+    lastUpdated: new Date(
+      Date.now() - Math.random() * 10000000000
+    ).toLocaleDateString(),
   }));
 }
 
@@ -294,8 +308,12 @@ function getMockSystemAlerts(): SystemAlert[] {
     type: ["info", "warning", "error"][i % 3],
     title: `System Alert ${i + 1}`,
     priority: ["low", "medium", "high"][i % 3] as "low" | "medium" | "high",
-    message: `System ${["started", "stopped", "error"][i % 3]} at ${new Date(Date.now() - Math.random() * 10000000000).toLocaleString()}`,
-    timestamp: new Date(Date.now() - Math.random() * 10000000000).toLocaleString(),
+    message: `System ${["started", "stopped", "error"][i % 3]} at ${new Date(
+      Date.now() - Math.random() * 10000000000
+    ).toLocaleString()}`,
+    timestamp: new Date(
+      Date.now() - Math.random() * 10000000000
+    ).toLocaleString(),
   }));
 }
 
@@ -303,9 +321,14 @@ function getMockApprovals(): Approval[] {
   return Array.from({ length: 5 }, (_, i) => ({
     id: `approval${i}`,
     type: ["leave", "expense", "purchase"][i % 3],
-    status: ["pending", "approved", "rejected"][i % 3] as "pending" | "approved" | "rejected",
+    status: ["pending", "approved", "rejected"][i % 3] as
+      | "pending"
+      | "approved"
+      | "rejected",
     requester: `User ${i + 1}`,
-    dateRequested: new Date(Date.now() - Math.random() * 10000000000).toLocaleString(),
+    dateRequested: new Date(
+      Date.now() - Math.random() * 10000000000
+    ).toLocaleString(),
   }));
 }
 
@@ -331,7 +354,11 @@ function getMockDeals(): Deal[] {
     id: `deal${i}`,
     name: `Deal ${i + 1}`,
     value: Math.floor(Math.random() * 100000) + 10000,
-    stage: ["prospect", "qualified", "negotiation", "closed"][i % 4] as "prospect" | "qualified" | "negotiation" | "closed",
+    stage: ["prospect", "qualified", "negotiation", "closed"][i % 4] as
+      | "prospect"
+      | "qualified"
+      | "negotiation"
+      | "closed",
     closeDate: new Date(
       Date.now() - Math.random() * 10000000000
     ).toLocaleDateString(),
@@ -344,7 +371,10 @@ function getMockTickets(): Ticket[] {
   return Array.from({ length: 5 }, (_, i) => ({
     id: `ticket${i}`,
     subject: `Ticket ${i + 1}`,
-    status: ["open", "resolved", "pending"][i % 3] as "pending" | "open" | "resolved",
+    status: ["open", "resolved", "pending"][i % 3] as
+      | "pending"
+      | "open"
+      | "resolved",
     priority: ["low", "medium", "high"][i % 3] as "low" | "medium" | "high",
     createdAt: new Date(
       Date.now() - Math.random() * 10000000000
@@ -357,8 +387,13 @@ function getMockAttendance(): AttendanceRecord[] {
     id: `att${i}`,
     userId: `user${i}`,
     name: `User ${i + 1}`,
-    date: new Date(Date.now() - Math.random() * 10000000000).toLocaleDateString(),
-    status: ["present", "absent", "on-leave"][i % 3] as "present" | "absent" | "on-leave",
+    date: new Date(
+      Date.now() - Math.random() * 10000000000
+    ).toLocaleDateString(),
+    status: ["present", "absent", "on-leave"][i % 3] as
+      | "present"
+      | "absent"
+      | "on-leave",
     hoursWorked: Math.floor(Math.random() * 8) + 1,
   }));
 }
@@ -389,15 +424,18 @@ function getMockPersonalMetrics(): PersonalMetric[] {
   ];
 }
 
-
 function getMockTasks(): Task[] {
   return Array.from({ length: 5 }, (_, i) => {
     const dueDate = `2023-04-${20 + i}`;
-    const dueSoon = new Date(dueDate).getTime() - Date.now() < 7 * 24 * 60 * 60 * 1000; // within 7 days
+    const dueSoon =
+      new Date(dueDate).getTime() - Date.now() < 7 * 24 * 60 * 60 * 1000; // within 7 days
     return {
       id: `task${i}`,
       title: `Task ${i + 1}`,
-      status: ["not-started", "in-progress", "completed"][i % 3] as "not-started" | "in-progress" | "completed",
+      status: ["not-started", "in-progress", "completed"][i % 3] as
+        | "not-started"
+        | "in-progress"
+        | "completed",
       progress: [0, 50, 100][i % 3],
       dueDate,
       dueSoon,

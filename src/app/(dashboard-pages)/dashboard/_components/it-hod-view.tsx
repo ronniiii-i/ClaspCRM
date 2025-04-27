@@ -6,7 +6,7 @@ import { SupportTickets } from "./support-tickets";
 import { TechnologyInventory } from "./technology-inventory";
 import { SecurityDashboard } from "./security-dashboard";
 import { DashboardSkeleton } from "./skeleton";
-import { Department } from "@/lib/modules";
+import { Department } from "../_hooks/use-dashboard-data";
 
 export function ItHodDashboard() {
   const { data, isLoading } = useDashboardData({

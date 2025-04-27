@@ -1,13 +1,12 @@
 "use client";
 
-import { useDashboardData } from "../_hooks/use-dashboard-data";
+import { useDashboardData, Department } from "../_hooks/use-dashboard-data";
 import { FinancialOverview } from "./finance-overview";
 import { BudgetVarianceChart } from "./budget-variance";
 import { RevenueTrends } from "./revenue-trends";
 import { TaxManagement } from "./tax-management";
 import { AuditTrails } from "./audit-trails";
 import { DashboardSkeleton } from "./skeleton";
-import { Department } from "@/lib/modules";
 
 export function FinanceHodDashboard() {
   const { data, isLoading } = useDashboardData({

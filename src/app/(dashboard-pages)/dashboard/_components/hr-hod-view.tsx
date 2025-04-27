@@ -6,7 +6,7 @@ import { RecruitmentPipeline } from "./recruitment-pipeline";
 import { TrainingManagement } from "./training-management";
 import { PerformanceReviews } from "./performance-reviews";
 import { DashboardSkeleton } from "./skeleton";
-import { Department } from "@/lib/modules";
+import { Department } from "../_hooks/use-dashboard-data";
 
 export function HrHodDashboard() {
   const { data, isLoading } = useDashboardData({

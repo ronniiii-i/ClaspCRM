@@ -6,7 +6,7 @@ import { DepartmentMetrics } from "./department_metrics";
 import { TeamPerformanceWidget } from "./team-performance-widget";
 import { BudgetAlerts } from "./budget-alerts";
 
-import { Department } from "@/lib/modules";
+import { Department } from "../_hooks/use-dashboard-data";
 
 export function HodDashboard({ department }: { department: Department }) {
   const { data, isLoading } = useDashboardData({

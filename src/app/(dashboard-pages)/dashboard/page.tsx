@@ -9,7 +9,7 @@ import { HrHodDashboard } from "./_components/hr-hod-view";
 import { TeamLeadDashboard } from "./_components/lead-view";
 import { StaffDashboard } from "./_components/staff-view";
 import { DashboardSkeleton } from "./_components/skeleton";
-import { Department } from "@/lib/modules";
+import { Department } from "./_hooks/use-dashboard-data";
 
 export default function DashboardPage() {
   const { user } = useAuth();
