@@ -9,6 +9,23 @@ export type DashboardData = {
   auditLog?: AuditLogEntry[];
   tasks?: Task[];
   alerts?: Alert[];
+  systemAlerts?: SystemAlert[];
+  pendingApprovals?: Approval[];
+  attendance?: AttendanceRecord[];
+  leaveRequests?: LeaveRequest[];
+  taxRecords?: TaxRecord[];
+  securityAlerts?: SecurityAlert[];
+  financeMetrics?: FinanceMetrics;
+  budgetData?: BudgetData[];
+  systemMetrics?: SystemMetrics;
+  employees?: Employee[];
+  deals?: Deal[];
+  tickets?: Ticket[];
+  revenueData?: RevenueData[];
+  jobOpenings?: JobOpening[];
+  trainings?: Training[];
+  reviews?: PerformanceReview[];
+  inventory?: InventoryItem[];
 };
 
 export interface Metric {
@@ -80,30 +97,138 @@ export interface Task {
   project?: string;
 }
 
-// Define missing types
-// interface Metric {
-//   id: string;
-//   title: string;
-//   value: string;
-//   change: string;
-//   icon: React.FC<React.SVGProps<SVGSVGElement>>;
-// }
 
-// interface DepartmentPerformance {
-//   name: string;
-//   revenue: number;
-// }
+interface SystemAlert {
+  id: string;
+  title: string;
+  priority: "high" | "medium" | "low";
+  message: string;
+}
+
+interface Approval {
+  id: string;
+  type: string;
+  requester: string;
+  status: "pending" | "approved" | "rejected";
+}
+
+interface AttendanceRecord {
+  userId: string;
+  name: string;
+  status: "present" | "absent" | "on-leave";
+  date: string;
+}
+
+interface LeaveRequest {
+  id: string;
+  type: string;
+  startDate: string;
+  endDate: string;
+  status: "pending" | "approved" | "rejected";
+}
+
+interface TaxRecord {
+  id: string;
+  type: string;
+  dueDate: string;
+  status: "paid" | "pending" | "overdue";
+}
+
+interface SecurityAlert {
+  id: string;
+  severity: "low" | "medium" | "high";
+  message: string;
+}
+
+// Finance Types
+interface FinanceMetrics {
+  totalRevenue: number;
+  yoyGrowth: number;
+  expenses: number;
+  profitMargin: number;
+}
+
+interface BudgetData {
+  month: string;
+  planned: number;
+  actual: number;
+}
+
+// IT Types
+interface SystemMetrics {
+  uptime: string;
+  responseTime: number;
+  serverLoad: number;
+  activeIncidents: number;
+}
+
+// HR Types
+interface Employee {
+  id: string;
+  name: string;
+  position: string;
+  department: string;
+  status: "active" | "on-leave" | "terminated";
+  avatar?: string;
+}
+
+// Sales Types
+interface Deal {
+  id: string;
+  name: string;
+  value: number;
+  stage: "prospect" | "qualified" | "negotiation" | "closed";
+  contact: string;
+}
+
+// Support Types
+interface Ticket {
+  id: string;
+  subject: string;
+  priority: "low" | "medium" | "high";
+  status: "open" | "pending" | "resolved";
+  createdAt: string;
+}
 
 
-// interface Alert {
-//   id: string;
-//   title: string;
-//   priority: "low" | "medium" | "high";
-//   message: string;
-// }
+interface RevenueData {
+  month: string;
+  revenue: number;
+}
 
-// interface TeamMetric {
-//   team: string;
-//   performance: number;
-//   members: number;
-// }
+interface TaxRecord {
+  id: string;
+  type: string;
+  dueDate: string;
+  status: "paid" | "pending" | "overdue";
+  amount: number;
+}
+
+interface JobOpening {
+  id: string;
+  title: string;
+  department: string;
+  applicants: number;
+  status: "open" | "closed";
+}
+
+interface Training {
+  id: string;
+  name: string;
+  participants: number;
+  completionRate: number;
+}
+
+interface PerformanceReview {
+  id: string;
+  employee: string;
+  rating: number;
+  status: "pending" | "completed";
+}
+
+interface InventoryItem {
+  id: string;
+  name: string;
+  type: string;
+  status: string;
+}
