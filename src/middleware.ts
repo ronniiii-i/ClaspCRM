@@ -90,7 +90,7 @@ export default async function middleware(request: NextRequest) {
         roleBasedRoutes.managerPlus.some(
           (route) => pathname === route || pathname.startsWith(`${route}/`)
         ) &&
-        !["ADMIN", "MANAGER"].includes(userRole)
+        !["ADMIN", "HOD"].includes(userRole)
       ) {
         return NextResponse.redirect(new URL("/dashboard", request.url));
       }

@@ -1,32 +1,47 @@
-// src/app/(dashboard-pages)/dashboard/page.tsx
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
-import { useRoleAccess } from "@/hooks/useRoleAccess";
 import { AdminDashboard } from "./_components/admin_view";
-import {HodDashboard} from "./_components/hod-view";
-// import LeadDashboard from "./_components/lead-view";
-import StaffDashboard from "./_components/staff-view";
+import { HodDashboard as GenericHodDashboard } from "./_components/hod-view";
+import { FinanceHodDashboard } from "./_components/finance-hod-view";
+import { ItHodDashboard } from "./_components/it-hod-view";
+import { HrHodDashboard } from "./_components/hr-hod-view";
+import { TeamLeadDashboard } from "./_components/lead-view";
+import { StaffDashboard } from "./_components/staff-view";
 import { DashboardSkeleton } from "./_components/skeleton";
+import { Department } from "@/lib/modules";
 
 export default function DashboardPage() {
   const { user } = useAuth();
-  const { userRole } = useRoleAccess();
 
   if (!user) return <DashboardSkeleton />;
 
-  return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">
-        {userRole === "ADMIN" ? "Organization" : "My"} Dashboard
-      </h1>
+  // Department-specific HOD dashboards
+  if (user.role === "HOD") {
+    switch (user.department?.name) {
+      case "Finance":
+        return <FinanceHodDashboard />;
+      case "IT":
+        return <ItHodDashboard />;
+      case "HR":
+      case "Human Resources":
+        return <HrHodDashboard />;
+      // Add other department
+      // s...
+      default:
+        return <GenericHodDashboard department={user.department?.name as Department} />;
+    }
+  }
 
-      {userRole === "ADMIN" && <AdminDashboard />}
-      {userRole === "HOD" && (
-        <HodDashboard department={user.department?.name || ""} />
-      )}
-      {/* {userRole === "LEAD" && <LeadDashboard teamId={user.teamId || ""} />} */}
-      {userRole === "STAFF" && <StaffDashboard userId={user.id} />}
-    </div>
-  );
+  // Standard role-based dashboards
+  switch (user.role) {
+    case "ADMIN":
+      return <AdminDashboard />;
+    case "LEAD":
+      return <TeamLeadDashboard teamId={user.id} />; // change to teamId
+    case "STAFF":
+      return <StaffDashboard userId={user.id} />;
+    default:
+      return <div>Unauthorized</div>;
+  }
 }

@@ -8,15 +8,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DepartmentPerformance } from "../types";
+import { BarChart, Bar, XAxis, CartesianGrid } from "recharts";
+
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+  // ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 
 export function DepartmentComparisonChart({
   data,
@@ -31,28 +30,35 @@ export function DepartmentComparisonChart({
       </CardHeader>
       <CardContent>
         <div className="h-80 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={data}
-              margin={{
-                top: 20,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip
+          <ChartContainer
+            config={{
+              revenue: {
+                label: "Revenue",
+                color: "hsl(var(--chart-1))",
+              },
+            }}
+          >
+            <BarChart data={data}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="name"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+              />
+              {/* <YAxis /> */}
+              <ChartTooltip
+                content={<ChartTooltipContent />}
+                cursor={false}
+                wrapperStyle={{ outline: "none" }}
                 formatter={(value: number) => [
+                  "Revenue: ",
                   `$${value.toLocaleString()}`,
-                  "Revenue",
                 ]}
               />
-              <Bar dataKey="revenue" fill="#3b82f6" />
+              <Bar dataKey="revenue" fill="#3b82f6" radius={8} />
             </BarChart>
-          </ResponsiveContainer>
+          </ChartContainer>
         </div>
       </CardContent>
     </Card>

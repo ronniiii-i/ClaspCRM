@@ -1,43 +1,35 @@
 "use client";
 
 import { useDashboardData } from "../_hooks/use-dashboard-data";
+import { DashboardSkeleton } from "./skeleton";
 import { OrganizationMetrics } from "./organization-metrics";
 import { DepartmentComparisonChart } from "./department-comparison-chart";
 import { AuditLog } from "./audit-log";
-
-// Define the AuditLogEntry type that matches what the AuditLog component expects
-// interface AuditLogEntry {
-//   id: number;
-//   target: string;
-//   initiator: string;
-//   action: string;
-//   timestamp: Date; // This is a Date, not a string
-// }
+import { PendingApprovals } from "./pending-approvals";
+import { SystemAlerts } from "./system-alerts";
 
 export function AdminDashboard() {
   const { data, isLoading } = useDashboardData({ scope: "organization" });
-  console.log("AdminDashboard data:", data); // Log the data for debugging
 
-  if (isLoading) return <div>Loading admin dashboard...</div>;
+  if (isLoading) return <DashboardSkeleton />;
   if (!data) return <div>No data available</div>;
 
   return (
-    <>
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+
+      {/* Global KPIs */}
       <OrganizationMetrics metrics={data.metrics} />
-      {data.departmentPerformance && (
-        <DepartmentComparisonChart data={data.departmentPerformance} />
-      )}
-      {data.auditLog && (
-        <AuditLog
-          entries={data.auditLog.map((item) => ({
-            id: String(item.id),
-            target: "target" in item ? String(item.target) : "Unknown Target",
-            initiator: String(item.initiator) || "Unknown Initiator",
-            action: item.action,
-            timestamp: new Date(item.timestamp), // Convert string timestamp to Date object
-          }))}
-        />
-      )}
-    </>
+
+      {/* Charts & Logs */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <DepartmentComparisonChart data={data.departmentPerformance || []} />
+        <AuditLog entries={data.auditLog || []} />
+      </div>
+
+      {/* Alerts & Approvals */}
+      <SystemAlerts alerts={data.systemAlerts || []} />
+      <PendingApprovals approvals={data.pendingApprovals || []} />
+    </div>
   );
 }
