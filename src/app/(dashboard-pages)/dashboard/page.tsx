@@ -6,7 +6,7 @@ import { HodDashboard as GenericHodDashboard } from "./_components/hod-view";
 import { FinanceHodDashboard } from "./_components/finance-hod-view";
 import { ItHodDashboard } from "./_components/it-hod-view";
 import { HrHodDashboard } from "./_components/hr-hod-view";
-// import { TeamLeadDashboard } from "./_components/teamlead-view";
+import { TeamLeadDashboard } from "./_components/lead-view";
 import { StaffDashboard } from "./_components/staff-view";
 import { DashboardSkeleton } from "./_components/skeleton";
 import { Department } from "@/lib/modules";
@@ -37,8 +37,8 @@ export default function DashboardPage() {
   switch (user.role) {
     case "ADMIN":
       return <AdminDashboard />;
-    // case "TEAM_LEAD":
-    //   return <TeamLeadDashboard teamId={user.teamId} />;
+    case "LEAD":
+      return <TeamLeadDashboard teamId={user.id} />; // change to teamId
     case "STAFF":
       return <StaffDashboard userId={user.id} />;
     default:
