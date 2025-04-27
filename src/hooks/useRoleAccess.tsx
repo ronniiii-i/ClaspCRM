@@ -2,82 +2,46 @@
 "use client";
 
 import { useAuth } from "./useAuth";
-import {
-  // Department,
-  ALL_MODULES,
-  Module,
-} from "@/lib/modules";
-
-export enum AccessLevel {
-  ADMIN = "ADMIN",
-  HOD = "HOD",
-  LEAD = "LEAD",
-  STAFF = "STAFF",
-}
-
-const roleHierarchy = {
-  [AccessLevel.ADMIN]: 3,
-  [AccessLevel.HOD]: 2,
-  [AccessLevel.LEAD]: 1,
-  [AccessLevel.STAFF]: 0,
-};
+import { ALL_MODULES, Department, AccessLevel } from "@/lib/modules";
 
 export function useRoleAccess() {
   const { user } = useAuth();
 
-  if (!user || !user.role) {
-    return {
-      userRole: null,
-      canAccess: () => false,
-      requiresRole: () => () => false,
-      getAccessibleModules: () => [],
-    };
-  }
+  const getAccessibleModules = () => {
+    if (!user?.role) return [];
 
-  const canAccess = (minRole: AccessLevel): boolean => {
-    const userRoleLevel = roleHierarchy[user.role as AccessLevel] || 0;
-    const requiredLevel = roleHierarchy[minRole];
-    return userRoleLevel >= requiredLevel;
+    return ALL_MODULES.filter((module) => {
+      // Admin sees all modules
+      if (user.role === "ADMIN") return true;
+
+      // Department check (if module is department-specific)
+      if (module.department && module.department !== user.department?.name) {
+        return false;
+      }
+
+      // Role-based access (must have at least one permission)
+      const rolePermissions =
+        module.roles[user.role as keyof typeof module.roles];
+      return rolePermissions && rolePermissions.length > 0;
+    });
   };
 
-  const requiresRole = (minRole: AccessLevel) => {
-    return (children: React.ReactNode): React.ReactNode => {
-      return canAccess(minRole) ? children : null;
-    };
+  const hasPermission = (moduleId: string, action: AccessLevel) => {
+    if (!user?.role) return false;
+    const foundModule = ALL_MODULES.find((m) => m.id === moduleId);
+    if (!foundModule) return false;
+    return (
+      foundModule.roles[user.role as keyof typeof foundModule.roles]?.includes(action) ??
+      false
+    );
   };
-
-  // Update the getAccessibleModules function
-  const getAccessibleModules = (): Module[] => {
-    if (user.role === AccessLevel.ADMIN) {
-      return ALL_MODULES;
-    }
-
-   const userDepartment = user.department?.name || "";
-   const managedDepartment = user.managedDepartment?.name || "";
-
-   if (user.role === AccessLevel.HOD) {
-     return ALL_MODULES.filter(
-       (module) =>
-         !module.department || // Modules available to all
-         userDepartment === module.department ||
-         managedDepartment === module.department ||
-         module.id === "analytics" // Cross-department module
-     );
-   }
-
-   // For regular users
-   return ALL_MODULES.filter(
-     (module) => !module.department || userDepartment === module.department
-   );
-  };
-  // const modules = getAccessibleModules();
-  // console.log("Accessible modules:", modules);
-  // console.log("User department:", user.department);
 
   return {
-    userRole: user.role as AccessLevel,
-    canAccess,
-    requiresRole,
     getAccessibleModules,
+    hasPermission,
+    currentRole: user?.role,
+    currentDepartment: user?.department?.name,
+    canAccessDepartment: (dept: Department) =>
+      user?.role === "ADMIN" || user?.department?.name === dept,
   };
 }

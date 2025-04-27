@@ -1,97 +1,259 @@
-// src/lib/modules.ts
-export type Module = {
-  id: string;
-  name: string;
-  icon: string;
-  path: string;
-  department?: Department; // If null, it's available to all departments
-};
+import { LucideIcon, Map, Server } from "lucide-react";
+import {
+  LayoutDashboard,
+  Users,
+  FolderKanban,
+  BarChart,
+  Wallet,
+  Truck,
+  Package,
+  Settings,
+  Home,
+  Shield,
+  UserRoundCog,
+  Key,
+  Receipt,
+  Clock,
+  FileSearch,
+  LineChart,
+  Headset,
+  Briefcase,
+  Landmark,
+  ClipboardList,
+  Globe,
+  PieChart,
+  Bell,
+  Calendar,
+  MessageSquare,
+  HelpCircle,
+} from "lucide-react";
 
 export enum Department {
-  ADMINISTRATION = "Administration",
-  HUMAN_RESOURCES = "Human Resources",
-  SALES = "Sales",
-  OPERATIONS = "Operations",
   FINANCE = "Finance",
   IT = "IT",
-  CUSTOMER_SERVICE = "Customer Service",
+  SALES = "Sales",
+  CUSTOMER_SUPPORT = "Customer Support",
+  HR = "Human Resources",
+  ACCOUNTING = "Accounting",
+  ADMINISTRATION = "Administration",
+  OPERATIONS = "Operations",
+}
+
+export enum AccessLevel {
+  VIEW = "VIEW",
+  CREATE = "CREATE",
+  EDIT = "EDIT",
+  DELETE = "DELETE",
+}
+
+export interface Module {
+  id: string;
+  name: string;
+  icon: LucideIcon | string;
+  path: string;
+  department?: Department;
+  roles: {
+    ADMIN: AccessLevel[];
+    HOD: AccessLevel[];
+    TEAM_LEAD: AccessLevel[];
+    STAFF: AccessLevel[];
+  };
 }
 
 export const ALL_MODULES: Module[] = [
+  // Global Modules (No Department)
   {
-    id: "contacts",
-    name: "Contact Management",
-    icon: "users",
-    path: "/contacts",
-    department: Department.SALES,
-  },
-  {
-    id: "projects",
-    name: "Project Management",
-    icon: "folder-kanban",
-    path: "/projects",
-    department: Department.OPERATIONS,
-  },
-  {
-    id: "hr",
-    name: "HR Management",
-    icon: "briefcase",
-    path: "/hr",
-    department: Department.HUMAN_RESOURCES,
+    id: "dashboard",
+    name: "Dashboard Overview",
+    icon: LayoutDashboard,
+    path: "/dashboard",
+    roles: {
+      ADMIN: [AccessLevel.VIEW, AccessLevel.EDIT],
+      HOD: [AccessLevel.VIEW],
+      TEAM_LEAD: [AccessLevel.VIEW],
+      STAFF: [AccessLevel.VIEW],
+    },
   },
   {
     id: "analytics",
     name: "Business Intelligence",
-    icon: "bar-chart",
+    icon: BarChart,
     path: "/analytics",
+    roles: {
+      ADMIN: [AccessLevel.VIEW, AccessLevel.EDIT, AccessLevel.DELETE],
+      HOD: [AccessLevel.VIEW],
+      TEAM_LEAD: [AccessLevel.VIEW],
+      STAFF: [],
+    },
   },
+  // Administration
   {
-    id: "accounts",
-    name: "Account Management",
-    icon: "wallet",
-    path: "/accounts",
-    department: Department.FINANCE,
-  },
-  {
-    id: "supply-chain",
-    name: "Supply Chain",
-    icon: "truck",
-    path: "/supply-chain",
-    department: Department.OPERATIONS,
-  },
-  {
-    id: "inventory",
-    name: "Materials Inventory",
-    icon: "package",
-    path: "/inventory",
-    department: Department.OPERATIONS,
-  },
-  {
-    id: "admin",
+    id: "admin-settings",
     name: "System Administration",
-    icon: "settings",
-    path: "/admin",
+    icon: Settings,
+    path: "/admin/settings",
     department: Department.ADMINISTRATION,
+    roles: {
+      ADMIN: [AccessLevel.VIEW, AccessLevel.EDIT, AccessLevel.DELETE],
+      HOD: [],
+      TEAM_LEAD: [],
+      STAFF: [],
+    },
   },
   {
-    id: "office",
-    name: "Office Admin",
-    icon: "home",
+    id: "office-admin",
+    name: "Office Administration",
+    icon: Home,
     path: "/office",
     department: Department.ADMINISTRATION,
+    roles: {
+      ADMIN: [AccessLevel.VIEW, AccessLevel.EDIT, AccessLevel.DELETE],
+      HOD: [AccessLevel.VIEW],
+      TEAM_LEAD: [],
+      STAFF: [AccessLevel.VIEW],
+    },
+  },
+  // Finance
+  {
+    id: "financial-analytics",
+    name: "Financial Analytics",
+    icon: Landmark,
+    path: "/finance/analytics",
+    department: Department.FINANCE,
+    roles: {
+      ADMIN: [AccessLevel.VIEW, AccessLevel.EDIT, AccessLevel.DELETE],
+      HOD: [AccessLevel.VIEW, AccessLevel.EDIT],
+      TEAM_LEAD: [AccessLevel.VIEW],
+      STAFF: [],
+    },
   },
   {
-    id: "safety",
+    id: "tax-management",
+    name: "Tax Management",
+    icon: Receipt,
+    path: "/finance/tax",
+    department: Department.FINANCE,
+    roles: {
+      ADMIN: [AccessLevel.VIEW, AccessLevel.EDIT, AccessLevel.DELETE],
+      HOD: [AccessLevel.VIEW, AccessLevel.EDIT],
+      TEAM_LEAD: [],
+      STAFF: [],
+    },
+  },
+  // IT
+  {
+    id: "system-health",
+    name: "System Health",
+    icon: Server,
+    path: "/it/health",
+    department: Department.IT,
+    roles: {
+      ADMIN: [AccessLevel.VIEW, AccessLevel.EDIT, AccessLevel.DELETE],
+      HOD: [AccessLevel.VIEW, AccessLevel.EDIT],
+      TEAM_LEAD: [AccessLevel.VIEW],
+      STAFF: [],
+    },
+  },
+  // Sales
+  {
+    id: "sales-pipeline",
+    name: "Sales Pipeline",
+    icon: Globe,
+    path: "/sales/pipeline",
+    department: Department.SALES,
+    roles: {
+      ADMIN: [AccessLevel.VIEW, AccessLevel.EDIT, AccessLevel.DELETE],
+      HOD: [AccessLevel.VIEW, AccessLevel.EDIT],
+      TEAM_LEAD: [AccessLevel.VIEW],
+      STAFF: [AccessLevel.VIEW],
+    },
+  },
+  {
+    id: "territory-management",
+    name: "Territory Management",
+    icon: Map,
+    path: "/sales/territory",
+    department: Department.SALES,
+    roles: {
+      ADMIN: [AccessLevel.VIEW, AccessLevel.EDIT, AccessLevel.DELETE],
+      HOD: [AccessLevel.VIEW, AccessLevel.EDIT],
+      TEAM_LEAD: [AccessLevel.VIEW],
+      STAFF: [],
+    },
+  },
+  // Customer Support
+  {
+    id: "sla-management",
+    name: "SLA Management",
+    icon: Clock,
+    path: "/support/sla",
+    department: Department.CUSTOMER_SUPPORT,
+    roles: {
+      ADMIN: [AccessLevel.VIEW, AccessLevel.EDIT, AccessLevel.DELETE],
+      HOD: [AccessLevel.VIEW, AccessLevel.EDIT],
+      TEAM_LEAD: [AccessLevel.VIEW],
+      STAFF: [],
+    },
+  },
+  // HR
+  {
+    id: "health-safety",
     name: "Health & Safety",
-    icon: "shield",
-    path: "/safety",
-    department: Department.HUMAN_RESOURCES,
+    icon: Shield,
+    path: "/hr/safety",
+    department: Department.HR,
+    roles: {
+      ADMIN: [AccessLevel.VIEW, AccessLevel.EDIT, AccessLevel.DELETE],
+      HOD: [AccessLevel.VIEW, AccessLevel.EDIT],
+      TEAM_LEAD: [AccessLevel.VIEW],
+      STAFF: [AccessLevel.VIEW],
+    },
   },
+  // Accounting
   {
-    id: "users",
-    name: "Users",
-    icon: "user-round-cog",
-    path: "/users",
-    department: Department.ADMINISTRATION,
+    id: "general-ledger",
+    name: "General Ledger",
+    icon: ClipboardList,
+    path: "/accounting/ledger",
+    department: Department.ACCOUNTING,
+    roles: {
+      ADMIN: [AccessLevel.VIEW, AccessLevel.EDIT, AccessLevel.DELETE],
+      HOD: [AccessLevel.VIEW, AccessLevel.EDIT],
+      TEAM_LEAD: [],
+      STAFF: [],
+    },
   },
 ];
+
+export const getIconComponent = (icon: string | LucideIcon): LucideIcon => {
+  if (typeof icon !== "string") return icon;
+  const iconMap: Record<string, LucideIcon> = {
+    dashboard: LayoutDashboard,
+    users: Users,
+    projects: FolderKanban,
+    analytics: BarChart,
+    wallet: Wallet,
+    truck: Truck,
+    package: Package,
+    settings: Settings,
+    home: Home,
+    shield: Shield,
+    "user-cog": UserRoundCog,
+    key: Key,
+    receipt: Receipt,
+    clock: Clock,
+    file: FileSearch,
+    chart: LineChart,
+    headset: Headset,
+    briefcase: Briefcase,
+    landmark: Landmark,
+    clipboard: ClipboardList,
+    globe: Globe,
+    pie: PieChart,
+    bell: Bell,
+    calendar: Calendar,
+    message: MessageSquare,
+    help: HelpCircle,
+  };
+  return iconMap[icon] || LayoutDashboard;
+};
