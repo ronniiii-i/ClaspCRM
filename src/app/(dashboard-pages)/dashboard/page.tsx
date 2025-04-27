@@ -9,6 +9,7 @@ import { HrHodDashboard } from "./_components/hr-hod-view";
 // import { TeamLeadDashboard } from "./_components/teamlead-view";
 import { StaffDashboard } from "./_components/staff-view";
 import { DashboardSkeleton } from "./_components/skeleton";
+import { Department } from "@/lib/modules";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -28,7 +29,7 @@ export default function DashboardPage() {
       // Add other department
       // s...
       default:
-        return <GenericHodDashboard department={user.department?.name || ""} />;
+        return <GenericHodDashboard department={user.department?.name as Department} />;
     }
   }
 
