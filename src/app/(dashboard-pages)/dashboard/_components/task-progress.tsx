@@ -2,13 +2,14 @@
 
 import { Progress } from "@/components/ui/progress";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Task } from "../types";
 
-type Task = {
-  id: string;
-  title: string;
-  status: "not-started" | "in-progress" | "completed";
-  progress: number;
-};
+// type Task = {
+//   id: string;
+//   title: string;
+//   status: "not-started" | "in-progress" | "completed";
+//   progress: number;
+// };
 
 export function TaskProgress({ tasks }: { tasks: Task[] }) {
   const completedTasks = tasks.filter((t) => t.status === "completed").length;

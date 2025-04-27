@@ -74,6 +74,14 @@ export interface AuditLogItem {
   initiator: string;
 }
 
+export interface AuditLog {
+  id: string;
+  action: string;
+  user: string;
+  timestamp: string;
+  status: "success" | "failure";
+}
+
 export interface TeamMetric {
   team: string;
   performance: number;
@@ -96,7 +104,6 @@ export interface Task {
   progress?: number;
   project?: string;
 }
-
 
 export interface SystemAlert {
   id: string;
@@ -190,7 +197,6 @@ export interface Ticket {
   createdAt: string;
 }
 
-
 export interface RevenueData {
   month: string;
   revenue: number;
@@ -234,6 +240,9 @@ export interface PerformanceReview {
 export interface InventoryItem {
   id: string;
   name: string;
-  type: string;
-  status: string;
+  // type: string;
+  // status: string;
+  type: "hardware" | "software";
+  status: "active" | "maintenance" | "retired";
+  assignedTo?: string;
 }

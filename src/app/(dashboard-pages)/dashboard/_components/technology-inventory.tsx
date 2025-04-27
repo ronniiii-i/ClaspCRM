@@ -9,14 +9,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { InventoryItem } from "../types";
 
-interface InventoryItem {
-  id: string;
-  name: string;
-  type: "hardware" | "software";
-  status: "active" | "maintenance" | "retired";
-  assignedTo?: string;
-}
+// interface InventoryItem {
+//   id: string;
+//   name: string;
+//   type: "hardware" | "software";
+//   status: "active" | "maintenance" | "retired";
+//   assignedTo?: string;
+// }
 
 export function TechnologyInventory({ items }: { items: InventoryItem[] }) {
   return (

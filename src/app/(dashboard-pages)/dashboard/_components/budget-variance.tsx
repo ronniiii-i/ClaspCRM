@@ -11,14 +11,13 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { BudgetData } from "../types";
 
-interface BudgetData {
-  month: string;
-  planned: number;
-  actual: number;
+interface BudgetDataProps {
+  data: BudgetData[];
 }
 
-export function BudgetVarianceChart({ data }: { data: BudgetData[] }) {
+export function BudgetVarianceChart({ data }: BudgetDataProps) {
   return (
     <Card>
       <CardHeader>

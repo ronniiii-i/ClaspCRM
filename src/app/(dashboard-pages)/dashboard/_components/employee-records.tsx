@@ -3,15 +3,16 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
+import { Employee } from "../types";
 
-interface Employee {
-  id: string;
-  name: string;
-  position: string;
-  department: string;
-  status: "active" | "on-leave" | "terminated";
-  avatar?: string;
-}
+// interface Employee {
+//   id: string;
+//   name: string;
+//   position: string;
+//   department: string;
+//   status: "active" | "on-leave" | "terminated";
+//   avatar?: string;
+// }
 
 export function EmployeeRecords({ employees }: { employees: Employee[] }) {
   return (

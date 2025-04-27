@@ -9,16 +9,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AuditLog } from "../types";
 
-interface AuditLog {
-  id: string;
-  action: string;
-  user: string;
-  timestamp: string;
-  status: "success" | "failure";
+interface AuditLogProps {
+  logs: AuditLog[];
 }
 
-export function AuditTrails({ logs }: { logs: AuditLog[] }) {
+export function AuditTrails({ logs }: AuditLogProps) {
   return (
     <Card>
       <CardHeader>

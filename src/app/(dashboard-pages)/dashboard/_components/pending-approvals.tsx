@@ -2,13 +2,14 @@
 
 import { Clock, Check, X } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Approval } from "../types";
 
-type Approval = {
-  id: string;
-  type: string;
-  requester: string;
-  status: "pending" | "approved" | "rejected";
-};
+// type Approval = {
+//   id: string;
+//   type: string;
+//   requester: string;
+//   status: "pending" | "approved" | "rejected";
+// };
 
 export function PendingApprovals({ approvals }: { approvals: Approval[] }) {
   return (

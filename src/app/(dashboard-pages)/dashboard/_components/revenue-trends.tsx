@@ -2,11 +2,12 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from "recharts";
+import { RevenueData } from "../types";
 
-interface RevenueData {
-  month: string;
-  revenue: number;
-}
+// interface RevenueData {
+//   month: string;
+//   revenue: number;
+// }
 
 export function RevenueTrends({ data }: { data: RevenueData[] }) {
   return (

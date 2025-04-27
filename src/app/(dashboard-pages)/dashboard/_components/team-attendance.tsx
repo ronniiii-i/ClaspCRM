@@ -2,13 +2,14 @@
 
 import { User, Calendar } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { AttendanceRecord } from "../types";
 
-type AttendanceRecord = {
-  userId: string;
-  name: string;
-  status: "present" | "absent" | "on-leave";
-  date: string;
-};
+// type AttendanceRecord = {
+//   userId: string;
+//   name: string;
+//   status: "present" | "absent" | "on-leave";
+//   date: string;
+// };
 
 export function TeamAttendance({ records }: { records: AttendanceRecord[] }) {
   return (

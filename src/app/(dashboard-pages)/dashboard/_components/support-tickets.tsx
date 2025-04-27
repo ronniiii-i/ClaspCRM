@@ -2,14 +2,15 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Ticket } from "../types";
 
-interface Ticket {
-  id: string;
-  subject: string;
-  priority: "low" | "medium" | "high";
-  status: "open" | "pending" | "resolved";
-  createdAt: string;
-}
+// interface Ticket {
+//   id: string;
+//   subject: string;
+//   priority: "low" | "medium" | "high";
+//   status: "open" | "pending" | "resolved";
+//   createdAt: string;
+// }
 
 export function SupportTickets({ tickets }: { tickets: Ticket[] }) {
   return (

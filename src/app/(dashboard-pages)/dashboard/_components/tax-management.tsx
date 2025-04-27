@@ -9,14 +9,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TaxRecord } from "../types";
 
-interface TaxRecord {
-  id: string;
-  type: string;
-  dueDate: string;
-  status: "paid" | "pending" | "overdue";
-  amount: number;
-}
+// interface TaxRecord {
+//   id: string;
+//   type: string;
+//   dueDate: string;
+//   status: "paid" | "pending" | "overdue";
+//   amount: number;
+// }
 
 export function TaxManagement({ taxes }: { taxes: TaxRecord[] }) {
   return (

@@ -2,14 +2,15 @@
 
 import { Clock, Check, X } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { LeaveRequest } from "../types";
 
-type LeaveRequest = {
-  id: string;
-  type: string;
-  startDate: string;
-  endDate: string;
-  status: "pending" | "approved" | "rejected";
-};
+// type LeaveRequest = {
+//   id: string;
+//   type: string;
+//   startDate: string;
+//   endDate: string;
+//   status: "pending" | "approved" | "rejected";
+// };
 
 export function LeaveStatus({ requests }: { requests: LeaveRequest[] }) {
   return (

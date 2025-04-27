@@ -6,14 +6,15 @@ import {
   PipelineHeader,
   PipelineContent,
 } from "@/components/ui/pipeline";
+import { Deal } from "../types";
 
-interface Deal {
-  id: string;
-  name: string;
-  value: number;
-  stage: "prospect" | "qualified" | "negotiation" | "closed";
-  contact: string;
-}
+// interface Deal {
+//   id: string;
+//   name: string;
+//   value: number;
+//   stage: "prospect" | "qualified" | "negotiation" | "closed";
+//   contact: string;
+// }
 
 export function SalesPipeline({ deals }: { deals: Deal[] }) {
   const stages = [

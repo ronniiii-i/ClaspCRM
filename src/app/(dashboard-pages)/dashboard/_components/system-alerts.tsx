@@ -2,13 +2,14 @@
 
 import { AlertCircle } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Alert } from "../types";
 
-type Alert = {
-  id: string;
-  title: string;
-  priority: "high" | "medium" | "low";
-  message: string;
-};
+// type Alert = {
+//   id: string;
+//   title: string;
+//   priority: "high" | "medium" | "low";
+//   message: string;
+// };
 
 export function SystemAlerts({ alerts }: { alerts: Alert[] }) {
   if (!alerts.length) return null;

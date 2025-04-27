@@ -2,13 +2,14 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Gauge } from "@/components/ui/guage";
+import { SystemMetrics } from "../types";
 
-interface SystemMetrics {
-  uptime: string;
-  responseTime: number;
-  serverLoad: number;
-  activeIncidents: number;
-}
+// interface SystemMetrics {
+//   uptime: string;
+//   responseTime: number;
+//   serverLoad: number;
+//   activeIncidents: number;
+// }
 
 export function SystemHealth({ metrics }: { metrics: SystemMetrics }) {
   return (
