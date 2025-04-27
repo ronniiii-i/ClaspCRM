@@ -209,7 +209,8 @@ export interface JobOpening {
   title: string;
   department: string;
   applicants: number;
-  status: "open" | "closed";
+  // status: "open" | "closed";
+  status: "sourcing" | "interviewing" | "offer" | "filled";
 }
 
 export interface Training {
@@ -217,6 +218,8 @@ export interface Training {
   name: string;
   participants: number;
   completionRate: number;
+  department: string;
+  status: "upcoming" | "in-progress" | "completed";
 }
 
 export interface PerformanceReview {
@@ -224,6 +227,8 @@ export interface PerformanceReview {
   employee: string;
   rating: number;
   status: "pending" | "completed";
+  position: string;
+  dueDate: string;
 }
 
 export interface InventoryItem {

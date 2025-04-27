@@ -2,9 +2,9 @@
 
 import { useDashboardData } from "../_hooks/use-dashboard-data";
 import { EmployeeRecords } from "./employee-records";
-// import { RecruitmentPipeline } from "./recruitment-pipeline";
-// import { TrainingManagement } from "./training-management";
-// import { PerformanceReviews } from "./performance-reviews";
+import { RecruitmentPipeline } from "./recruitment-pipeline";
+import { TrainingManagement } from "./training-management";
+import { PerformanceReviews } from "./performance-reviews";
 import { DashboardSkeleton } from "./skeleton";
 
 export function HrHodDashboard() {
@@ -22,12 +22,12 @@ export function HrHodDashboard() {
 
       {/* Core Widgets */}
       <EmployeeRecords employees={data.employees || []} />
-      {/* <RecruitmentPipeline jobs={data.jobOpenings || []} /> */}
+      <RecruitmentPipeline jobs={data.jobOpenings || []} />
 
       {/* Training & Reviews */}
       <div className="grid gap-4 md:grid-cols-2">
-        {/* <TrainingManagement trainings={data.trainings || []} /> */}
-        {/* <PerformanceReviews reviews={data.reviews || []} /> */}
+        <TrainingManagement trainings={data.trainings || []} />
+        <PerformanceReviews reviews={data.reviews || []} />
       </div>
     </div>
   );
