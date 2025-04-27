@@ -1,17 +1,33 @@
-// // _components/lead-view.tsx
-// export default function LeadDashboard({ teamId }: { teamId: string }) {
-//   const { data } = useDashboardData({
-//     scope: "team",
-//     teamId,
-//   });
+"use client";
 
-//   return (
-//     <>
-//       <TeamMetrics metrics={data.teamMetrics} />
-//       <MemberPerformance
-//         members={data.members}
-//         showDetails={true} // Leads see individual stats
-//       />
-//     </>
-//   );
-// }
+import { useDashboardData } from "../_hooks/use-dashboard-data";
+import { DashboardSkeleton } from "./skeleton";
+import { TeamPerformanceWidget } from "./team-performance-widget";
+import { TaskProgress } from "./task-progress";
+import { TeamAttendance } from "./team-attendance";
+
+export function TeamLeadDashboard({ teamId }: { teamId: string }) {
+  const { data, isLoading } = useDashboardData({
+    scope: "team",
+    teamId,
+  });
+
+  if (isLoading) return <DashboardSkeleton />;
+  if (!data) return <div>No team data found</div>;
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold">Team Dashboard</h1>
+
+      {/* Team Performance */}
+      <TeamPerformanceWidget
+        metrics={data.teamMetric}
+        showDetails={true} // Leads see individual stats
+      />
+
+      {/* Tasks & Attendance */}
+      <TaskProgress tasks={data.tasks || []} />
+      <TeamAttendance records={data.attendance || []} />
+    </div>
+  );
+}
