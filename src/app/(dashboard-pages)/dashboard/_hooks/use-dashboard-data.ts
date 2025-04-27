@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { Department } from "@/lib/modules";
+// import { Department } from "@/lib/modules";
 import type {
   DashboardData,
   Metric,
@@ -31,6 +31,17 @@ import type {
   Deal,
 } from "../types";
 import { CheckCircleIcon, ClockIcon, FolderIcon } from "lucide-react";
+
+enum Department {
+  FINANCE = "Finance",
+  IT = "IT",
+  SALES = "Sales",
+  CUSTOMER_SUPPORT = "Customer Support",
+  HR = "Human Resources",
+  ACCOUNTING = "Accounting",
+  ADMINISTRATION = "Administration",
+  OPERATIONS = "Operations",
+}
 
 type DashboardScope =
   | { scope: "organization" }
