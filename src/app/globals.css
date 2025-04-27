@@ -120,3 +120,14 @@
     @apply bg-background text-foreground;
   }
 }
+/* Smooth transitions for sidebar */
+[class*="transition-all"] {
+  will-change: transform, opacity;
+}
+
+/* Safari fix for transform transitions */
+@supports (-webkit-touch-callout: none) {
+  [class*="transition-transform"] {
+    -webkit-backface-visibility: hidden;
+  }
+}

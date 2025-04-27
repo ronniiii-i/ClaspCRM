@@ -17,7 +17,7 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="hidden w-64 flex-col border-r bg-background sm:flex">
+    <aside className="w-64 sm:w-full flex-col border-r bg-background flex h-full justify-between">
       <div className="p-4">
         <Link href="/" className="flex items-center gap-2">
           <Image
