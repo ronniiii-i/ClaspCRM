@@ -225,8 +225,12 @@ export const ALL_MODULES: Module[] = [
   },
 ];
 
-export const getIconComponent = (icon: string | LucideIcon): LucideIcon => {
-  if (typeof icon !== "string") return icon;
+export const getIconComponent = (
+  icon: string | LucideIcon | React.ComponentType<{ className?: string }>
+): LucideIcon => {
+  if (typeof icon !== "string" && typeof (icon as LucideIcon)?.$$typeof !== "undefined") {
+    return icon as LucideIcon;
+  }
   const iconMap: Record<string, LucideIcon> = {
     dashboard: LayoutDashboard,
     users: Users,
@@ -255,5 +259,5 @@ export const getIconComponent = (icon: string | LucideIcon): LucideIcon => {
     message: MessageSquare,
     help: HelpCircle,
   };
-  return iconMap[icon] || LayoutDashboard;
+  return iconMap[icon as string] || LayoutDashboard;
 };

@@ -29,13 +29,6 @@ export default function Sidebar() {
       : []),
   ];
 
-  console.log('====================================');
-  console.log('allModules:', allModules);
-  console.log('currentRole:', currentRole);
-  console.log('user.department?.name:', user.department?.name);
-  console.log('user:', user);
-  console.log('====================================');
-
   return (
     <aside className="w-64 flex-col border-r bg-background flex h-full justify-between">
       {/* Logo/Header */}
