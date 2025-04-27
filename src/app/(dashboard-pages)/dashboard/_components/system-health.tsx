@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-// import { Gauge } from "@/components/ui/gauge";
+import { Gauge } from "@/components/ui/guage";
 
 interface SystemMetrics {
   uptime: string;
@@ -23,7 +23,7 @@ export function SystemHealth({ metrics }: { metrics: SystemMetrics }) {
         </div>
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground">Server Load</p>
-          {/* <Gauge value={metrics.serverLoad} /> */}
+          <Gauge value={metrics.serverLoad} />
         </div>
         {/* Add other metrics similarly */}
       </CardContent>
