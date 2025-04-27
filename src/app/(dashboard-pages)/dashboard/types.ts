@@ -98,28 +98,28 @@ export interface Task {
 }
 
 
-interface SystemAlert {
+export interface SystemAlert {
   id: string;
   title: string;
   priority: "high" | "medium" | "low";
   message: string;
 }
 
-interface Approval {
+export interface Approval {
   id: string;
   type: string;
   requester: string;
   status: "pending" | "approved" | "rejected";
 }
 
-interface AttendanceRecord {
+export interface AttendanceRecord {
   userId: string;
   name: string;
   status: "present" | "absent" | "on-leave";
   date: string;
 }
 
-interface LeaveRequest {
+export interface LeaveRequest {
   id: string;
   type: string;
   startDate: string;
@@ -127,35 +127,35 @@ interface LeaveRequest {
   status: "pending" | "approved" | "rejected";
 }
 
-interface TaxRecord {
+export interface TaxRecord {
   id: string;
   type: string;
   dueDate: string;
   status: "paid" | "pending" | "overdue";
 }
 
-interface SecurityAlert {
+export interface SecurityAlert {
   id: string;
-  severity: "low" | "medium" | "high";
+  severity: "critical" | "warning" | "info";
   message: string;
+  timestamp: string;
 }
 
-// Finance Types
-interface FinanceMetrics {
+export interface FinanceMetrics {
   totalRevenue: number;
   yoyGrowth: number;
   expenses: number;
   profitMargin: number;
 }
 
-interface BudgetData {
+export interface BudgetData {
   month: string;
   planned: number;
   actual: number;
 }
 
 // IT Types
-interface SystemMetrics {
+export interface SystemMetrics {
   uptime: string;
   responseTime: number;
   serverLoad: number;
@@ -163,7 +163,7 @@ interface SystemMetrics {
 }
 
 // HR Types
-interface Employee {
+export interface Employee {
   id: string;
   name: string;
   position: string;
@@ -173,7 +173,7 @@ interface Employee {
 }
 
 // Sales Types
-interface Deal {
+export interface Deal {
   id: string;
   name: string;
   value: number;
@@ -182,7 +182,7 @@ interface Deal {
 }
 
 // Support Types
-interface Ticket {
+export interface Ticket {
   id: string;
   subject: string;
   priority: "low" | "medium" | "high";
@@ -191,12 +191,12 @@ interface Ticket {
 }
 
 
-interface RevenueData {
+export interface RevenueData {
   month: string;
   revenue: number;
 }
 
-interface TaxRecord {
+export interface TaxRecord {
   id: string;
   type: string;
   dueDate: string;
@@ -204,7 +204,7 @@ interface TaxRecord {
   amount: number;
 }
 
-interface JobOpening {
+export interface JobOpening {
   id: string;
   title: string;
   department: string;
@@ -212,21 +212,21 @@ interface JobOpening {
   status: "open" | "closed";
 }
 
-interface Training {
+export interface Training {
   id: string;
   name: string;
   participants: number;
   completionRate: number;
 }
 
-interface PerformanceReview {
+export interface PerformanceReview {
   id: string;
   employee: string;
   rating: number;
   status: "pending" | "completed";
 }
 
-interface InventoryItem {
+export interface InventoryItem {
   id: string;
   name: string;
   type: string;

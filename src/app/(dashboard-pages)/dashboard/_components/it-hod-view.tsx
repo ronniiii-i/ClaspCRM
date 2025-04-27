@@ -4,7 +4,7 @@ import { useDashboardData } from "../_hooks/use-dashboard-data";
 import { SystemHealth } from "./system-health";
 import { SupportTickets } from "./support-tickets";
 import { TechnologyInventory } from "./technology-inventory";
-// import { SecurityDashboard } from "./security-dashboard";
+import { SecurityDashboard } from "./security-dashboard";
 import { DashboardSkeleton } from "./skeleton";
 
 export function ItHodDashboard() {
@@ -36,7 +36,7 @@ export function ItHodDashboard() {
       {/* Inventory & Security */}
       <div className="grid gap-4 md:grid-cols-2">
         <TechnologyInventory items={data.inventory || []} />
-        {/* <SecurityDashboard alerts={data.securityAlerts || []} /> */}
+        <SecurityDashboard alerts={data.securityAlerts || []} />
       </div>
     </div>
   );
