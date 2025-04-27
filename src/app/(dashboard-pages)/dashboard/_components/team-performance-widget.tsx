@@ -12,9 +12,9 @@ import {
 import { TeamMetric } from "../types";
 import { Progress } from "@/components/ui/progress";
 
-interface TeamPerformanceWidgetProps {
+export interface TeamPerformanceWidgetProps {
   teams: TeamMetric[];
-  showIndividual: boolean;
+  showIndividual?: boolean; // Added the missing property
 }
 
 export function TeamPerformanceWidget({

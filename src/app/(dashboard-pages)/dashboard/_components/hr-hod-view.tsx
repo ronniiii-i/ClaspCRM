@@ -6,11 +6,12 @@ import { RecruitmentPipeline } from "./recruitment-pipeline";
 import { TrainingManagement } from "./training-management";
 import { PerformanceReviews } from "./performance-reviews";
 import { DashboardSkeleton } from "./skeleton";
+import { Department } from "@/lib/modules";
 
 export function HrHodDashboard() {
   const { data, isLoading } = useDashboardData({
     scope: "department",
-    department: "HR",
+    department: "HR" as Department,
   });
 
   if (isLoading) return <DashboardSkeleton />;

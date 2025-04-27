@@ -7,11 +7,12 @@ import { RevenueTrends } from "./revenue-trends";
 import { TaxManagement } from "./tax-management";
 import { AuditTrails } from "./audit-trails";
 import { DashboardSkeleton } from "./skeleton";
+import { Department } from "@/lib/modules";
 
 export function FinanceHodDashboard() {
   const { data, isLoading } = useDashboardData({
     scope: "department",
-    department: "Finance",
+    department: "Finance" as Department,
   });
 
   if (isLoading) return <DashboardSkeleton />;

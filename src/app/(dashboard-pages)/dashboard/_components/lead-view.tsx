@@ -21,8 +21,8 @@ export function TeamLeadDashboard({ teamId }: { teamId: string }) {
 
       {/* Team Performance */}
       <TeamPerformanceWidget
-        metrics={data.teamMetric}
-        showDetails={true} // Leads see individual stats
+        teams={data.teamMetric || []}
+        showIndividual={true} // Leads see individual stats
       />
 
       {/* Tasks & Attendance */}

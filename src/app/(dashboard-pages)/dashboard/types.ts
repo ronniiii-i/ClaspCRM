@@ -56,6 +56,7 @@ export type PersonalMetric = {
   title: string;
   value: string;
   change?: string;
+  progress?: number;
 };
 
 export type AuditLogEntry = {
@@ -64,6 +65,7 @@ export type AuditLogEntry = {
   target?: string;
   timestamp: Date;
   initiator: string;
+  status?: "success" | "failure";
 };
 
 export interface AuditLogItem {
@@ -77,9 +79,9 @@ export interface AuditLogItem {
 export interface AuditLog {
   id: string;
   action: string;
-  user: string;
-  timestamp: string;
-  status: "success" | "failure";
+  initiator: string;
+  timestamp: Date;
+  status?: "success" | "failure";
 }
 
 export interface TeamMetric {
@@ -161,7 +163,6 @@ export interface BudgetData {
   actual: number;
 }
 
-// IT Types
 export interface SystemMetrics {
   uptime: string;
   responseTime: number;
@@ -169,7 +170,6 @@ export interface SystemMetrics {
   activeIncidents: number;
 }
 
-// HR Types
 export interface Employee {
   id: string;
   name: string;
@@ -179,16 +179,16 @@ export interface Employee {
   avatar?: string;
 }
 
-// Sales Types
 export interface Deal {
   id: string;
   name: string;
   value: number;
   stage: "prospect" | "qualified" | "negotiation" | "closed";
   contact: string;
+  closeDate: string;
+  status: "won" | "lost" | "pending";
 }
 
-// Support Types
 export interface Ticket {
   id: string;
   subject: string;

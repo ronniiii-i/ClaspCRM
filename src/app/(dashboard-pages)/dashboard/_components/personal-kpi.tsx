@@ -1,12 +1,12 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Metric } from "../types";
+import { PersonalMetric } from "../types";
 import { Progress } from "@/components/ui/progress";
 import { Target, CheckCheck, CalendarCheck, LucideIcon } from "lucide-react";
 
 interface PersonalKPIProps {
-  metrics: Metric[];
+  metrics: PersonalMetric[];
 }
 
 export function PersonalKPI({ metrics }: PersonalKPIProps) {

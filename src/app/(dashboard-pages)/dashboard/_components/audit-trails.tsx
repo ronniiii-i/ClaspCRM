@@ -35,8 +35,8 @@ export function AuditTrails({ logs }: AuditLogProps) {
             {logs.map((log) => (
               <TableRow key={log.id}>
                 <TableCell>{log.action}</TableCell>
-                <TableCell>{log.user}</TableCell>
-                <TableCell>{log.timestamp}</TableCell>
+                <TableCell>{log.initiator}</TableCell>
+                <TableCell>{log.timestamp.toLocaleString()}</TableCell>
                 <TableCell>
                   <span
                     className={`px-2 py-1 rounded-full text-xs ${

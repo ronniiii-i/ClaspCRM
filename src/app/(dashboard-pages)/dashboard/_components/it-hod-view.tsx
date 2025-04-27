@@ -6,11 +6,12 @@ import { SupportTickets } from "./support-tickets";
 import { TechnologyInventory } from "./technology-inventory";
 import { SecurityDashboard } from "./security-dashboard";
 import { DashboardSkeleton } from "./skeleton";
+import { Department } from "@/lib/modules";
 
 export function ItHodDashboard() {
   const { data, isLoading } = useDashboardData({
     scope: "department",
-    department: "IT",
+    department: "IT" as Department,
   });
 
   if (isLoading) return <DashboardSkeleton />;
