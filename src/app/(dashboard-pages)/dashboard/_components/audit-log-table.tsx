@@ -10,7 +10,7 @@ import { AuditLogEntry } from "../types";
 
 export function AuditLogTable({ entries }: { entries: AuditLogEntry[] }) {
   return (
-        <Table className="min-w-full">
+        <Table className="min-w-full dark:bg-grey-700">
           <TableHeader className="sticky top-0 bg-background z-10">
             <TableRow>
               <TableHead>Action</TableHead>

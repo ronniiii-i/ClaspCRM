@@ -30,7 +30,14 @@ import type {
   Ticket,
   Deal,
 } from "../types";
-import { CheckCircleIcon, ClockIcon, FolderIcon } from "lucide-react";
+import {
+  Activity,
+  CheckCircle,
+  CheckCircleIcon,
+  ClockIcon,
+  DollarSign,
+  FolderIcon,
+} from "lucide-react";
 
 export enum Department {
   FINANCE = "Finance",
@@ -130,14 +137,14 @@ function getMockMetrics(scope: string): Metric[] {
       title: "Total Revenue",
       value: `$${scope === "organization" ? "1,234,567" : "245,678"}`,
       change: "12% ↑",
-      icon: "dollar-sign",
+      icon: DollarSign,
     },
     {
       id: "productivity",
       title: "Productivity",
       value: scope === "organization" ? "85%" : "92%",
       change: "3% ↑",
-      icon: "activity",
+      icon: Activity,
     },
   ];
 
@@ -147,7 +154,7 @@ function getMockMetrics(scope: string): Metric[] {
       title: "Tasks Completed",
       value: "24/30",
       change: "2% ↑",
-      icon: "check-circle",
+      icon: CheckCircle,
     });
   }
 
