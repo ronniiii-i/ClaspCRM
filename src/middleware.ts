@@ -31,17 +31,20 @@ const roleBasedRoutes = {
 
 export default async function middleware(request: NextRequest) {
   const token = getToken(request);
-  const { pathname, searchParams } = request.nextUrl;
+  const {
+    pathname,
+    // searchParams
+  } = request.nextUrl;
 
   // Skip middleware for static files and API routes
   if (pathname.startsWith("/_next/") || pathname.startsWith("/api/")) {
     return NextResponse.next();
   }
 
-  // Special case: allow post-login redirects
-  if (searchParams.get("authed") === "true") {
-    return NextResponse.next();
-  }
+  // // Special case: allow post-login redirects
+  // if (searchParams.get("authed") === "true") {
+  //   return NextResponse.next();
+  // }
 
   // Check public routes
   const isPublicRoute = publicRoutes.some(
@@ -65,7 +68,7 @@ export default async function middleware(request: NextRequest) {
       pathname === "/verify-email")
   ) {
     const dashboardUrl = new URL("/dashboard", request.url);
-    dashboardUrl.searchParams.set("authed", "true");
+    // dashboardUrl.searchParams.set("authed", "true");
     return NextResponse.redirect(dashboardUrl);
   }
 

@@ -13,9 +13,7 @@ export function OrganizationMetrics({ metrics }: { metrics: Metric[] }) {
               <CardTitle className="text-sm font-medium">
                 {metric.title}
               </CardTitle>
-                    <Icon
-                        // className="h-4 w-4 text-muted-foreground"
-                    />
+              <Icon />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{metric.value}</div>
