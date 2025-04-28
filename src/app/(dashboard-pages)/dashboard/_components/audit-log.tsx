@@ -1,36 +1,26 @@
 // src/app/(dashboard-pages)/dashboard/_components/audit-log.tsx
 import { AuditLogEntry } from "../types";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { AuditLogTable } from "./audit-log-table";
 
 export function AuditLog({ entries }: { entries: AuditLogEntry[] }) {
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Action</TableHead>
-          <TableHead>Target</TableHead>
-          <TableHead>Initiator</TableHead>
-          <TableHead>Time</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {entries.map((entry) => (
-          <TableRow key={entry.id}>
-            <TableCell>{entry.action}</TableCell>
-            <TableCell>{entry.target}</TableCell>
-            <TableCell>{entry.initiator}</TableCell>
-            <TableCell>{entry.timestamp.toLocaleString()}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <Card className="w-full">
+      <CardHeader className="pb-2">
+        <CardTitle>Audit Log</CardTitle>
+        <CardDescription>Logs of stuff</CardDescription>
+      </CardHeader>
+      <CardContent className="relative overflow-hidden">
+        <div className="overflow-auto max-h-80">
+          <AuditLogTable entries={entries} />
+        </div>
+      </CardContent>
+    </Card>
   );
 }
