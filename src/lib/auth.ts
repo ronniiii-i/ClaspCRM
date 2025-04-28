@@ -94,15 +94,55 @@ export function getToken(request?: NextRequest) {
   }
   return null;
 }
-// src/lib/auth.ts
-export function logout() {
-  if (typeof window !== "undefined") {
-    // Clear token from cookies
-    document.cookie = "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-    // Clear token from localStorage if you're using it
-    localStorage.removeItem("token");
+
+export async function logout() {
+  try {
+    // First call the backend logout endpoint
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
+      },
+      credentials: "include",
+    });
+
+    if (!res.ok) {
+      throw new Error("Logout failed");
+    }
+
+    // Then clear client-side storage
+    if (typeof window !== "undefined") {
+      // Clear token from cookies
+      document.cookie =
+        "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+      // Clear token and user from localStorage
+      localStorage.removeItem("token");
+      localStorage.removeItem("auth_user");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Logout error:", error);
+    // Even if backend logout fails, clear client-side storage
+    if (typeof window !== "undefined") {
+      document.cookie =
+        "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+      localStorage.removeItem("token");
+      localStorage.removeItem("auth_user");
+    }
+    throw error;
   }
 }
+
+// export function logout() {
+//   if (typeof window !== "undefined") {
+//     // Clear token from cookies
+//     document.cookie = "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+//     // Clear token from localStorage if you're using it
+//     localStorage.removeItem("token");
+//   }
+// }
 
 // export function getToken() {
 //   if (typeof window !== "undefined") {

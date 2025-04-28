@@ -54,12 +54,18 @@ export function useAuth() {
     }
   };
 
-  const handleLogout = useCallback(() => {
-    logoutAPI();
-    setToken(null);
-    setUser(null);
-    clearAuthCache();
-    router.push("/login");
+  const handleLogout = useCallback(async () => {
+    try {
+      await logoutAPI(); // Now calls the backend endpoint
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      // Ensure client-side cleanup happens regardless of backend success
+      setToken(null);
+      setUser(null);
+      clearAuthCache();
+      router.push("/login");
+    }
   }, [clearAuthCache, router]);
 
   const getPrimaryDepartment = (): Department | null => {
