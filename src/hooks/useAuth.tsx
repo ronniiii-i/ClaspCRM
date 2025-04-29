@@ -8,6 +8,7 @@ import {
   logout as logoutAPI,
   getToken,
   register as registerAPI,
+  initializeSessionTracking,
 } from "@/lib/auth";
 
 interface Department {
@@ -216,6 +217,7 @@ export function useAuth() {
     register,
     login,
     logout,
+    initializeSessionTracking,
     hasRole,
     isAdmin: () => hasRole(["ADMIN"]),
     isManager: () => hasRole(["MANAGER", "ADMIN"]),

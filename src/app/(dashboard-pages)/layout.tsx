@@ -1,17 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import Navbar from "@/components/navbar/Navbar";
 import Sidebar from "@/components/sidebar/Sidebar";
 import { Menu } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { initializeSessionTracking, setupTokenRefresh } from "@/lib/auth";
+import { Toaster } from "sonner"; 
+import SessionTimeoutWarning from "@/components/SessionTimeoutWarning";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { token } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    if (token) {
+      initializeSessionTracking();
+      setupTokenRefresh(3600);
+    }
+
+    return () => {
+      // Cleanup function to remove event listeners when component unmounts
+      ['mousemove', 'keydown', 'click', 'scroll'].forEach(event => {
+        window.removeEventListener(event, initializeSessionTracking);
+      });
+    };
+  }, [token]);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -50,6 +69,21 @@ export default function DashboardLayout({
 
         <main className="flex-1 overflow-auto p-4 bg-gray-100 dark:bg-gray-900">
           {children}
+
+          {/* Session timeout warning modal */}
+          <SessionTimeoutWarning />
+
+          {/* Toast notifications */}
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              style: {
+                background: "hsl(var(--background))",
+                color: "hsl(var(--foreground))",
+                border: "1px solid hsl(var(--border))",
+              },
+            }}
+          />
         </main>
       </div>
     </div>

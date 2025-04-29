@@ -77,6 +77,9 @@ export async function login(
     localStorage.setItem("auth_user", JSON.stringify(formattedResponse.user));
   }
 
+  initializeSessionTracking();
+  setupTokenRefresh(3600);
+
   // console.log(formattedResponse);
   return formattedResponse;
 }
@@ -93,6 +96,106 @@ export function getToken(request?: NextRequest) {
       ?.split("=")[1];
   }
   return null;
+}
+
+let refreshTimer: NodeJS.Timeout;
+
+export const setupTokenRefresh = (expiresIn: number) => {
+  // Clear existing timer if any
+  if (refreshTimer) clearTimeout(refreshTimer);
+
+  // Set to refresh 5 minutes before expiration
+  const refreshTime = (expiresIn - 300) * 1000;
+
+  refreshTimer = setTimeout(async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/refresh`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+
+      if (res.ok) {
+        const { token } = await res.json();
+
+        // Update token storage
+        if (typeof window !== "undefined") {
+          document.cookie = `token=${token}; Path=/; Secure; SameSite=Strict`;
+          localStorage.setItem("token", token);
+        }
+
+        // Reset both timers with new token
+        setupTokenRefresh(3600); // Reset refresh timer
+        resetInactivityTimer(); // Reset activity timer
+      } else {
+        logout();
+      }
+    } catch {
+      logout();
+    }
+  }, refreshTime);
+};
+
+let inactivityTimer: NodeJS.Timeout;
+
+const resetInactivityTimer = () => {
+  // Clear existing timer
+  if (inactivityTimer) clearTimeout(inactivityTimer);
+  // console.log(inactivityTimer);
+
+  // Set new timer (1 hour = 3600000 ms)
+  inactivityTimer = setTimeout(() => {
+    logout();
+    window.location.reload();
+    window.location.href = "/login?reason=inactivity";
+    window.location.replace("/login?reason=inactivity"); // Fallback for older browsers
+  }, 300000); // 1 hour in milliseconds
+};
+
+// // Set up activity listeners
+// const setupActivityListeners = () => {
+//   if (typeof window !== "undefined") {
+//     ["mousemove", "keydown", "click", "scroll"].forEach((event) => {
+//       window.addEventListener(event, resetInactivityTimer);
+//     });
+//     resetInactivityTimer(); // Initialize timer
+//   }
+// };
+
+// Call this when user logs in
+export function initializeSessionTracking() {
+  const handleActivity = () => {
+    triggerActivity();
+    resetInactivityTimer();
+  };
+
+  const events = ["mousemove", "keydown", "click", "scroll", "touchstart"];
+
+  events.forEach((event) => {
+    window.addEventListener(event, handleActivity);
+  });
+
+  return () => {
+    events.forEach((event) => {
+      window.removeEventListener(event, handleActivity);
+    });
+  };
+}
+
+let activityCallbacks: (() => void)[] = [];
+
+export function onActivity(callback: () => void) {
+  activityCallbacks.push(callback);
+  return () => {
+    activityCallbacks = activityCallbacks.filter((cb) => cb !== callback);
+  };
+}
+
+export function triggerActivity() {
+  activityCallbacks.forEach((cb) => cb());
 }
 
 export async function logout() {
@@ -113,6 +216,15 @@ export async function logout() {
 
     // Then clear client-side storage
     if (typeof window !== "undefined") {
+      // Clear activity listeners
+      ["mousemove", "keydown", "click", "scroll"].forEach((event) => {
+        window.removeEventListener(event, resetInactivityTimer);
+      });
+
+      // Clear timer
+      if (inactivityTimer) clearTimeout(inactivityTimer);
+      if (refreshTimer) clearTimeout(refreshTimer);
+
       // Clear token from cookies
       document.cookie =
         "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
@@ -134,19 +246,3 @@ export async function logout() {
     throw error;
   }
 }
-
-// export function logout() {
-//   if (typeof window !== "undefined") {
-//     // Clear token from cookies
-//     document.cookie = "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-//     // Clear token from localStorage if you're using it
-//     localStorage.removeItem("token");
-//   }
-// }
-
-// export function getToken() {
-//   if (typeof window !== "undefined") {
-//     return localStorage.getItem("token");
-//   }
-//   return null;
-// }

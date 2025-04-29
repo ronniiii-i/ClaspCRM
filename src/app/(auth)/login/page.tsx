@@ -11,7 +11,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login, token, isLoading } = useAuth();
+  const { login, token, isLoading, initializeSessionTracking } = useAuth();
   const router = useRouter();
 
   // Handle redirect when authenticated
@@ -30,6 +30,9 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
+      initializeSessionTracking();
+      console.log(initializeSessionTracking);
+      
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
       console.error("Login error:", err);
