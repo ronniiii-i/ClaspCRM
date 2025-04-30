@@ -1,6 +1,6 @@
 // src/hooks/usePermissions.ts
 import { useState, useEffect } from "react";
-import { ACLService } from "../services/acl";
+import { ACLService } from "@/services/acl";
 import { useAuth } from "./useAuth"; // Your existing auth hook
 import { Module } from "@/lib/modules";
 
