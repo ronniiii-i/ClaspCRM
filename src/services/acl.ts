@@ -38,7 +38,7 @@ export class ACLService {
     action: string
   ): Promise<boolean> {
     const result = await this.fetchWithAuth<{ hasPermission: boolean }>(
-      `${process.env.NEXT_PUBLIC_API}//auth/acl/check-permission/${moduleId}/${action}`,
+      `${process.env.NEXT_PUBLIC_API}/auth/acl/check-permission/${moduleId}/${action}`,
       token
     );
     return result.hasPermission;
