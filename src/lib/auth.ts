@@ -1,3 +1,4 @@
+import { jwtDecode } from "jwt-decode";
 import { NextRequest } from "next/server";
 
 export async function register(
@@ -75,6 +76,9 @@ export async function login(
     document.cookie = `token=${formattedResponse.accessToken}; Path=/; Secure; SameSite=Strict`;
     localStorage.setItem("token", formattedResponse.accessToken);
     localStorage.setItem("auth_user", JSON.stringify(formattedResponse.user));
+    console.log("Cookie token:", document.cookie.match(/token=([^;]+)/)?.[1]);
+    console.log("LocalStorage token:", localStorage.getItem("token")); // Temporarily add this to your auth.ts
+    console.log("Decoded token:", jwtDecode(formattedResponse.accessToken));
   }
 
   initializeSessionTracking();
@@ -105,7 +109,7 @@ export const setupTokenRefresh = (expiresIn: number) => {
   if (refreshTimer) clearTimeout(refreshTimer);
 
   // Set to refresh 5 minutes before expiration
-  const refreshTime = (expiresIn - 300) * 1000;
+  const refreshTime = (expiresIn - 600) * 1000;
 
   refreshTimer = setTimeout(async () => {
     try {
@@ -130,6 +134,11 @@ export const setupTokenRefresh = (expiresIn: number) => {
         // Reset both timers with new token
         setupTokenRefresh(3600); // Reset refresh timer
         resetInactivityTimer(); // Reset activity timer
+        console.log(
+          "Cookie token:",
+          document.cookie.match(/token=([^;]+)/)?.[1]
+        );
+        console.log("LocalStorage token:", localStorage.getItem("token"));
       } else {
         logout();
       }
@@ -152,7 +161,7 @@ const resetInactivityTimer = () => {
     window.location.reload();
     window.location.href = "/login?reason=inactivity";
     window.location.replace("/login?reason=inactivity"); // Fallback for older browsers
-  }, 300000); // 1 hour in milliseconds
+  }, 1800000); // 1 hour in milliseconds
 };
 
 // // Set up activity listeners
@@ -205,7 +214,7 @@ export async function logout() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()}`,
+        Authorization: `Bearer ${getToken()}`, // Will fail if token expired
       },
       credentials: "include",
     });
@@ -228,9 +237,9 @@ export async function logout() {
       // Clear token from cookies
       document.cookie =
         "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-      // Clear token and user from localStorage
       localStorage.removeItem("token");
       localStorage.removeItem("auth_user");
+      window.location.href = "/login";
     }
 
     return { success: true };
@@ -245,4 +254,17 @@ export async function logout() {
     }
     throw error;
   }
+}
+
+// Temporary test in your frontend
+export async function testTokenRefresh() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/refresh`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+  console.log("Refresh response:", await res.json());
 }
