@@ -1,7 +1,6 @@
 import { LucideIcon } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 
-
 export interface Module {
   id: string;
   path: string;
@@ -14,43 +13,6 @@ export interface Module {
 export interface PermissionCheck {
   hasPermission: boolean;
 }
-
-// export const getIconComponent = (
-//   icon: string | LucideIcon | undefined
-// ): LucideIcon => {
-//   if (typeof icon !== "string" && typeof (icon as LucideIcon)?.$$typeof !== "undefined") {
-//     return icon as LucideIcon;
-//   }
-//   const iconMap: Record<string, LucideIcon> = {
-//     dashboard: LayoutDashboard,
-//     users: Users,
-//     projects: FolderKanban,
-//     analytics: BarChart,
-//     wallet: Wallet,
-//     truck: Truck,
-//     package: Package,
-//     settings: Settings,
-//     home: Home,
-//     shield: Shield,
-//     "user-cog": UserRoundCog,
-//     key: Key,
-//     receipt: Receipt,
-//     clock: Clock,
-//     file: FileSearch,
-//     chart: LineChart,
-//     headset: Headset,
-//     briefcase: Briefcase,
-//     landmark: Landmark,
-//     clipboard: ClipboardList,
-//     globe: Globe,
-//     pie: PieChart,
-//     bell: Bell,
-//     calendar: Calendar,
-//     message: MessageSquare,
-//     help: HelpCircle,
-//   };
-//   return iconMap[icon as string] || HelpCircle;
-// };
 
 export const getIconComponent = (
   icon: string | LucideIcon | undefined
