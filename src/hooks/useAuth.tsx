@@ -9,6 +9,7 @@ import {
   getToken,
   register as registerAPI,
   initializeSessionTracking,
+  testTokenRefresh,
 } from "@/lib/auth";
 
 interface Department {
@@ -224,5 +225,6 @@ export function useAuth() {
     refreshUserData,
     clearAuthCache,
     getDepartment: getPrimaryDepartment,
+    testTokenRefresh,
   };
 }
