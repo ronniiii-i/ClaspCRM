@@ -88,21 +88,40 @@ export async function login(
   return formattedResponse;
 }
 
+// export function getToken(request?: NextRequest) {
+//   if (request) {
+//     // Server-side (middleware)
+//     return request.cookies.get("token")?.value;
+//   } else if (typeof document !== "undefined") {
+//     // Client-side
+//     return document.cookie
+//       .split("; ")
+//       .find((row) => row.startsWith("token="))
+//       ?.split("=")[1];
+//   }
+//   return null;
+// }
+
+
+// Improved token retrieval
 export function getToken(request?: NextRequest) {
+  let token;
+  
+  // Server-side (middleware)
   if (request) {
-    // Server-side (middleware)
-    return request.cookies.get("token")?.value;
-  } else if (typeof document !== "undefined") {
-    // Client-side
-    return document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      ?.split("=")[1];
+    token = request.cookies.get("token")?.value;
+  } 
+  // Client-side
+  else if (typeof window !== 'undefined') {
+    token = localStorage.getItem('token');
   }
-  return null;
+
+  console.log('Retrieved Token:', token); // Debug logging
+  return token;
 }
 
-let refreshTimer: NodeJS.Timeout;
+
+let refreshTimer: ReturnType<typeof setTimeout>;
 
 export const setupTokenRefresh = (expiresIn: number) => {
   // Clear existing timer if any
@@ -148,7 +167,7 @@ export const setupTokenRefresh = (expiresIn: number) => {
   }, refreshTime);
 };
 
-let inactivityTimer: NodeJS.Timeout;
+let inactivityTimer: ReturnType<typeof setTimeout>;
 
 const resetInactivityTimer = () => {
   // Clear existing timer
