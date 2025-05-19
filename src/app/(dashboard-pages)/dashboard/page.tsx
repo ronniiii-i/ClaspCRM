@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { AdminDashboard } from "./_components/admin_view";
 import { HodDashboard as GenericHodDashboard } from "./_components/hod-view";
@@ -13,18 +13,18 @@ import { DashboardSkeleton } from "./_components/skeleton";
 import { Department } from "./_hooks/use-dashboard-data";
 
 export default function DashboardPage() {
-  const { user, testTokenRefresh } = useAuth();
+  const { user } = useAuth();
 
-  // how to call testTokenRefresh fucnction after 1 min when page loads?
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      testTokenRefresh();
-    }, 60000); // 60000 milliseconds = 1 minute
+  // // how to call testTokenRefresh function after 1 min when page loads?
+  // useEffect(() => {
+  //   const timeoutId = setTimeout(() => {
+  //     testTokenRefresh();
+  //   }, 60000); // 60000 milliseconds = 1 minute
 
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [testTokenRefresh]);
+  //   return () => {
+  //     clearTimeout(timeoutId);
+  //   };
+  // }, [testTokenRefresh]);
 
   if (!user) return <DashboardSkeleton />;
 

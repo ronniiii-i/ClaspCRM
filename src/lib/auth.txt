@@ -73,59 +73,33 @@ export async function login(
   };
 
   if (typeof window !== "undefined") {
-    // Storing the token in localStorage is generally preferred for modern web applications
-    // over using cookies directly, as it provides more flexibility and avoids some of the
-    // security concerns associated with cookies (like CSRF).  We'll ONLY use localStorage.
+    document.cookie = `token=${formattedResponse.accessToken}; Path=/; Secure; SameSite=Strict`;
     localStorage.setItem("token", formattedResponse.accessToken);
     localStorage.setItem("auth_user", JSON.stringify(formattedResponse.user));
-    console.log("LocalStorage token:", localStorage.getItem("token"));
-    try {
-      console.log("Decoded token:", jwtDecode(formattedResponse.accessToken));
-    } catch (error) {
-      console.error("Error decoding token:", error);
-      // Consider throwing the error or handling it appropriately, depending on your application's needs.
-    }
+    console.log("Cookie token:", document.cookie.match(/token=([^;]+)/)?.[1]);
+    console.log("LocalStorage token:", localStorage.getItem("token")); // Temporarily add this to your auth.ts
+    console.log("Decoded token:", jwtDecode(formattedResponse.accessToken));
   }
 
+  // initializeSessionTracking();
+  // setupTokenRefresh(3600);
+
+  // console.log(formattedResponse);
   return formattedResponse;
 }
 
-// export function getToken(request?: NextRequest) {
-//   if (request) {
-//     // Server-side (middleware)
-//     return request.cookies.get("token")?.value;
-//   } else if (typeof document !== "undefined") {
-//     // Client-side
-//     return document.cookie
-//       .split("; ")
-//       .find((row) => row.startsWith("token="))
-//       ?.split("=")[1];
-//   }
-//   return null;
-// }
-
-
-// Improved token retrieval
 export function getToken(request?: NextRequest) {
-  console.log(request);
   if (request) {
     // Server-side (middleware)
-    //  We should retrieve the token from request headers, not cookies or localStorage.
-    //  The token is typically sent in the Authorization header:
-    console.log(request);
-
-    const authHeader = request.headers.get("authorization");
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      return authHeader.split(" ")[1]; // Extract the token part
-    }
-    return null; // Or handle the case where the token is not found
+    return request.cookies.get("token")?.value;
   } else if (typeof document !== "undefined") {
     // Client-side
-    return localStorage.getItem("token");
+    return document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="))
+      ?.split("=")[1];
   }
-
-  console.log('Retrieved Token:', token); // Debug logging
-  return token;
+  return null;
 }
 
 let refreshTimer: NodeJS.Timeout;
@@ -134,7 +108,7 @@ export const setupTokenRefresh = (expiresIn: number) => {
   // Clear existing timer if any
   if (refreshTimer) clearTimeout(refreshTimer);
 
-  // Set to refresh 10 minutes before expiration (increased for safety)
+  // Set to refresh 5 minutes before expiration
   const refreshTime = (expiresIn - 600) * 1000;
 
   refreshTimer = setTimeout(async () => {
@@ -144,7 +118,7 @@ export const setupTokenRefresh = (expiresIn: number) => {
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`, // Use the getToken() function
+          Authorization: `Bearer ${getToken()}`,
         },
       });
 
@@ -153,39 +127,52 @@ export const setupTokenRefresh = (expiresIn: number) => {
 
         // Update token storage
         if (typeof window !== "undefined") {
+          document.cookie = `token=${token}; Path=/; Secure; SameSite=Strict`;
           localStorage.setItem("token", token);
         }
 
         // Reset both timers with new token
-        setupTokenRefresh(3600); // Reset refresh timer.  Assume 1 hour refresh time.
+        setupTokenRefresh(3600); // Reset refresh timer
         resetInactivityTimer(); // Reset activity timer
+        console.log(
+          "Cookie token:",
+          document.cookie.match(/token=([^;]+)/)?.[1]
+        );
         console.log("LocalStorage token:", localStorage.getItem("token"));
       } else {
         logout();
       }
-    } catch (error) {
-      console.error("Token refresh failed:", error); // Log the error
+    } catch {
       logout();
     }
   }, refreshTime);
 };
 
-let inactivityTimer: ReturnType<typeof setTimeout>;
+let inactivityTimer: NodeJS.Timeout;
 
 const resetInactivityTimer = () => {
   // Clear existing timer
   if (inactivityTimer) clearTimeout(inactivityTimer);
+  // console.log(inactivityTimer);
 
   // Set new timer (1 hour = 3600000 ms)
   inactivityTimer = setTimeout(() => {
     logout();
-    //  Reloading and redirecting is not ideal.  It's better to handle this
-    //  more gracefully in the UI (e.g., show a modal, then redirect).
-    if (typeof window !== "undefined") {
-      window.location.href = "/login?reason=inactivity";
-    }
+    window.location.reload();
+    window.location.href = "/login?reason=inactivity";
+    window.location.replace("/login?reason=inactivity"); // Fallback for older browsers
   }, 1800000); // 1 hour in milliseconds
 };
+
+// // Set up activity listeners
+// const setupActivityListeners = () => {
+//   if (typeof window !== "undefined") {
+//     ["mousemove", "keydown", "click", "scroll"].forEach((event) => {
+//       window.addEventListener(event, resetInactivityTimer);
+//     });
+//     resetInactivityTimer(); // Initialize timer
+//   }
+// };
 
 // Call this when user logs in
 export function initializeSessionTracking() {
@@ -196,19 +183,14 @@ export function initializeSessionTracking() {
 
   const events = ["mousemove", "keydown", "click", "scroll", "touchstart"];
 
-  if (typeof window !== "undefined") {
-    events.forEach((event) => {
-      window.addEventListener(event, handleActivity);
-    });
-    resetInactivityTimer(); // Initialize timer
-  }
+  events.forEach((event) => {
+    window.addEventListener(event, handleActivity);
+  });
 
   return () => {
-    if (typeof window !== "undefined") {
-      events.forEach((event) => {
-        window.removeEventListener(event, handleActivity);
-      });
-    }
+    events.forEach((event) => {
+      window.removeEventListener(event, handleActivity);
+    });
   };
 }
 
@@ -232,7 +214,7 @@ export async function logout() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()}`, // Use getToken()
+        Authorization: `Bearer ${getToken()}`, // Will fail if token expired
       },
       credentials: "include",
     });
@@ -243,10 +225,18 @@ export async function logout() {
 
     // Then clear client-side storage
     if (typeof window !== "undefined") {
+      // Clear activity listeners
+      ["mousemove", "keydown", "click", "scroll"].forEach((event) => {
+        window.removeEventListener(event, resetInactivityTimer);
+      });
+
       // Clear timer
       if (inactivityTimer) clearTimeout(inactivityTimer);
       if (refreshTimer) clearTimeout(refreshTimer);
 
+      // Clear token from cookies
+      document.cookie =
+        "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
       localStorage.removeItem("token");
       localStorage.removeItem("auth_user");
       window.location.href = "/login";
@@ -255,11 +245,14 @@ export async function logout() {
     return { success: true };
   } catch (error) {
     console.error("Logout error:", error);
+    // Even if backend logout fails, clear client-side storage
     if (typeof window !== "undefined") {
+      document.cookie =
+        "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
       localStorage.removeItem("token");
       localStorage.removeItem("auth_user");
     }
-    throw error; // Re-throw the error so the caller can handle it
+    throw error;
   }
 }
 
@@ -270,7 +263,7 @@ export async function testTokenRefresh() {
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${getToken()}`, // Use getToken()
+      Authorization: `Bearer ${getToken()}`,
     },
   });
   console.log("Refresh response:", await res.json());
