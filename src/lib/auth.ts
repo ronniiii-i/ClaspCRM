@@ -91,12 +91,12 @@ export async function login(
 }
 
 export function getToken(request?: NextRequest) {
-  console.log(request);
+  // console.log(request?.body);
   if (request) {
     // Server-side (middleware)
     //  We should retrieve the token from request headers, not cookies or localStorage.
     //  The token is typically sent in the Authorization header:
-    console.log(request);
+    // console.log(request);
 
     const authHeader = request.headers.get("authorization");
     if (authHeader && authHeader.startsWith("Bearer ")) {
