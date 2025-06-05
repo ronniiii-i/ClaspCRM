@@ -1,13 +1,29 @@
 import { LucideIcon } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 
+export type Permission = 'VIEW' | 'CREATE' | 'EDIT' | 'DELETE'; // Or import from a shared types package
+export type Role = 'ADMIN' | 'HOD' | 'LEAD' | 'STAFF'; // Or import
+
 export interface Module {
   id: string;
   path: string;
   name: string;
-  permissions: string[];
+  permissions: {
+    [key in Role]?: Permission[]; // Allows for optional roles
+  };
   department?: string;
   icon?: string | LucideIcon | undefined;
+}
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  name: string;
+  role: Role;
+  isVerified: boolean;
+  department: { id: string; name: string } | null;
+  managedDepartment: { id: string; name: string } | null;
+  accessibleModules: Module[]; // Add this
 }
 
 export interface PermissionCheck {
