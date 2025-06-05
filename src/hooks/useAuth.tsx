@@ -11,26 +11,26 @@ import {
   initializeSessionTracking,
   setupTokenRefresh, // Keep setupTokenRefresh
 
-} from "@/lib/auth"; // Your existing auth utility functions
+} from "@/lib/auth"; 
 
-import { Module, AuthUser } from "@/lib/modules"
+import { AuthUser } from "@/lib/modules"
 import { jwtDecode } from "jwt-decode";
 
-interface Department {
-  id: string;
-  name: string;
-}
+// interface Department {
+//   id: string;
+//   name: string;
+// }
 
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-  avatar?: string;
-  isVerified: boolean;
-  department: Department | null;
-  managedDepartment: Department | null;
-}
+// interface User {
+//   id: string;
+//   email: string;
+//   name: string;
+//   role: string;
+//   avatar?: string;
+//   isVerified: boolean;
+//   department: Department | null;
+//   managedDepartment: Department | null;
+// }
 
 // export function useAuth() {
 //   const [token, setToken] = useState<string | null>(null);
