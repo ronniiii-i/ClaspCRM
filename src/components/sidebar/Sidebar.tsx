@@ -10,11 +10,30 @@ import { usePermissions } from "@/hooks/usePermissions";
 import { getIconComponent } from "@/lib/modules";
 import { Skeleton } from "@/components/ui/skeleton";
 
+/**
+ * A sidebar component that displays navigation and user information.
+ *
+ * @remarks
+ *
+ * This component is responsible for rendering the sidebar that appears on the left side of the
+ * application. It fetches the user's data and permissions, and based on the user's role, it
+ * renders the navigation links. It also displays the user's name and role.
+ *
+ * @returns A React component that renders the sidebar.
+ */
 export default function Sidebar() {
-  const { user } = useAuth();
-  const { modules, loading } = usePermissions();
+  const { user, isLoading: authLoading } = useAuth();
+  const { modules, loading: permissionsLoading, error: permissionsError } = usePermissions();
 
   if (!user) return null;
+
+  if (authLoading || permissionsLoading) {
+    return <div>Loading user and permissions...</div>;
+  }
+
+  // if (permissionsError) {
+  //   return <div>Error loading permissions: {permissionsError.message}</div>;
+  // }
 
   return (
     <aside className="w-64 flex-col border-r bg-background flex h-full justify-between">
@@ -35,7 +54,7 @@ export default function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 overflow-auto py-2">
         <ul className="space-y-1 px-2">
-          {loading
+          {permissionsError ? <div>Error loading permissions: {permissionsError.message}</div> : (permissionsLoading
             ? Array.from({ length: 5 }).map((_, i) => (
                 <li key={`skeleton-${i}`}>
                   <Skeleton className="h-10 w-full" />
@@ -58,7 +77,7 @@ export default function Sidebar() {
                     </Button>
                   </li>
                 );
-              })}
+              }))}
         </ul>
       </nav>
 
