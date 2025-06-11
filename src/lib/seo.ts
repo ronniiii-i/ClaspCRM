@@ -21,6 +21,10 @@ export const defaultMetadata: Metadata = {
     "Next.js Projects",
     "NestJS Projects",
     "Fullstack Portfolio",
+    "Portfolio",
+    "Software Engineer",
+    "Software Engineer Portfolio",
+    
   ],
   authors: [{ name: "Roni Egbu", url: "https://roniegbu.vercel.app" }],
   creator: "Roni Egbu",

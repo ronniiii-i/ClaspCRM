@@ -1,13 +1,13 @@
 "use client";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from "recharts";
+import { LineChart, Line, XAxis, CartesianGrid } from "recharts";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { RevenueData } from "../types";
-
-// interface RevenueData {
-//   month: string;
-//   revenue: number;
-// }
 
 export function RevenueTrends({ data }: { data: RevenueData[] }) {
   return (
@@ -16,13 +16,29 @@ export function RevenueTrends({ data }: { data: RevenueData[] }) {
         <CardTitle>Revenue Trends</CardTitle>
       </CardHeader>
       <CardContent className="h-80">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data}>
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Line type="monotone" dataKey="revenue" stroke="#8884d8" />
+        <ChartContainer config={{}}>
+          <LineChart accessibilityLayer data={data}>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
+            />
+            <Line
+              type="natural"
+              dataKey="revenue"
+              stroke="hsl(221.2 83.2% 53.3%)"
+              strokeWidth={2}
+              dot={false}
+            />
           </LineChart>
-        </ResponsiveContainer>
+        </ChartContainer>
       </CardContent>
     </Card>
   );

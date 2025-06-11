@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url><loc>https://claspcrm.vercel.app/dashboard</loc><lastmod>2025-04-26T21:02:37.251Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://claspcrm.vercel.app/admin/users</loc><lastmod>2025-04-26T21:02:37.252Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://claspcrm.vercel.app/login</loc><lastmod>2025-04-26T21:02:37.252Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://claspcrm.vercel.app/verify-email</loc><lastmod>2025-04-26T21:02:37.252Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://claspcrm.vercel.app/forgot-password</loc><lastmod>2025-04-26T21:02:37.252Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://claspcrm.vercel.app/register</loc><lastmod>2025-04-26T21:02:37.252Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://claspcrm.vercel.app</loc><lastmod>2025-04-26T21:02:37.252Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://claspcrm.vercel.app/about</loc><lastmod>2025-04-26T21:02:37.252Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://claspcrm.vercel.app/contact</loc><lastmod>2025-04-26T21:02:37.252Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://claspcrm.vercel.app/reset-password</loc><lastmod>2025-04-26T21:02:37.252Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://claspcrm.vercel.app/pricing</loc><lastmod>2025-04-26T21:02:37.252Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://claspcrm.vercel.app/privacy</loc><lastmod>2025-04-26T21:02:37.252Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://claspcrm.vercel.app/faq</loc><lastmod>2025-04-26T21:02:37.252Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://claspcrm.vercel.app/terms</loc><lastmod>2025-04-26T21:02:37.252Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://claspcrm.vercel.app/profile</loc><lastmod>2025-04-26T21:02:37.252Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://claspcrm.vercel.app/profile</loc><lastmod>2025-06-05T14:42:07.191Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://claspcrm.vercel.app/register</loc><lastmod>2025-06-05T14:42:07.193Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://claspcrm.vercel.app/login</loc><lastmod>2025-06-05T14:42:07.193Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://claspcrm.vercel.app/reset-password</loc><lastmod>2025-06-05T14:42:07.193Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://claspcrm.vercel.app/verify-email</loc><lastmod>2025-06-05T14:42:07.193Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://claspcrm.vercel.app</loc><lastmod>2025-06-05T14:42:07.193Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://claspcrm.vercel.app/about</loc><lastmod>2025-06-05T14:42:07.193Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://claspcrm.vercel.app/faq</loc><lastmod>2025-06-05T14:42:07.193Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://claspcrm.vercel.app/pricing</loc><lastmod>2025-06-05T14:42:07.193Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://claspcrm.vercel.app/terms</loc><lastmod>2025-06-05T14:42:07.193Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://claspcrm.vercel.app/users</loc><lastmod>2025-06-05T14:42:07.193Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://claspcrm.vercel.app/forgot-password</loc><lastmod>2025-06-05T14:42:07.193Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://claspcrm.vercel.app/privacy</loc><lastmod>2025-06-05T14:42:07.193Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://claspcrm.vercel.app/contact</loc><lastmod>2025-06-05T14:42:07.193Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://claspcrm.vercel.app/dashboard</loc><lastmod>2025-06-05T14:42:07.193Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 </urlset>

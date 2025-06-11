@@ -1,0 +1,270 @@
+import { jwtDecode } from "jwt-decode";
+import { NextRequest } from "next/server";
+
+export async function register(
+  email: string,
+  password: string,
+  name: string
+): Promise<{
+  success: boolean;
+  message: string;
+}> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password, name }),
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.message || "Registration failed");
+  }
+
+  return res.json();
+}
+
+export async function login(
+  email: string,
+  password: string
+): Promise<{
+  accessToken: string;
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+    isVerified: boolean;
+    department: {
+      id: string;
+      name: string;
+    };
+    managedDepartment: {
+      id: string;
+      name: string;
+    };
+  };
+}> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.message || "Login failed");
+  }
+
+  const data = await res.json();
+
+  // Ensure the response has the expected structure
+  const formattedResponse = {
+    accessToken: data.accessToken,
+    user: {
+      id: data.user.id,
+      email: data.user.email,
+      name: data.user.name,
+      role: data.user.role,
+      isVerified: data.user.isVerified,
+      department: data.user.department || null,
+      managedDepartment: data.user.managedDepartment || null,
+    },
+  };
+
+  if (typeof window !== "undefined") {
+    document.cookie = `token=${formattedResponse.accessToken}; Path=/; Secure; SameSite=Strict`;
+    localStorage.setItem("token", formattedResponse.accessToken);
+    localStorage.setItem("auth_user", JSON.stringify(formattedResponse.user));
+    console.log("Cookie token:", document.cookie.match(/token=([^;]+)/)?.[1]);
+    console.log("LocalStorage token:", localStorage.getItem("token")); // Temporarily add this to your auth.ts
+    console.log("Decoded token:", jwtDecode(formattedResponse.accessToken));
+  }
+
+  // initializeSessionTracking();
+  // setupTokenRefresh(3600);
+
+  // console.log(formattedResponse);
+  return formattedResponse;
+}
+
+export function getToken(request?: NextRequest) {
+  if (request) {
+    // Server-side (middleware)
+    return request.cookies.get("token")?.value;
+  } else if (typeof document !== "undefined") {
+    // Client-side
+    return document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="))
+      ?.split("=")[1];
+  }
+  return null;
+}
+
+let refreshTimer: NodeJS.Timeout;
+
+export const setupTokenRefresh = (expiresIn: number) => {
+  // Clear existing timer if any
+  if (refreshTimer) clearTimeout(refreshTimer);
+
+  // Set to refresh 5 minutes before expiration
+  const refreshTime = (expiresIn - 600) * 1000;
+
+  refreshTimer = setTimeout(async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/refresh`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+
+      if (res.ok) {
+        const { token } = await res.json();
+
+        // Update token storage
+        if (typeof window !== "undefined") {
+          document.cookie = `token=${token}; Path=/; Secure; SameSite=Strict`;
+          localStorage.setItem("token", token);
+        }
+
+        // Reset both timers with new token
+        setupTokenRefresh(3600); // Reset refresh timer
+        resetInactivityTimer(); // Reset activity timer
+        console.log(
+          "Cookie token:",
+          document.cookie.match(/token=([^;]+)/)?.[1]
+        );
+        console.log("LocalStorage token:", localStorage.getItem("token"));
+      } else {
+        logout();
+      }
+    } catch {
+      logout();
+    }
+  }, refreshTime);
+};
+
+let inactivityTimer: NodeJS.Timeout;
+
+const resetInactivityTimer = () => {
+  // Clear existing timer
+  if (inactivityTimer) clearTimeout(inactivityTimer);
+  // console.log(inactivityTimer);
+
+  // Set new timer (1 hour = 3600000 ms)
+  inactivityTimer = setTimeout(() => {
+    logout();
+    window.location.reload();
+    window.location.href = "/login?reason=inactivity";
+    window.location.replace("/login?reason=inactivity"); // Fallback for older browsers
+  }, 1800000); // 1 hour in milliseconds
+};
+
+// // Set up activity listeners
+// const setupActivityListeners = () => {
+//   if (typeof window !== "undefined") {
+//     ["mousemove", "keydown", "click", "scroll"].forEach((event) => {
+//       window.addEventListener(event, resetInactivityTimer);
+//     });
+//     resetInactivityTimer(); // Initialize timer
+//   }
+// };
+
+// Call this when user logs in
+export function initializeSessionTracking() {
+  const handleActivity = () => {
+    triggerActivity();
+    resetInactivityTimer();
+  };
+
+  const events = ["mousemove", "keydown", "click", "scroll", "touchstart"];
+
+  events.forEach((event) => {
+    window.addEventListener(event, handleActivity);
+  });
+
+  return () => {
+    events.forEach((event) => {
+      window.removeEventListener(event, handleActivity);
+    });
+  };
+}
+
+let activityCallbacks: (() => void)[] = [];
+
+export function onActivity(callback: () => void) {
+  activityCallbacks.push(callback);
+  return () => {
+    activityCallbacks = activityCallbacks.filter((cb) => cb !== callback);
+  };
+}
+
+export function triggerActivity() {
+  activityCallbacks.forEach((cb) => cb());
+}
+
+export async function logout() {
+  try {
+    // First call the backend logout endpoint
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`, // Will fail if token expired
+      },
+      credentials: "include",
+    });
+
+    if (!res.ok) {
+      throw new Error("Logout failed");
+    }
+
+    // Then clear client-side storage
+    if (typeof window !== "undefined") {
+      // Clear activity listeners
+      ["mousemove", "keydown", "click", "scroll"].forEach((event) => {
+        window.removeEventListener(event, resetInactivityTimer);
+      });
+
+      // Clear timer
+      if (inactivityTimer) clearTimeout(inactivityTimer);
+      if (refreshTimer) clearTimeout(refreshTimer);
+
+      // Clear token from cookies
+      document.cookie =
+        "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+      localStorage.removeItem("token");
+      localStorage.removeItem("auth_user");
+      window.location.href = "/login";
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Logout error:", error);
+    // Even if backend logout fails, clear client-side storage
+    if (typeof window !== "undefined") {
+      document.cookie =
+        "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+      localStorage.removeItem("token");
+      localStorage.removeItem("auth_user");
+    }
+    throw error;
+  }
+}
+
+// Temporary test in your frontend
+export async function testTokenRefresh() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/refresh`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+  console.log("Refresh response:", await res.json());
+}

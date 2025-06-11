@@ -6,7 +6,7 @@ import { RecruitmentPipeline } from "./recruitment-pipeline";
 import { TrainingManagement } from "./training-management";
 import { PerformanceReviews } from "./performance-reviews";
 import { DashboardSkeleton } from "./skeleton";
-import { Department } from "@/lib/modules";
+import { Department } from "../_hooks/use-dashboard-data";
 
 export function HrHodDashboard() {
   const { data, isLoading } = useDashboardData({
@@ -22,7 +22,6 @@ export function HrHodDashboard() {
       <h1 className="text-2xl font-bold">HR Dashboard</h1>
 
       {/* Core Widgets */}
-      <EmployeeRecords employees={data.employees || []} />
       <RecruitmentPipeline jobs={data.jobOpenings || []} />
 
       {/* Training & Reviews */}
@@ -30,6 +29,7 @@ export function HrHodDashboard() {
         <TrainingManagement trainings={data.trainings || []} />
         <PerformanceReviews reviews={data.reviews || []} />
       </div>
+      <EmployeeRecords employees={data.employees || []} />
     </div>
   );
 }

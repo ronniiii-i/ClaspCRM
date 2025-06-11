@@ -30,6 +30,9 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
+      // initializeSessionTracking();
+      // console.log(initializeSessionTracking);
+      
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
       console.error("Login error:", err);
