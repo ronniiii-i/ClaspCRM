@@ -95,14 +95,14 @@ export async function login(
   email: string,
   password: string
 ): Promise<{
-  accessToken: string; // The token will be returned in the body AND set as httpOnly cookie
-  user: AuthUser; // Use the new AuthUser type
+  accessToken: string;
+  user: AuthUser;
 }> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
-    credentials: "include", // Important: this tells fetch to send/receive cookies
+    credentials: "include",
   });
 
   if (!res.ok) {
@@ -112,7 +112,6 @@ export async function login(
 
   const data = await res.json();
 
-  // The backend now sends accessibleModules in the user object
   const formattedResponse = {
     accessToken: data.accessToken,
     user: {
@@ -123,17 +122,18 @@ export async function login(
       isVerified: data.user.isVerified,
       department: data.user.department || null,
       managedDepartment: data.user.managedDepartment || null,
-      accessibleModules: data.user.accessibleModules || [], // Ensure this is set
+      accessibleModules: data.user.accessibleModules || [],
     },
   };
 
   if (typeof window !== "undefined") {
-    // Store token in localStorage for client-side JavaScript access (e.g., for Authorization header)
-    // The httpOnly cookie is handled by the browser automatically for most requests.
     localStorage.setItem("token", formattedResponse.accessToken);
     localStorage.setItem("auth_user", JSON.stringify(formattedResponse.user));
 
-    console.log("LocalStorage token:", localStorage.getItem("token")?.substring(0, 10) + '...');
+    console.log(
+      "LocalStorage token:",
+      localStorage.getItem("token")?.substring(0, 10) + "..."
+    );
     try {
       console.log("Decoded token:", jwtDecode(formattedResponse.accessToken));
     } catch (error) {
@@ -158,39 +158,34 @@ export async function login(
 //   return null;
 // }
 
-
 export function getToken(request?: NextRequest) {
   if (request) {
-    // Server-side (Next.js Middleware context)
-    // IMPORTANT: Middleware CANNOT access localStorage. It must read cookies.
-    console.log('Middleware: Attempting to get token from cookie.');
+    console.log("Middleware: Attempting to get token from cookie.");
     const cookieToken = request.cookies.get("access_token")?.value;
     if (cookieToken) {
-      console.log('Middleware: Token found in cookie.');
+      console.log("Middleware: Token found in cookie.");
       return cookieToken;
     }
-    // If you also expect an Authorization header in middleware for some reason:
     // const authHeader = request.headers.get("authorization");
     // if (authHeader && authHeader.startsWith("Bearer ")) {
     //   return authHeader.split(" ")[1];
     // }
-    console.log('Middleware: No token found in cookie.');
-    return null; // No token found in httpOnly cookie
+    console.log("Middleware: No token found in cookie.");
+    return null;
   } else if (typeof window !== "undefined") {
     // Client-side (Browser context)
     // Client-side JS can access localStorage
-    console.log('Client-side: Attempting to get token from localStorage.');
+    console.log("Client-side: Attempting to get token from localStorage.");
     const localStorageToken = localStorage.getItem("token");
     if (localStorageToken) {
-        console.log('Client-side: Token found in localStorage.');
-        return localStorageToken;
+      console.log("Client-side: Token found in localStorage.");
+      return localStorageToken;
     }
-    console.log('Client-side: No token found in localStorage.');
+    console.log("Client-side: No token found in localStorage.");
     return null;
   }
-  return null; // Fallback
+  return null;
 }
-
 
 let refreshTimer: NodeJS.Timeout | undefined;
 
@@ -208,7 +203,7 @@ let refreshTimer: NodeJS.Timeout | undefined;
 //         credentials: "include",
 //         headers: {
 //           "Content-Type": "application/json",
-//           Authorization: `Bearer ${getToken()}`, // Use the getToken() function
+//           Authorization: `Bearer ${getToken()}`,
 //         },
 //       });
 
@@ -221,14 +216,14 @@ let refreshTimer: NodeJS.Timeout | undefined;
 //         }
 
 //         // Reset both timers with new token
-//         setupTokenRefresh(3600); // Reset refresh timer.  Assume 1 hour refresh time.
-//         resetInactivityTimer(); // Reset activity timer
+//         setupTokenRefresh(3600);
+//         resetInactivityTimer();
 //         console.log("LocalStorage token:", localStorage.getItem("token"));
 //       } else {
 //         logout();
 //       }
 //     } catch (error) {
-//       console.error("Token refresh failed:", error); // Log the error
+//       console.error("Token refresh failed:", error);
 //       logout();
 //     }
 //   }, refreshTime);
@@ -239,7 +234,7 @@ export const setupTokenRefresh = (expiresInSeconds: number) => {
 
   // Set to refresh 10 minutes (600 seconds) before expiration
   // Ensure expiresInSeconds is realistic (e.g., from decoded JWT or backend response)
-  const refreshTimeMs = Math.max(0, (expiresInSeconds - 600) * 1000); // Ensure it's not negative
+  const refreshTimeMs = Math.max(0, (expiresInSeconds - 600) * 1000);
 
   console.log(`Setting token refresh in ${refreshTimeMs / 1000} seconds`);
 
@@ -254,27 +249,31 @@ export const setupTokenRefresh = (expiresInSeconds: number) => {
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/refresh`, {
         method: "POST",
-        credentials: "include", // Send httpOnly cookie for refresh
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${currentToken}`, // Also send current token in header
+          Authorization: `Bearer ${currentToken}`,
         },
       });
 
       if (res.ok) {
-        const { accessToken } = await res.json(); // New token from backend
+        const { accessToken } = await res.json();
         const decoded = jwtDecode<{ exp: number }>(accessToken);
-        const newExpiresIn = decoded.exp - Math.floor(Date.now() / 1000); // Calculate new expiry
+        const newExpiresIn = decoded.exp - Math.floor(Date.now() / 1000);
 
         if (typeof window !== "undefined") {
-          localStorage.setItem("token", accessToken); // Update localStorage token
+          localStorage.setItem("token", accessToken);
         }
         console.log("Token refreshed successfully.");
-        setupTokenRefresh(newExpiresIn); // Reset refresh timer with new expiry
-        resetInactivityTimer(); // Reset activity timer
+        setupTokenRefresh(newExpiresIn);
+        resetInactivityTimer();
       } else {
-        console.error("Token refresh failed on API call:", res.status, res.statusText);
-        await logout(); // Logout if refresh fails
+        console.error(
+          "Token refresh failed on API call:",
+          res.status,
+          res.statusText
+        );
+        await logout();
       }
     } catch (error) {
       console.error("Token refresh failed:", error);
@@ -295,7 +294,7 @@ export const resetInactivityTimer = () => {
     if (typeof window !== "undefined") {
       window.location.href = "/login?reason=inactivity";
     }
-  }, 1800000); // 30 minutes (1800000 ms)
+  }, 1800000);
 };
 
 // Call this when user logs in
@@ -311,7 +310,7 @@ export function initializeSessionTracking() {
     events.forEach((event) => {
       window.addEventListener(event, handleActivity);
     });
-    resetInactivityTimer(); // Initialize timer
+    resetInactivityTimer();
   }
 
   return () => {
@@ -343,7 +342,7 @@ export function triggerActivity() {
 //       method: "POST",
 //       headers: {
 //         "Content-Type": "application/json",
-//         Authorization: `Bearer ${getToken()}`, // Use getToken()
+//         Authorization: `Bearer ${getToken()}`,
 //       },
 //       credentials: "include",
 //     });
@@ -370,51 +369,54 @@ export function triggerActivity() {
 //       localStorage.removeItem("token");
 //       localStorage.removeItem("auth_user");
 //     }
-//     throw error; // Re-throw the error so the caller can handle it
+//     throw error;
 //   }
 // }
 
 // Temporary test in your frontend
 
-
 export async function logout() {
   try {
-    const currentToken = getToken(); // Get token for backend logout call
+    const currentToken = getToken();
     if (!currentToken) {
-        console.log("No token found for backend logout. Proceeding with client-side cleanup.");
-        // If no token, just do client-side cleanup and redirect.
+      console.log(
+        "No token found for backend logout. Proceeding with client-side cleanup."
+      );
     } else {
-        // Call the backend logout endpoint to clear httpOnly cookie and blacklist token
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/logout`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${currentToken}`, // Send token for backend identification
-            },
-            credentials: "include", // Ensure cookie is sent for logout
-        });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${currentToken}`,
+        },
+        credentials: "include",
+      });
 
-        if (!res.ok) {
-            // Log the error but proceed with client-side cleanup regardless
-            const errorText = await res.text();
-            console.error("Backend logout failed:", res.status, errorText);
-        }
+      if (!res.ok) {
+        // Log the error but proceed with client-side cleanup regardless
+        const errorText = await res.text();
+        console.error("Backend logout failed:", res.status, errorText);
+      }
     }
   } catch (error) {
     console.error("Error during backend logout attempt:", error);
   } finally {
-    // Always clear client-side storage and timers
     if (typeof window !== "undefined") {
       if (inactivityTimer) clearTimeout(inactivityTimer);
       if (refreshTimer) clearTimeout(refreshTimer);
 
       localStorage.removeItem("token");
       localStorage.removeItem("auth_user");
-      window.location.href = "/login"; // Full page redirect
+      // document.cookie =
+      //   "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; sameSite=lax";
+      // document.cookie =
+      //   "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; sameSite=lax";
+      // document.cookie =
+      //   "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      window.location.href = "/login";
     }
   }
 }
-
 
 export async function testTokenRefresh() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/refresh`, {
@@ -422,7 +424,7 @@ export async function testTokenRefresh() {
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${getToken()}`, // Use getToken()
+      Authorization: `Bearer ${getToken()}`,
     },
   });
   console.log("Refresh response:", await res.json());

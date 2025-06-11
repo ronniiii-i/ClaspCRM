@@ -62,7 +62,7 @@ import { jwtDecode } from "jwt-decode";
 
 //   const handleLogout = useCallback(async () => {
 //     try {
-//       await logoutAPI(); // Now calls the backend endpoint
+//       await logoutAPI();
 //     } catch (error) {
 //       console.error("Logout error:", error);
 //     } finally {
@@ -235,7 +235,7 @@ import { jwtDecode } from "jwt-decode";
 
 export function useAuth() {
   const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<AuthUser | null>(null); // Use AuthUser type
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
   const router = useRouter();
@@ -249,14 +249,12 @@ export function useAuth() {
 
   const handleLogout = useCallback(async () => {
     try {
-      await logoutAPI(); // This now handles backend cookie clearing and client-side localStorage clearing/redirect
+      await logoutAPI();
     } catch (error) {
       console.error("Error during logout:", error);
-      // Even if backend call fails, ensure client-side state is cleared
       clearAuthData();
-      router.push("/login"); // Ensure redirection happens
+      router.push("/login");
     } finally {
-      // Ensure state is cleared on frontend
       setToken(null);
       setUser(null);
     }
@@ -280,7 +278,7 @@ export function useAuth() {
 
       const data = await res.json();
       console.log('useAuth: Token verification successful, received user data:', data.user);
-      return data.user as AuthUser; // Cast to AuthUser type
+      return data.user as AuthUser;
     },
     [clearAuthData]
   );
@@ -290,7 +288,7 @@ export function useAuth() {
 
     const initializeAuth = async () => {
       setIsLoading(true);
-      const storedToken = getToken(); // Get from localStorage (client-side)
+      const storedToken = getToken();
       setToken(storedToken);
 
       if (storedToken) {
@@ -314,23 +312,20 @@ export function useAuth() {
             }
             console.log('useAuth: Initialized from backend token verification.');
           }
-
-          // Set up token refresh and inactivity tracking *after* user is loaded
-          // Decode token to get expiry for refresh timer
           try {
             const decoded = jwtDecode<{ exp: number }>(storedToken);
-            const expiresIn = decoded.exp - Math.floor(Date.now() / 1000); // Time until expiry in seconds
+            const expiresIn = decoded.exp - Math.floor(Date.now() / 1000);
             setupTokenRefresh(expiresIn);
             initializeSessionTracking();
             console.log(`useAuth: Token expires in ${expiresIn} seconds. Session tracking initialized.`);
           } catch (jwtError) {
             console.error("useAuth: Error decoding JWT for refresh setup:", jwtError);
-            handleLogout(); // If token can't be decoded, treat as invalid
+            handleLogout();
           }
 
         } catch (error) {
           console.error("useAuth: Initial authentication failed:", error);
-          handleLogout(); // This will clear data and redirect
+          handleLogout();
         }
       }
       setIsLoading(false);
@@ -340,7 +335,6 @@ export function useAuth() {
 
     initializeAuth();
 
-    // Cleanup function for event listeners and timers if component unmounts
     return () => {
         // Any cleanup from initializeSessionTracking needs to be handled here
         // (the function returns a cleanup callback)
@@ -348,7 +342,6 @@ export function useAuth() {
   }, [initialized, handleLogout, verifyToken]);
 
 
-  // Function to refresh user data from backend (e.g., after role/department changes)
   const refreshUserData = useCallback(async () => {
     if (!token) {
       console.warn("Cannot refresh user data: No token available.");
@@ -356,7 +349,7 @@ export function useAuth() {
     }
     setIsLoading(true);
     try {
-      const freshUserData = await verifyToken(token); // Fetch fresh data from backend
+      const freshUserData = await verifyToken(token);
       setUser(freshUserData);
       if (typeof window !== "undefined") {
         localStorage.setItem("auth_user", JSON.stringify(freshUserData));
@@ -365,7 +358,7 @@ export function useAuth() {
       return freshUserData;
     } catch (error) {
       console.error("useAuth: Failed to refresh user data:", error);
-      handleLogout(); // Logout if refresh fails
+      handleLogout();
       throw error;
     } finally {
       setIsLoading(false);
@@ -402,13 +395,12 @@ export function useAuth() {
         throw new Error("Please verify your email before logging in");
       }
 
-      setToken(accessToken); // Update state with the token from response body
-      setUser(user); // Update state with user data (including modules)
+      setToken(accessToken);
+      setUser(user);
 
-      // Token refresh and inactivity tracking setup
       try {
         const decoded = jwtDecode<{ exp: number }>(accessToken);
-        const expiresIn = decoded.exp - Math.floor(Date.now() / 1000); // Time until expiry in seconds
+        const expiresIn = decoded.exp - Math.floor(Date.now() / 1000);
         setupTokenRefresh(expiresIn);
         initializeSessionTracking();
         console.log(`useAuth: Login successful. Token expires in ${expiresIn} seconds. Session tracking initialized.`);
@@ -420,7 +412,7 @@ export function useAuth() {
       return { accessToken, user };
     } catch (error) {
       console.error("useAuth: Login failed:", error);
-      handleLogout(); // Ensure logout on login failure
+      handleLogout();
       throw error;
     }
   };

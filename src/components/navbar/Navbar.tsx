@@ -30,7 +30,7 @@ export default function Navbar({ children }: { children?: React.ReactNode }) {
     setLogoutError("");
     setIsLoggingOut(true);
     try {
-      await logout();
+      logout();
     } catch (error) {
       setLogoutError("Logout failed. Please try again.");
       console.error("Logout failed:", error);
