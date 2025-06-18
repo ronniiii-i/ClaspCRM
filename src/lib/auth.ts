@@ -217,29 +217,61 @@ export function triggerActivity() {
   activityCallbacks.forEach((cb) => cb());
 }
 
+// export async function logout() {
+//   try {
+//     const currentToken = getToken();
+//     if (!currentToken) {
+//       console.log(
+//         "No token found for backend logout. Proceeding with client-side cleanup."
+//       );
+//     } else {
+//       const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/logout`, {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${currentToken}`,
+//         },
+//         credentials: "include",
+//       });
+
+//       if (!res.ok) {
+//         // Log the error but proceed with client-side cleanup regardless
+//         const errorText = await res.text();
+//         console.error("Backend logout failed:", res.status, errorText);
+//       }
+//     }
+//   } catch (error) {
+//     console.error("Error during backend logout attempt:", error);
+//   } finally {
+//     if (typeof window !== "undefined") {
+//       if (inactivityTimer) clearTimeout(inactivityTimer);
+//       if (refreshTimer) clearTimeout(refreshTimer);
+
+//       localStorage.removeItem("token");
+//       localStorage.removeItem("auth_user");
+//       document.cookie =
+//         "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; sameSite=lax";
+//       // document.cookie =
+//       //   "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; sameSite=lax";
+//       // document.cookie =
+//       //   "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+//       window.location.href = "/login";
+//     }
+//   }
+// }
+
 export async function logout() {
   try {
-    const currentToken = getToken();
-    if (!currentToken) {
-      console.log(
-        "No token found for backend logout. Proceeding with client-side cleanup."
-      );
-    } else {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/logout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${currentToken}`,
-        },
-        credentials: "include",
-      });
+    const logoutProxyRes = await fetch('/api/auth/logout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    });
 
-      if (!res.ok) {
-        // Log the error but proceed with client-side cleanup regardless
-        const errorText = await res.text();
-        console.error("Backend logout failed:", res.status, errorText);
-      }
+    if (!logoutProxyRes.ok) {
+      const errorText = await logoutProxyRes.text();
+      console.error("Logout proxy failed:", logoutProxyRes.status, errorText);
     }
+
   } catch (error) {
     console.error("Error during backend logout attempt:", error);
   } finally {
@@ -249,12 +281,10 @@ export async function logout() {
 
       localStorage.removeItem("token");
       localStorage.removeItem("auth_user");
+
       document.cookie =
-        "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; sameSite=lax";
-      // document.cookie =
-      //   "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; sameSite=lax";
-      // document.cookie =
-      //   "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        "access_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Lax;";
+
       window.location.href = "/login";
     }
   }
