@@ -249,8 +249,8 @@ export async function logout() {
 
       localStorage.removeItem("token");
       localStorage.removeItem("auth_user");
-      // document.cookie =
-      //   "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; sameSite=lax";
+      document.cookie =
+        "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; sameSite=lax";
       // document.cookie =
       //   "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; sameSite=lax";
       // document.cookie =
