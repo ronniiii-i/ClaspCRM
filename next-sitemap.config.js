@@ -17,7 +17,7 @@ module.exports = {
           "/dashboard",
           "/profile",
           "/admin",
-          "/api", // API routes shouldn't be indexed
+          // "/api", // API routes shouldn't be indexed
         ],
       },
     ],
