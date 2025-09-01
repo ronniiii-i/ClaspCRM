@@ -25,7 +25,6 @@ export default function DashboardLayout({
     }
 
     return () => {
-      // Cleanup function to remove event listeners when component unmounts
       ['mousemove', 'keydown', 'click', 'scroll'].forEach(event => {
         window.removeEventListener(event, initializeSessionTracking);
       });
