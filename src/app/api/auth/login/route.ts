@@ -1,15 +1,12 @@
-// src/app/api/auth/login/route.ts
 import { NextResponse } from "next/server";
 import { serialize } from "cookie";
 
-// Use the environment variable from your Next.js project to get the backend URL
 const NESTJS_BACKEND_LOGIN_URL = `${process.env.NEXT_PUBLIC_API}/auth/login`;
 
 export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
 
-    // 1. Forward the login request to your NestJS backend (server-to-server)
     const backendResponse = await fetch(NESTJS_BACKEND_LOGIN_URL, {
       method: "POST",
       headers: {
@@ -21,7 +18,6 @@ export async function POST(request: Request) {
     const backendData = await backendResponse.json();
 
     if (!backendResponse.ok) {
-      // Propagate error from backend to frontend
       return NextResponse.json(backendData, { status: backendResponse.status });
     }
 
@@ -37,22 +33,20 @@ export async function POST(request: Request) {
       );
     }
 
-    // 2. Set the httpOnly cookie on the Next.js frontend's domain (claspcrm.vercel.app)
     const cookie = serialize("access_token", accessToken, {
-      httpOnly: true, // Makes it inaccessible to client-side JS
-      secure: process.env.NODE_ENV === "production", // Vercel is HTTPS, so this will be true
-      sameSite: "lax", // 'lax' is appropriate for same-site (claspcrm.vercel.app)
-      path: "/", // Cookie accessible across all paths on claspcrm.vercel.app
-      maxAge: 3600000, // 1 hour (make sure this aligns with JWT expiration)
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 3600000,
     });
 
-    // 3. Create the response object and set the cookie header
     const response = NextResponse.json(
       {
         success: true,
         message: backendData.message || "Login successful!",
         user: backendData.user,
-        accessToken: accessToken, // <--- Send token in body for localStorage (Choice A)
+        accessToken: accessToken,
       },
       { status: 200 }
     );
