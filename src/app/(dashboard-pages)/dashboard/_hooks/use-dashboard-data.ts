@@ -115,8 +115,7 @@ export function useDashboardData(params: DashboardScope) {
         };
 
         setData(mockData);
-      } catch (error) {
-        console.error("Failed to fetch dashboard data:", error);
+      } catch {
       } finally {
         setIsLoading(false);
       }
@@ -294,7 +293,7 @@ function getMockInventory(): InventoryItem[] {
       | "maintenance"
       | "retired",
     lastUpdated: new Date(
-      Date.now() - Math.random() * 10000000000
+      Date.now() - Math.random() * 10000000000,
     ).toLocaleDateString(),
   }));
 }
@@ -316,10 +315,10 @@ function getMockSystemAlerts(): SystemAlert[] {
     title: `System Alert ${i + 1}`,
     priority: ["low", "medium", "high"][i % 3] as "low" | "medium" | "high",
     message: `System ${["started", "stopped", "error"][i % 3]} at ${new Date(
-      Date.now() - Math.random() * 10000000000
+      Date.now() - Math.random() * 10000000000,
     ).toLocaleString()}`,
     timestamp: new Date(
-      Date.now() - Math.random() * 10000000000
+      Date.now() - Math.random() * 10000000000,
     ).toLocaleString(),
   }));
 }
@@ -334,7 +333,7 @@ function getMockApprovals(): Approval[] {
       | "rejected",
     requester: `User ${i + 1}`,
     dateRequested: new Date(
-      Date.now() - Math.random() * 10000000000
+      Date.now() - Math.random() * 10000000000,
     ).toLocaleString(),
   }));
 }
@@ -367,7 +366,7 @@ function getMockDeals(): Deal[] {
       | "negotiation"
       | "closed",
     closeDate: new Date(
-      Date.now() - Math.random() * 10000000000
+      Date.now() - Math.random() * 10000000000,
     ).toLocaleDateString(),
     contact: `Contact ${i + 1}`, // Added contact field
     status: ["won", "lost", "pending"][i % 3] as "won" | "lost" | "pending", // Added status field
@@ -384,7 +383,7 @@ function getMockTickets(): Ticket[] {
       | "resolved",
     priority: ["low", "medium", "high"][i % 3] as "low" | "medium" | "high",
     createdAt: new Date(
-      Date.now() - Math.random() * 10000000000
+      Date.now() - Math.random() * 10000000000,
     ).toLocaleDateString(),
   }));
 }
@@ -395,7 +394,7 @@ function getMockAttendance(): AttendanceRecord[] {
     userId: `user${i}`,
     name: `User ${i + 1}`,
     date: new Date(
-      Date.now() - Math.random() * 10000000000
+      Date.now() - Math.random() * 10000000000,
     ).toLocaleDateString(),
     status: ["present", "absent", "on-leave"][i % 3] as
       | "present"
