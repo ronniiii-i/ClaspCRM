@@ -1,63 +1,86 @@
 "use client";
 
-// import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useDashboardData, Department } from "./_hooks/use-dashboard-data";
+import { DashboardSkeleton } from "./_components/skeleton";
 import { AdminDashboard } from "./_components/admin_view";
-import { HodDashboard as GenericHodDashboard } from "./_components/hod-view";
+// import { HodDashboard } from "./_components/hod-view";
 import { FinanceHodDashboard } from "./_components/finance-hod-view";
 import { ItHodDashboard } from "./_components/it-hod-view";
 import { HrHodDashboard } from "./_components/hr-hod-view";
 import { TeamLeadDashboard } from "./_components/lead-view";
 import { StaffDashboard } from "./_components/staff-view";
-import { DashboardSkeleton } from "./_components/skeleton";
-import { Department } from "./_hooks/use-dashboard-data";
+
+// Maps whatever the DB returns (human-readable name or enum key) to the
+// Department enum that DashboardScope expects.
+function resolveDepartmentEnum(
+  name: string | undefined,
+): Department | undefined {
+  if (!name) return undefined;
+  const map: Record<string, Department> = {
+    Finance: Department.FINANCE,
+    FINANCE: Department.FINANCE,
+    Accounting: Department.ACCOUNTING,
+    ACCOUNTING: Department.ACCOUNTING,
+    "Information Technology": Department.IT,
+    INFORMATION_TECHNOLOGY: Department.IT,
+    IT: Department.IT,
+    Sales: Department.SALES,
+    SALES: Department.SALES,
+    "Customer Support": Department.CUSTOMER_SUPPORT,
+    CUSTOMER_SERVICE: Department.CUSTOMER_SUPPORT,
+    "Human Resources": Department.HR,
+    HUMAN_RESOURCES: Department.HR,
+    Administration: Department.ADMINISTRATION,
+    ADMINISTRATION: Department.ADMINISTRATION,
+    Operations: Department.OPERATIONS,
+    OPERATIONS: Department.OPERATIONS,
+  };
+  return map[name];
+}
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
 
-  // // how to call testTokenRefresh function after 1 min when page loads?
-  // useEffect(() => {
-  //   const timeoutId = setTimeout(() => {
-  //     testTokenRefresh();
-  //   }, 60000); // 60000 milliseconds = 1 minute
+  const rawDeptName = user?.managedDepartment?.name ?? user?.department?.name;
 
-  //   return () => {
-  //     clearTimeout(timeoutId);
-  //   };
-  // }, [testTokenRefresh]);
+  function buildScope() {
+    switch (user?.role) {
+      case "ADMIN":
+        return { scope: "organization" };
 
-  if (!user) return <DashboardSkeleton />;
+      case "HOD": {
+        const dept = resolveDepartmentEnum(rawDeptName);
+        return dept
+          ? { scope: "department", department: dept }
+          : { scope: "organization" };
+      }
 
-  // Department-specific HOD dashboards
-  if (user.role === "HOD") {
-    switch (user.department?.name) {
-      case "Finance":
-        return <FinanceHodDashboard />;
-      case "IT":
-        return <ItHodDashboard />;
-      case "HR":
-      case "Human Resources":
-        return <HrHodDashboard />;
-      // Add other department
-      // s...
+      case "LEAD":
+        return { scope: "team", teamId: user.id };
+
       default:
-        return (
-          <GenericHodDashboard
-            department={user.department?.name as Department}
-          />
-        );
+        return { scope: "individual", userId: user?.id ?? "" };
     }
   }
 
-  // Standard role-based dashboards
-  switch (user.role) {
-    case "ADMIN":
-      return <AdminDashboard />;
-    case "LEAD":
-      return <TeamLeadDashboard teamId={user.id} />; // change to teamId
-    case "STAFF":
-      return <StaffDashboard userId={user.id} />;
-    default:
-      return <div>Unauthorized</div>;
+  const { isLoading: dataLoading } = useDashboardData(
+    user ? buildScope() : { scope: "individual", userId: "" } as const,
+  );
+
+  if (authLoading || !user || dataLoading) {
+    return <DashboardSkeleton />;
   }
+
+  if (user.role === "HOD") {
+    const dept = resolveDepartmentEnum(rawDeptName);
+    if (dept === Department.FINANCE) return <FinanceHodDashboard />;
+    if (dept === Department.IT) return <ItHodDashboard />;
+    if (dept === Department.HR) return <HrHodDashboard />;
+    // return <HodDashboard />;
+  }
+
+  if (user.role === "ADMIN") return <AdminDashboard />;
+  if (user.role === "LEAD") return <TeamLeadDashboard teamId={user.id} />;
+  return <StaffDashboard userId={user.id} />;
 }

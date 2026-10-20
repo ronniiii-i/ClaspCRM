@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
 export default function LoginPage() {
@@ -10,14 +10,20 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const { login, token, isLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const hasRedirected = useRef(false);
 
+  // Already logged in — redirect immediately
   useEffect(() => {
-    if (token && !isLoading) {
-      router.push("/dashboard");
+    if (token && !isLoading && !hasRedirected.current) {
+      hasRedirected.current = true;
+      const redirect = searchParams.get("redirect") || "/dashboard";
+      router.replace(redirect);
     }
-  }, [token, isLoading, router]);
+  }, [token, isLoading, router, searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,17 +31,27 @@ export default function LoginPage() {
     setIsSubmitting(true);
     try {
       await login(email, password);
+      // Login succeeded — immediately show "taking you there" screen
+      setIsSubmitting(false);
+      setIsRedirecting(true);
+      const redirect = searchParams.get("redirect") || "/dashboard";
+      router.replace(redirect);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
-    } finally {
+      setError(
+        err instanceof Error ? err.message : "Login failed. Please try again.",
+      );
       setIsSubmitting(false);
     }
   };
 
-  if (isLoading) {
+  // Full-screen loading states
+  if (isLoading || isRedirecting) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="min-h-screen flex flex-col items-center justify-center gap-3">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          {isRedirecting ? "Taking you to your dashboard..." : "Loading..."}
+        </p>
       </div>
     );
   }
@@ -47,13 +63,15 @@ export default function LoginPage() {
         className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-lg shadow-md"
       >
         <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-white">
-          Login
+          Welcome back
         </h1>
+
         {error && (
           <div className="p-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-300 rounded-md text-sm">
             {error}
           </div>
         )}
+
         <div>
           <label
             htmlFor="email"
@@ -71,6 +89,7 @@ export default function LoginPage() {
             autoComplete="username"
           />
         </div>
+
         <div>
           <div className="flex justify-between items-center">
             <label
@@ -79,13 +98,12 @@ export default function LoginPage() {
             >
               Password
             </label>
-            <button
-              type="button"
-              onClick={() => router.push("/forgot-password")}
-              className="text-sm text-blue-500 dark:text-blue-400 hover:underline cursor-pointer"
+            <a
+              href="/forgot-password"
+              className="text-sm text-blue-500 dark:text-blue-400 hover:underline"
             >
               Forgot password?
-            </button>
+            </a>
           </div>
           <input
             id="password"
@@ -97,17 +115,22 @@ export default function LoginPage() {
             autoComplete="current-password"
           />
         </div>
+
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          className="w-full flex justify-center items-center gap-2 py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
           {isSubmitting ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Signing in...
+            </>
           ) : (
             "Sign in"
           )}
         </button>
+
         <p className="text-sm text-center text-gray-600 dark:text-gray-400">
           Don&apos;t have an account?{" "}
           <a

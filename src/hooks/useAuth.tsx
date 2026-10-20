@@ -45,12 +45,10 @@ export function useAuth() {
         headers: { Authorization: `Bearer ${currentToken}` },
         credentials: "include",
       });
-
       if (!res.ok) {
         clearAuthData();
         throw new Error("Invalid token or session expired");
       }
-
       const data = await res.json();
       return data.user as AuthUser;
     },
@@ -74,7 +72,7 @@ export function useAuth() {
 
           let userData: AuthUser;
           if (cachedUser) {
-            userData = JSON.parse(cachedUser);
+            userData = JSON.parse(cachedUser) as AuthUser;
             setUser(userData);
           } else {
             userData = await verifyToken(storedToken);
@@ -104,9 +102,9 @@ export function useAuth() {
     initializeAuth();
   }, [initialized, handleLogout, verifyToken]);
 
+  // Silent background refresh — does NOT set isLoading (which was causing logout redirects)
   const refreshUserData = useCallback(async () => {
     if (!token) return;
-    setIsLoading(true);
     try {
       const freshUserData = await verifyToken(token);
       setUser(freshUserData);
@@ -115,11 +113,9 @@ export function useAuth() {
       }
       return freshUserData;
     } catch {
-      handleLogout();
-    } finally {
-      setIsLoading(false);
+      // Silently fail — don't log the user out on a background refresh error
     }
-  }, [token, verifyToken, handleLogout]);
+  }, [token, verifyToken]);
 
   const register = async (email: string, password: string, name: string) => {
     try {
@@ -136,6 +132,7 @@ export function useAuth() {
   };
 
   const login = async (email: string, password: string) => {
+    // No try/catch here — errors bubble up to the login page to display inline
     const response = await loginAPI(email, password);
 
     if (!response.accessToken || !response.user) {
