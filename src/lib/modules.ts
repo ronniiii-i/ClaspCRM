@@ -23,6 +23,7 @@ export interface AuthUser {
   roleEnhanced?: boolean;
   avatar?: string;
   isVerified: boolean;
+  tenantId?: string;
   department: { id: string; name: string } | null;
   managedDepartment: { id: string; name: string } | null;
   accessibleModules: Module[]; // Add this
