@@ -32,6 +32,7 @@ const AUTH_ROUTES = [
 
 const ROLE_GATED_ROUTES: Record<string, string[]> = {
   "/admin": ["ADMIN"],
+  "/user-management": ["ADMIN"],
   "/reports": ["ADMIN", "HOD"],
   "/analytics": ["ADMIN", "HOD"],
 };
