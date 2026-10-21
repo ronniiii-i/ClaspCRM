@@ -77,7 +77,7 @@ export default function DashboardPage() {
 
   if (user.role === "HOD") {
     const dept = resolveDepartmentEnum(rawDeptName);
-    if (dept === Department.FINANCE) return <FinanceHodDashboard />;
+    if (dept === Department.FINANCE || dept === Department.ACCOUNTING) return <FinanceHodDashboard />;
     if (dept === Department.IT) return <ItHodDashboard />;
     if (dept === Department.HR) return <HrHodDashboard />;
     // return <HodDashboard />;
