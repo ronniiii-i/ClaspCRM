@@ -17,7 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, Settings, LogOut, ChevronUp } from "lucide-react";
+import { User, Settings, LogOut, ChevronUp, Sparkles } from "lucide-react";
 
 // Extends the base Module type with the optional group field sent by the backend
 interface ModuleWithGroup extends Module {
@@ -226,9 +226,15 @@ export default function Sidebar() {
                 className="rounded-full shrink-0 object-cover"
               />
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm truncate">{user.name}</p>
+                <div className="flex items-center gap-1">
+                  <p className="font-medium text-sm truncate">{user.name}</p>
+                  {user.roleEnhanced && (
+                    <Sparkles className="h-3 w-3 text-amber-500 shrink-0" aria-label="Role enhanced" />
+                  )}
+                </div>
                 <p className="text-xs text-muted-foreground truncate">
                   {deptLabel}
+                  {user.roleEnhanced && " • Role+"}
                 </p>
               </div>
               <ChevronUp className="h-4 w-4 text-muted-foreground shrink-0" />
@@ -236,9 +242,15 @@ export default function Sidebar() {
           </DropdownMenuTrigger>
           <DropdownMenuContent side="top" align="start" className="w-56 mb-1">
             <div className="px-2 py-1.5">
-              <p className="text-sm font-medium">{user.name}</p>
+              <div className="flex items-center gap-1">
+                <p className="text-sm font-medium">{user.name}</p>
+                {user.roleEnhanced && (
+                  <Sparkles className="h-3 w-3 text-amber-500 shrink-0" aria-label="Role enhanced" />
+                )}
+              </div>
               <p className="text-xs text-muted-foreground truncate">
                 {user.email}
+                {user.roleEnhanced && " • Role+"}
               </p>
             </div>
             <DropdownMenuSeparator />
