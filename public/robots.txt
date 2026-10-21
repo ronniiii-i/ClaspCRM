@@ -9,7 +9,6 @@ Disallow: /verify-email
 Disallow: /dashboard
 Disallow: /profile
 Disallow: /admin
-Disallow: /api
 
 # Host
 Host: https://claspcrm.vercel.app

@@ -120,7 +120,7 @@ export default function UserFormModal({
                   <DropdownMenuSeparator />
                   <DropdownMenuRadioGroup
                     value={selectedRole}
-                    onValueChange={(value: any) => setValue("role", value)}
+                    onValueChange={(value: string) => setValue("role", value as "ADMIN" | "HOD" | "LEAD" | "STAFF")}
                   >
                     <DropdownMenuRadioItem value="ADMIN">
                       ADMIN

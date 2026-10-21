@@ -1,5 +1,24 @@
 import { Module, Permission } from "@/lib/modules";
 
+export interface PermissionSource {
+  type: "ROLE" | "GROUP" | "OVERRIDE";
+  effect?: "GRANT" | "REVOKE";
+  groupId?: string;
+  groupName?: string;
+}
+
+export interface EffectivePermission {
+  moduleId: string;
+  permissionType: Permission;
+  granted: boolean;
+  sources: PermissionSource[];
+}
+
+export interface EffectivePermissionsResponse {
+  permissions: EffectivePermission[];
+  enhanced: boolean;
+}
+
 export class ACLService {
   private static async fetchWithAuth<T>(
     url: string,
@@ -39,5 +58,14 @@ export class ACLService {
       token,
     );
     return result.hasPermission;
+  }
+
+  static async getEffectivePermissions(
+    token: string,
+  ): Promise<EffectivePermissionsResponse> {
+    return this.fetchWithAuth<EffectivePermissionsResponse>(
+      `${process.env.NEXT_PUBLIC_API}/auth/acl/permissions`,
+      token,
+    );
   }
 }

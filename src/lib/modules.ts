@@ -20,6 +20,7 @@ export interface AuthUser {
   email: string;
   name: string;
   role: Role;
+  roleEnhanced?: boolean;
   avatar?: string;
   isVerified: boolean;
   department: { id: string; name: string } | null;

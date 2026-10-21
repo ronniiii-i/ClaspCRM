@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
-import { useDashboardData, Department } from "./_hooks/use-dashboard-data";
+import { useDashboardData, Department, type DashboardScope } from "./_hooks/use-dashboard-data";
 import { DashboardSkeleton } from "./_components/skeleton";
 import { AdminDashboard } from "./_components/admin_view";
 // import { HodDashboard } from "./_components/hod-view";
@@ -44,28 +44,31 @@ export default function DashboardPage() {
 
   const rawDeptName = user?.managedDepartment?.name ?? user?.department?.name;
 
-  function buildScope() {
+  function buildScope(): DashboardScope {
     switch (user?.role) {
       case "ADMIN":
-        return { scope: "organization" };
+        return { scope: "organization" } as const;
 
       case "HOD": {
         const dept = resolveDepartmentEnum(rawDeptName);
-        return dept
-          ? { scope: "department", department: dept }
-          : { scope: "organization" };
+        if (dept) {
+          return { scope: "department", department: dept };
+        }
+        return { scope: "organization" };
       }
 
       case "LEAD":
-        return { scope: "team", teamId: user.id };
+        return { scope: "team", teamId: user.id } as const;
 
       default:
-        return { scope: "individual", userId: user?.id ?? "" };
+        return { scope: "individual", userId: user?.id ?? "" } as const;
     }
   }
 
   const { isLoading: dataLoading } = useDashboardData(
-    user ? buildScope() : { scope: "individual", userId: "" } as const,
+    user
+      ? buildScope()
+      : ({ scope: "individual", userId: "" } as const),
   );
 
   if (authLoading || !user || dataLoading) {

@@ -50,7 +50,7 @@ export enum Department {
   OPERATIONS = "Operations",
 }
 
-type DashboardScope =
+export type DashboardScope =
   | { scope: "organization" }
   | { scope: "department"; department: Department }
   | { scope: "team"; teamId: string }
