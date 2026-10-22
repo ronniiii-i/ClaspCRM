@@ -7,8 +7,9 @@ import Sidebar from "@/components/sidebar/Sidebar";
 import { Menu } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { initializeSessionTracking, setupTokenRefresh } from "@/lib/auth";
-import { Toaster } from "sonner"; 
+import { Toaster } from "sonner";
 import SessionTimeoutWarning from "@/components/SessionTimeoutWarning";
+import { QueryProvider } from "@/components/providers/QueryProvider";
 
 export default function DashboardLayout({
   children,
@@ -67,7 +68,9 @@ export default function DashboardLayout({
         </Navbar>
 
         <main className="flex-1 overflow-auto p-4 bg-gray-100 dark:bg-gray-900">
-          {children}
+          <QueryProvider>
+            {children}
+          </QueryProvider>
 
           {/* Session timeout warning modal */}
           <SessionTimeoutWarning />
@@ -85,6 +88,8 @@ export default function DashboardLayout({
           />
         </main>
       </div>
+      <Toaster />
+      <SessionTimeoutWarning />
     </div>
   );
 }

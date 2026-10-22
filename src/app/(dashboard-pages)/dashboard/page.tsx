@@ -1,13 +1,9 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
-import { useDashboardData, Department, type DashboardScope } from "./_hooks/use-dashboard-data";
+import { useDashboardData, Department, type DashboardParams } from "./_hooks/use-dashboard-data";
 import { DashboardSkeleton } from "./_components/skeleton";
 import { AdminDashboard } from "./_components/admin_view";
-// import { HodDashboard } from "./_components/hod-view";
-import { FinanceHodDashboard } from "./_components/finance-hod-view";
-import { ItHodDashboard } from "./_components/it-hod-view";
-import { HrHodDashboard } from "./_components/hr-hod-view";
 import { TeamLeadDashboard } from "./_components/lead-view";
 import { StaffDashboard } from "./_components/staff-view";
 
@@ -44,18 +40,16 @@ export default function DashboardPage() {
 
   const rawDeptName = user?.managedDepartment?.name ?? user?.department?.name;
 
-  function buildScope(): DashboardScope {
+  function buildScope(): DashboardParams {
     switch (user?.role) {
       case "ADMIN":
         return { scope: "organization" } as const;
 
-      case "HOD": {
-        const dept = resolveDepartmentEnum(rawDeptName);
-        if (dept) {
-          return { scope: "department", department: dept };
-        }
-        return { scope: "organization" };
-      }
+      case "HOD":
+      return {
+        scope: "department",
+        department: resolveDepartmentEnum(rawDeptName) || undefined,
+      };
 
       case "LEAD":
         return { scope: "team", teamId: user.id } as const;
@@ -67,8 +61,8 @@ export default function DashboardPage() {
 
   const { isLoading: dataLoading } = useDashboardData(
     user
-      ? buildScope()
-      : ({ scope: "individual", userId: "" } as const),
+      ? (buildScope() as DashboardParams)
+      : ({ scope: "individual", userId: "" } as DashboardParams),
   );
 
   if (authLoading || !user || dataLoading) {
@@ -76,11 +70,6 @@ export default function DashboardPage() {
   }
 
   if (user.role === "HOD") {
-    const dept = resolveDepartmentEnum(rawDeptName);
-    if (dept === Department.FINANCE || dept === Department.ACCOUNTING) return <FinanceHodDashboard />;
-    if (dept === Department.IT) return <ItHodDashboard />;
-    if (dept === Department.HR) return <HrHodDashboard />;
-    // return <HodDashboard />;
   }
 
   if (user.role === "ADMIN") return <AdminDashboard />;
