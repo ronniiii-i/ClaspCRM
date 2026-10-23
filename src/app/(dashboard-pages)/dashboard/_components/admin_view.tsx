@@ -2,6 +2,7 @@
 
 import { useDashboardData } from "../_hooks/use-dashboard-data";
 import { DashboardSkeleton } from "./skeleton";
+import { DashboardEmpty, DashboardError } from "./dashboard-states";
 import { OrganizationMetrics } from "./organization-metrics";
 import { DepartmentComparisonChart } from "./department-comparison-chart";
 import { AuditLog } from "./audit-log";
@@ -9,10 +10,28 @@ import { PendingApprovals } from "./pending-approvals";
 import { SystemAlerts } from "./system-alerts";
 
 export function AdminDashboard() {
-  const { data, isLoading } = useDashboardData({ scope: "organization" });
+  const { data, isLoading, isError, error, refetch, isEmpty } =
+    useDashboardData({ scope: "organization" });
 
   if (isLoading) return <DashboardSkeleton />;
-  if (!data) return <div>No data available</div>;
+  if (isError) {
+    return (
+      <DashboardError
+        message={error?.message}
+        onRetry={() => {
+          void refetch();
+        }}
+      />
+    );
+  }
+  if (!data || isEmpty) {
+    return (
+      <DashboardEmpty
+        title="No organization data yet"
+        description="Seed your tenant (departments, users, deals) to populate the admin dashboard."
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">

@@ -2,18 +2,37 @@
 
 import { useDashboardData } from "../_hooks/use-dashboard-data";
 import { DashboardSkeleton } from "./skeleton";
+import { DashboardEmpty, DashboardError } from "./dashboard-states";
 import { TeamPerformanceWidget } from "./team-performance-widget";
 import { TaskProgress } from "./task-progress";
 import { TeamAttendance } from "./team-attendance";
 
 export function TeamLeadDashboard({ teamId }: { teamId: string }) {
-  const { data, isLoading } = useDashboardData({
-    scope: "team",
-    teamId,
-  });
+  const { data, isLoading, isError, error, refetch, isEmpty } =
+    useDashboardData({
+      scope: "team",
+      teamId,
+    });
 
   if (isLoading) return <DashboardSkeleton />;
-  if (!data) return <div>No team data found</div>;
+  if (isError) {
+    return (
+      <DashboardError
+        message={error?.message}
+        onRetry={() => {
+          void refetch();
+        }}
+      />
+    );
+  }
+  if (!data || isEmpty) {
+    return (
+      <DashboardEmpty
+        title="No team data found"
+        description="Team performance, tasks and attendance will appear here once your team has records."
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">

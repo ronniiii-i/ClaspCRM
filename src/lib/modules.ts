@@ -24,8 +24,9 @@ export interface AuthUser {
   avatar?: string;
   isVerified: boolean;
   tenantId?: string;
-  department: { id: string; name: string } | null;
-  managedDepartment: { id: string; name: string } | null;
+  /** `type` is the canonical DepartmentType enum and is preferred for routing. */
+  department: { id: string; name: string; type?: string } | null;
+  managedDepartment: { id: string; name: string; type?: string } | null;
   accessibleModules: Module[]; // Add this
 }
 

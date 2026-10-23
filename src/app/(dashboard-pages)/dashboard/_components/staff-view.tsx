@@ -2,18 +2,37 @@
 
 import { useDashboardData } from "../_hooks/use-dashboard-data";
 import { DashboardSkeleton } from "./skeleton";
+import { DashboardEmpty, DashboardError } from "./dashboard-states";
 import { PersonalKPI } from "./personal-kpi";
 import { TasksWidget } from "./tasks-widget";
 import { LeaveStatus } from "./leave-status";
 
 export function StaffDashboard({ userId }: { userId: string }) {
-  const { data, isLoading } = useDashboardData({
-    scope: "individual",
-    userId,
-  });
+  const { data, isLoading, isError, error, refetch, isEmpty } =
+    useDashboardData({
+      scope: "individual",
+      userId,
+    });
 
   if (isLoading) return <DashboardSkeleton />;
-  if (!data) return <div>Failed to load your data</div>;
+  if (isError) {
+    return (
+      <DashboardError
+        message={error?.message}
+        onRetry={() => {
+          void refetch();
+        }}
+      />
+    );
+  }
+  if (!data || isEmpty) {
+    return (
+      <DashboardEmpty
+        title="Nothing assigned to you yet"
+        description="Your tasks, leave requests and personal metrics will appear here."
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">

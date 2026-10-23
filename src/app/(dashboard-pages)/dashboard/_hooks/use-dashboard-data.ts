@@ -281,12 +281,25 @@ async function fetchDashboardWidgets(token: string): Promise<DashboardData> {
   return mapDashboardPayload(payload);
 }
 
+/**
+ * `GET /dashboard/widgets` is the single source of truth for every role: the
+ * API derives scope and dataset from the caller's role, department and
+ * permissions. The `params` argument therefore only describes *what the view
+ * is showing*; it is deliberately not part of the query key, because the
+ * response is identical for every scope within one session and splitting the
+ * cache would double the (expensive) requests.
+ */
 export function useDashboardData(params: DashboardParams) {
+  // `params` documents the scope the caller intends to render; the API derives
+  // the real scope from the JWT. Referenced so the public signature stays
+  // stable without forcing every call site to change.
   void params;
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   const query = useQuery({
-    queryKey: ["dashboard", "widgets"],
+    // Scope the cache to the tenant *and* user so signing in as someone else
+    // in the same tab never renders the previous user's numbers.
+    queryKey: ["dashboard", "widgets", user?.tenantId ?? "global", user?.id ?? "anonymous"],
     queryFn: () => {
       if (!token) throw new Error("Not authenticated");
       return fetchDashboardWidgets(token);
@@ -294,6 +307,9 @@ export function useDashboardData(params: DashboardParams) {
     enabled: Boolean(token),
     staleTime: 60 * 1000,
     refetchInterval: 5 * 60 * 1000,
+    // Keep the previous payload visible while a background refresh runs so the
+    // page does not collapse back to a skeleton on every navigation/refetch.
+    placeholderData: (previous) => previous,
   });
 
   const isEmpty =
@@ -308,7 +324,11 @@ export function useDashboardData(params: DashboardParams) {
 
   return {
     data: query.data,
-    isLoading: query.isLoading || query.isFetching,
+    // `isLoading` is true only for the first fetch of this key. Using
+    // `isFetching` here made every background refetch swap the dashboard for a
+    // skeleton, which read as "the app is slow".
+    isLoading: query.isLoading,
+    isFetching: query.isFetching,
     isError: query.isError,
     error: query.error,
     refetch: query.refetch,
