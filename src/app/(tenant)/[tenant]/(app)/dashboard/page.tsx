@@ -1,13 +1,14 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuthStore } from "@/stores/auth-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
 
-  const isTenantAdmin = user?.role?.isTenantAdmin;
-  const dataScope = user?.role?.dataScope;
+  const role: any = user?.role;
+  const isTenantAdmin = role?.isTenantAdmin || role === "ADMIN";
+  const dataScope = role?.dataScope;
 
   return (
     <div className="flex flex-col gap-6">

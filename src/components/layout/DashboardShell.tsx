@@ -2,18 +2,18 @@
 
 import { Sidebar } from "@/components/sidebar/Sidebar";
 import ThemeToggle from "@/components/ThemeToggle";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuthStore } from "@/stores/auth-store";
 import { Button } from "@/components/ui/button";
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuthStore();
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
       <Sidebar />
       <div className="flex flex-1 flex-col">
         <header className="flex h-14 items-center justify-between border-b border-border px-6">
-          <div className="text-sm text-muted-foreground">{user?.tenant?.name || ""}</div>
+          <div className="text-sm text-muted-foreground">{(user as any)?.tenant?.name || (user as any)?.tenantName || ""}</div>
           <div className="flex items-center gap-2">
             <ThemeToggle />
             <div className="text-sm text-muted-foreground">{user?.name}</div>

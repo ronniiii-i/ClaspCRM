@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { DashboardShell } from "@/components/layout/DashboardShell";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuthStore } from "@/stores/auth-store";
 
 export default function TenantAppLayout({
   children,
@@ -13,29 +13,33 @@ export default function TenantAppLayout({
   const params = useParams();
   const router = useRouter();
   const tenant = params?.tenant as string | undefined;
-  const { user, isAuthenticated, initialize } = useAuth();
+  const { user, token, isLoading, initialize } = useAuthStore();
 
   useEffect(() => {
     initialize();
   }, [initialize]);
 
   useEffect(() => {
-    if (isAuthenticated === false) {
+    if (!isLoading && !token) {
       router.push(`/${tenant}/login`);
-    } else if (user?.tenantStatus === "PAST_DUE" || user?.tenantStatus === "SUSPENDED") {
-      if (user?.role?.isTenantAdmin) {
-        router.push(`/${tenant}/settings/billing`);
-      } else {
-        router.push(`/${tenant}/account-locked`);
+    } else if (!isLoading && user) {
+      const tenantStatus = (user as any).tenantStatus || user?.tenant?.status;
+      if (tenantStatus === "PAST_DUE" || tenantStatus === "SUSPENDED") {
+        if ((user as any).role?.isTenantAdmin || (user as any).role === "ADMIN" || (user as any).isTenantAdmin) {
+          router.push(`/${tenant}/settings/billing`);
+        } else {
+          router.push(`/${tenant}/account-locked`);
+        }
       }
     }
-  }, [isAuthenticated, user, tenant, router]);
+  }, [isLoading, token, user, tenant, router]);
 
-  if (isAuthenticated === false || !user) {
+  if (isLoading || !token || !user) {
     return null;
   }
 
-  if (user?.tenantStatus === "PAST_DUE" || user?.tenantStatus === "SUSPENDED") {
+  const tenantStatus = (user as any).tenantStatus || (user as any).tenant?.status;
+  if (tenantStatus === "PAST_DUE" || tenantStatus === "SUSPENDED") {
     return null;
   }
 

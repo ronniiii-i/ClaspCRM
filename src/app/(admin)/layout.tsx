@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { redirect } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import Navbar from "@/components/navbar/Navbar";
-import Sidebar from "@/components/sidebar/Sidebar";
+import { Sidebar } from "@/components/sidebar/Sidebar";
 
 export default function AdminLayout({
   children,

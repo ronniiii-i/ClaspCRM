@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Sidebar from '@/components/sidebar/Sidebar';
+import { Sidebar } from '@/components/sidebar/Sidebar';
 import { buildModule, buildUser, clearSession, seedSession } from './utils/factories';
 
 // The sidebar consumes the auth + permission hooks; drive them from the

@@ -163,7 +163,7 @@ export default function CreateWorkspacePage() {
               <Input id="password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} required />
             </div>
             <div className="flex items-start gap-2">
-              <Checkbox id="terms" checked={terms} onCheckedChange={(checked) => setTerms(checked === true)} />
+              <Checkbox id="terms" checked={terms} onChange={(event: React.ChangeEvent<HTMLInputElement>) => setTerms(event.target.checked)} />
               <Label htmlFor="terms" className="text-sm text-muted-foreground">
                 I agree to the Terms of Service and Privacy Policy
               </Label>

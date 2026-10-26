@@ -1,11 +1,12 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuthStore } from "@/stores/auth-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function UserManagementPage() {
-  const { user } = useAuth();
-  const isTenantAdmin = user?.role?.isTenantAdmin;
+  const { user } = useAuthStore();
+  const role: any = user?.role;
+  const isTenantAdmin = role?.isTenantAdmin || role === "ADMIN" || (user as any)?.isTenantAdmin;
 
   return (
     <div className="flex flex-col gap-6">

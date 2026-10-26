@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuthStore } from "@/stores/auth-store";
 import { cn } from "@/lib/utils";
 
 function getTenantPath(pathname: string, tenant: string) {
@@ -18,9 +18,9 @@ export function Sidebar() {
   const params = useParams();
   const pathname = usePathname();
   const tenant = params?.tenant as string | undefined;
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const activeRef = useRef<HTMLAnchorElement>(null);
-  const isTenantAdmin = user?.role?.isTenantAdmin;
+  const isTenantAdmin = (user as any)?.role?.isTenantAdmin || user?.role === "ADMIN";
   const tenantPath = tenant ? getTenantPath(pathname || "", tenant) : pathname || "/";
 
   useEffect(() => {

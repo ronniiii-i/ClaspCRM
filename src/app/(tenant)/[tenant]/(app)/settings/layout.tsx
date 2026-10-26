@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuthStore } from "@/stores/auth-store";
 import { cn } from "@/lib/utils";
 
 const tabs = [
@@ -18,8 +18,9 @@ export default function SettingsLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const { user } = useAuth();
-  const isTenantAdmin = user?.role?.isTenantAdmin;
+  const { user } = useAuthStore();
+  const role: any = user?.role;
+  const isTenantAdmin = role?.isTenantAdmin || role === "ADMIN" || (user as any)?.isTenantAdmin;
   const visibleTabs = isTenantAdmin ? tabs : tabs.slice(0, 1);
 
   return (
