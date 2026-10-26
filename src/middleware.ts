@@ -1,123 +1,76 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { jwtDecode } from "jwt-decode";
 
-const PUBLIC_ROUTES = [
-  "/",
-  "/login",
-  "/register",
-  "/verify-email",
-  "/forgot-password",
-  "/reset-password",
-  "/terms",
-  "/privacy",
-  "/about",
-  "/contact",
-  "/pricing",
-  "/faq",
-  "/blog",
-  "/features",
-  "/demo",
-  "/docs",
-  "/support",
-];
+const RESERVED = new Set(["www", "api", "app", "admin", "system", "system-admin"]);
 
-const AUTH_ROUTES = [
-  "/login",
-  "/register",
-  "/forgot-password",
-  "/reset-password",
-  "/verify-email",
-];
-
-/**
- * Routes that require a session. Anything not listed here (and not public) is
- * assumed to be an unknown URL: it is allowed through so Next can render the
- * 404 boundary, which keeps the dashboard shell for signed-in users and shows
- * the standalone page otherwise.
- *
- * Add every new authenticated section here.
- */
-const PROTECTED_ROUTES = [
-  "/dashboard",
-  "/profile",
-  "/settings",
-  "/user-management",
-  "/admin",
-  "/users",
-  "/reports",
-  "/analytics",
-];
-
-const ROLE_GATED_ROUTES: Record<string, string[]> = {
-  "/admin": ["ADMIN"],
-  "/user-management": ["ADMIN"],
-  "/users": ["ADMIN"],
-  "/reports": ["ADMIN", "HOD"],
-  "/analytics": ["ADMIN", "HOD"],
-};
-
-function matchesRoute(pathname: string, route: string): boolean {
-  return pathname === route || pathname.startsWith(`${route}/`);
+function getSlugFromHost(host: string): string | null {
+  if (!host) return null;
+  const h = host.split(":")[0];
+  if (h === "localhost" || h.endsWith(".claspcrm.com") === false && h.includes(".localhost") === false) {
+    // apex/local apex
+    if (h === "localhost" || h === "claspcrm.com" || h === "www.claspcrm.com") return null;
+  }
+  // *.localhost
+  if (h.endsWith(".localhost")) {
+    const parts = h.split(".");
+    if (parts.length >= 3) {
+      const slug = parts[0];
+      if (RESERVED.has(slug)) return null;
+      if (/^[a-z0-9-]+$/.test(slug)) return slug;
+    }
+    return null;
+  }
+  // *.claspcrm.com
+  if (h.endsWith(".claspcrm.com")) {
+    const parts = h.split(".");
+    if (parts.length >= 3) {
+      const slug = parts[0];
+      if (RESERVED.has(slug)) return null;
+      if (/^[a-z0-9-]+$/.test(slug)) return slug;
+    }
+    return null;
+  }
+  return null;
 }
 
-export default function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
+  const host = request.headers.get("host") || "";
+  const slug = getSlugFromHost(host);
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get("access_token")?.value;
 
-  const isPublicRoute = PUBLIC_ROUTES.some((route) =>
-    matchesRoute(pathname, route),
-  );
-  const isAuthRoute = AUTH_ROUTES.some((route) =>
-    matchesRoute(pathname, route),
-  );
-  const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
-    matchesRoute(pathname, route),
-  );
-
-  // Authenticated user trying to access auth pages
-  if (token && isAuthRoute) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-
-  // Unknown / public routes need no session handling.
-  if (!isProtectedRoute || isPublicRoute) {
-    return NextResponse.next();
-  }
-
-  // Unauthenticated access to a protected route
-  if (!token) {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  try {
-    const decoded = jwtDecode<{ role: string }>(token);
-    const userRole = decoded.role;
-
-    for (const [routePrefix, allowedRoles] of Object.entries(
-      ROLE_GATED_ROUTES,
-    )) {
-      if (
-        matchesRoute(pathname, routePrefix) &&
-        !allowedRoles.includes(userRole)
-      ) {
-        return NextResponse.redirect(new URL("/dashboard", request.url));
-      }
+  if (slug) {
+    // Skip internal paths
+    if (pathname.startsWith("/_next") || pathname.startsWith("/api") || pathname.startsWith("/static")) {
+      const res = NextResponse.next();
+      res.headers.set("x-tenant-slug", slug);
+      return res;
     }
-  } catch {
-    // Token is malformed or expired — clear it and redirect to login
-    const response = NextResponse.redirect(
-      new URL("/login?error=invalid_token", request.url),
-    );
-    response.cookies.delete("access_token");
-    return response;
+    if (pathname.startsWith("/system-admin")) {
+      return new NextResponse("Not Found", { status: 404 });
+    }
+    // Rewrite to [tenant] tree
+    const url = request.nextUrl.clone();
+    if (pathname.startsWith(`/${slug}`)) {
+      url.pathname = pathname.replace(`/${slug}`, "") || "/";
+    }
+    url.pathname = `/[tenant]${url.pathname}`.replace("/[tenant]/", "/[tenant]/").replace("/[tenant]$", "/[tenant]");
+    // Better: rewrite to /[tenant]/... 
+    const rewriteUrl = request.nextUrl.clone();
+    rewriteUrl.pathname = `/${slug}${pathname === "/" ? "" : pathname}`.replace(`/${slug}`, `/[tenant]`) || "/[tenant]";
+    if (rewriteUrl.pathname === "/[tenant]") rewriteUrl.pathname = "/[tenant]/";
+    const res = NextResponse.rewrite(rewriteUrl);
+    res.headers.set("x-tenant-slug", slug);
+    return res;
   }
 
+  // Apex
+  if (pathname.startsWith("/system-admin")) {
+    const res = NextResponse.next();
+    return res;
+  }
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
