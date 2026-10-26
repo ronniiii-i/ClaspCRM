@@ -1,58 +1,34 @@
-import { NextResponse } from "next/server";
-import { serialize } from "cookie";
+import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_LOGIN_URL = `${process.env.NEXT_PUBLIC_API}/auth/login`;
-
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json();
-
-    const backendResponse = await fetch(BACKEND_LOGIN_URL, {
+    const body = await request.json();
+    const apiBase = process.env.NEXT_PUBLIC_API || "http://localhost:3030";
+    const response = await fetch(`${apiBase}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify(body),
     });
 
-    const backendData = await backendResponse.json();
+    const data = await response.json().catch(() => ({}));
 
-    if (!backendResponse.ok) {
-      return NextResponse.json(backendData, { status: backendResponse.status });
+    if (!response.ok) {
+      return NextResponse.json(data, { status: response.status });
     }
 
-    const { accessToken } = backendData;
-
-    if (!accessToken) {
-      return NextResponse.json(
-        { message: "Authentication failed: no token received." },
-        { status: 500 },
-      );
+    const token = data.accessToken || data.token;
+    const res = NextResponse.json({ accessToken: token, user: data.user }, { status: 200 });
+    if (token) {
+      res.cookies.set("access_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24,
+      });
     }
-
-    // maxAge in seconds (1 hour) — matches JWT expiry
-    const cookie = serialize("access_token", accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 3600,
-    });
-
-    const response = NextResponse.json(
-      {
-        success: true,
-        message: backendData.message || "Login successful",
-        user: backendData.user,
-        accessToken,
-      },
-      { status: 200 },
-    );
-
-    response.headers.set("Set-Cookie", cookie);
-    return response;
-  } catch {
-    return NextResponse.json(
-      { message: "Internal server error during authentication." },
-      { status: 500 },
-    );
+    return res;
+  } catch (error) {
+    return NextResponse.json({ message: "Login failed" }, { status: 500 });
   }
 }

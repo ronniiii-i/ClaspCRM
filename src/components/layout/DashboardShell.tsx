@@ -1,72 +1,28 @@
 "use client";
 
-import { useState } from "react";
-import Head from "next/head";
-import Navbar from "@/components/navbar/Navbar";
-import Sidebar from "@/components/sidebar/Sidebar";
-import { Menu } from "lucide-react";
-import { Toaster } from "sonner";
-import SessionTimeoutWarning from "@/components/SessionTimeoutWarning";
-import { QueryProvider } from "@/components/providers/QueryProvider";
+import { Sidebar } from "@/components/sidebar/Sidebar";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
 
-/**
- * The authenticated application chrome (sidebar + navbar).
- *
- * Extracted from the dashboard layout so that the in-shell 404 page can reuse
- * exactly the same shell without duplicating markup.
- */
 export function DashboardShell({ children }: { children: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <Head>
-        <meta name="robots" content="noindex, nofollow" />
-      </Head>
-
-      {/* Mobile Sidebar Overlay */}
-      <div
-        className={`fixed inset-0 z-40 bg-black/50 lg:hidden ${
-          sidebarOpen ? "block" : "hidden"
-        }`}
-        onClick={() => setSidebarOpen(false)}
-      />
-
-      <aside
-        className={`fixed top-0 bottom-0 lg:relative z-50 md:w-64 sm:w-full flex-col border-r bg-background transition-all duration-300 ease-in-out ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        }`}
-      >
-        <Sidebar />
-      </aside>
-
-      <div className="flex flex-col w-full overflow-hidden">
-        <Navbar>
-          <button
-            className="lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            aria-label="Toggle navigation"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-        </Navbar>
-
-        <main className="flex-1 overflow-auto p-4 bg-gray-100 dark:bg-gray-900">
-          <QueryProvider>{children}</QueryProvider>
-
-          <SessionTimeoutWarning />
-
-          <Toaster
-            position="top-center"
-            toastOptions={{
-              style: {
-                background: "hsl(var(--background))",
-                color: "hsl(var(--foreground))",
-                border: "1px solid hsl(var(--border))",
-              },
-            }}
-          />
-        </main>
+    <div className="flex min-h-screen bg-background text-foreground">
+      <Sidebar />
+      <div className="flex flex-1 flex-col">
+        <header className="flex h-14 items-center justify-between border-b border-border px-6">
+          <div className="text-sm text-muted-foreground">{user?.tenant?.name || ""}</div>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <div className="text-sm text-muted-foreground">{user?.name}</div>
+            <Button variant="ghost" size="sm" onClick={() => logout()}>
+              Sign out
+            </Button>
+          </div>
+        </header>
+        <main className="flex-1 px-6 py-6">{children}</main>
       </div>
     </div>
   );

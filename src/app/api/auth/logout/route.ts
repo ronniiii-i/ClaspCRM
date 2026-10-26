@@ -1,39 +1,8 @@
-import { NextResponse } from "next/server";
-import { serialize } from "cookie";
+import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_LOGOUT_URL = `${process.env.NEXT_PUBLIC_API}/auth/logout`;
-
-export async function POST(request: Request) {
-  const expiredCookie = serialize("access_token", "", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    expires: new Date(0),
-  });
-
-  const response = NextResponse.json(
-    { message: "Logout successful" },
-    { status: 200 },
-  );
-  response.headers.set("Set-Cookie", expiredCookie);
-
-  // Notify backend to blacklist the token (best-effort)
-  try {
-    const incomingCookies = request.headers.get("Cookie");
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-    };
-    if (incomingCookies) headers["Cookie"] = incomingCookies;
-
-    await fetch(BACKEND_LOGOUT_URL, {
-      method: "POST",
-      headers,
-      credentials: "include",
-    });
-  } catch {
-    // Non-fatal — cookie is already cleared
-  }
-
-  return response;
+export async function POST(request: NextRequest) {
+  const res = NextResponse.json({ success: true }, { status: 200 });
+  res.cookies.set("access_token", "", { httpOnly: true, path: "/", maxAge: 0 });
+  res.cookies.set("sys_access_token", "", { httpOnly: true, path: "/", maxAge: 0 });
+  return res;
 }
