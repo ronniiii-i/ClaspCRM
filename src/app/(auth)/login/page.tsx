@@ -38,7 +38,7 @@ export default function AuthGatewayPage() {
       }
       localStorage.setItem("clasp_last_workspace", trimmed);
       window.location.href = `${protocol}://${trimmed}.${rootDomain}/login`;
-    } catch (err) {
+    } catch {
       setError("We couldn't find that workspace.");
       setLoading(false);
     }
