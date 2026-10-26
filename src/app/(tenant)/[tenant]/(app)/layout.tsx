@@ -23,7 +23,7 @@ export default function TenantAppLayout({
     if (!isLoading && !token) {
       router.push(`/${tenant}/login`);
     } else if (!isLoading && user) {
-      const tenantStatus = (user as any).tenantStatus || user?.tenant?.status;
+      const tenantStatus = (user as any).tenantStatus || (user as any).tenantStatus;
       if (tenantStatus === "PAST_DUE" || tenantStatus === "SUSPENDED") {
         if ((user as any).role?.isTenantAdmin || (user as any).role === "ADMIN" || (user as any).isTenantAdmin) {
           router.push(`/${tenant}/settings/billing`);
@@ -38,7 +38,7 @@ export default function TenantAppLayout({
     return null;
   }
 
-  const tenantStatus = (user as any).tenantStatus || (user as any).tenant?.status;
+  const tenantStatus = (user as any).tenantStatus;
   if (tenantStatus === "PAST_DUE" || tenantStatus === "SUSPENDED") {
     return null;
   }
