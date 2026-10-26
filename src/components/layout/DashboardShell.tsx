@@ -1,7 +1,7 @@
 "use client";
 
 import { Sidebar } from "@/components/sidebar/Sidebar";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import ThemeToggle from "@/components/ThemeToggle";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 
