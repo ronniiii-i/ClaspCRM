@@ -68,6 +68,9 @@ export function middleware(request: NextRequest) {
     const res = NextResponse.next();
     return res;
   }
+  if (pathname === "/login") {
+    return NextResponse.redirect(new URL("/find-workspace", request.url));
+  }
   return NextResponse.next();
 }
 

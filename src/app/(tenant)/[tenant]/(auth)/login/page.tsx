@@ -77,7 +77,7 @@ export default function TenantLoginPage() {
               <Link href={`/${tenant}/forgot-password`} className="underline underline-offset-4 hover:text-foreground">
                 Forgot password?
               </Link>
-              <Link href="/login" className="underline underline-offset-4 hover:text-foreground">
+              <Link href="/find-workspace" className="underline underline-offset-4 hover:text-foreground">
                 Find a different workspace
               </Link>
             </div>
