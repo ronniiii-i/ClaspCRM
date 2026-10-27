@@ -7,17 +7,23 @@ export const defaultMetadata: Metadata = {
     template: "%s | ClaspCRM by Roni Egbu",
   },
   description:
-    "ClaspCRM is a complete business management solution built by Roni Egbu, a frontend developer passionate about creating scalable software.",
+    "ClaspCRM is a complete business management solution built by Roni Egbu, a fullstack developer passionate about creating scalable software.",
   keywords: [
     "Princess Roni Egbu",
     "Roni Egbu",
+    "Princess Egbu",
     "CRM",
+    "B2B",
+    "B2C",
+    "SaaS",
     "Business Management",
-    "Project Management",
-    "HR Management",
-    "Frontend Developer Portfolio",
+    "Business Management Software",
+    "Business Management System",
+    "Business Management Tools",
+    "Fullstack Developer Portfolio",
     "ClaspCRM",
     "Enterprise Tools",
+    "Software as a Service",
     "Next.js Projects",
     "NestJS Projects",
     "Fullstack Portfolio",
@@ -49,7 +55,7 @@ export const defaultMetadata: Metadata = {
     siteName: "ClaspCRM by Roni Egbu",
     title: "ClaspCRM | Built by Roni Egbu",
     description:
-      "Manage your business smarter with ClaspCRM — a CRM built by Roni Egbu, frontend developer and software engineer.",
+      "Manage your business smarter with ClaspCRM — a CRM built by Roni Egbu, fullstack developer and software engineer.",
     images: [
       {
         url: "https://claspcrm.vercel.app/og-image.png",
@@ -96,7 +102,7 @@ export const defaultMetadata: Metadata = {
         url: "https://roniegbu.vercel.app",
       },
       description:
-        "ClaspCRM is a business management solution built by Roni Egbu, a frontend developer passionate about scalable software.",
+        "ClaspCRM is a business management solution built by Roni Egbu, a fullstack developer passionate about scalable software.",
       publisher: {
         "@type": "Person",
         name: "Roni Egbu",

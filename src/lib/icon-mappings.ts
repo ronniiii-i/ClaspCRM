@@ -1,4 +1,3 @@
-// src/lib/icon-mappings.ts
 import {
   LayoutDashboard,
   Users,

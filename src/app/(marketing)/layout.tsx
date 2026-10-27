@@ -1,5 +1,5 @@
-import { PublicNavbar } from "@/components/marketing/PublicNavbar";
-import { PublicFooter } from "@/components/marketing/PublicFooter";
+import { PublicNavbar } from "@/components/navbar/PublicNavbar";
+import { PublicFooter } from "@/components/footer/PublicFooter";
 
 export default function MarketingLayout({
   children,
