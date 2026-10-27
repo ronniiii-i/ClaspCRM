@@ -36,8 +36,14 @@ export default function AuthGatewayPage() {
         setLoading(false);
         return;
       }
-      localStorage.setItem("clasp_last_workspace", trimmed);
-      window.location.href = `${protocol}://${trimmed}.${rootDomain}/login`;
+      const data = await response.json();
+      if (!data?.success || !data?.workspace?.slug) {
+        setError("We couldn't find that workspace.");
+        setLoading(false);
+        return;
+      }
+      localStorage.setItem("clasp_last_workspace", data.workspace.slug);
+      window.location.href = `${protocol}://${data.workspace.slug}.${rootDomain}/login`;
     } catch {
       setError("We couldn't find that workspace.");
       setLoading(false);

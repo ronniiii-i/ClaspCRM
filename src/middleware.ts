@@ -45,18 +45,15 @@ export function middleware(request: NextRequest) {
       res.headers.set("x-tenant-slug", slug);
       return res;
     }
-    if (pathname.startsWith("/system-admin")) {
+    if (pathname.startsWith("/system-admin") || pathname.startsWith("/find-workspace") || pathname.startsWith("/create-workspace") || pathname.startsWith("/register") || pathname === "/login") {
       return new NextResponse("Not Found", { status: 404 });
     }
     // Rewrite to [tenant] tree
-    const url = request.nextUrl.clone();
-    if (pathname.startsWith(`/${slug}`)) {
-      url.pathname = pathname.replace(`/${slug}`, "") || "/";
-    }
-    url.pathname = `/[tenant]${url.pathname}`.replace("/[tenant]/", "/[tenant]/").replace("/[tenant]$", "/[tenant]");
-    // Better: rewrite to /[tenant]/... 
     const rewriteUrl = request.nextUrl.clone();
-    rewriteUrl.pathname = `/${slug}${pathname === "/" ? "" : pathname}`.replace(`/${slug}`, `/[tenant]`) || "/[tenant]";
+    if (pathname.startsWith(`/${slug}`)) {
+      rewriteUrl.pathname = pathname.replace(`/${slug}`, "") || "/";
+    }
+    rewriteUrl.pathname = `/${slug}${rewriteUrl.pathname === "/" ? "" : rewriteUrl.pathname}`.replace(`/${slug}`, `/[tenant]`) || "/[tenant]";
     if (rewriteUrl.pathname === "/[tenant]") rewriteUrl.pathname = "/[tenant]/";
     const res = NextResponse.rewrite(rewriteUrl);
     res.headers.set("x-tenant-slug", slug);
