@@ -36,7 +36,7 @@ export const useSystemAdminStore = create<SystemAdminState>()(
           const res = await fetch("/api/system-admin/verify", { credentials: "include" });
           if (res.ok) {
             const data = await res.json();
-            set({ admin: data.admin || data, token: get().token });
+            set({ admin: data.admin || data, token: get().token || data.accessToken || data.token || null });
           } else {
             set({ admin: null, token: null });
           }

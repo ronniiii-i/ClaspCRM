@@ -32,8 +32,11 @@ export default function SystemAdminLoginPage() {
       }
       if (data.admin && (data.accessToken || data.token)) {
         setAuth(data.admin, data.accessToken || data.token);
+      } else if (data.accessToken || data.token) {
+        setAuth({ id: data.admin?.id || 'sys', email: data.admin?.email || email, name: data.admin?.name || 'System Admin', role: data.admin?.role || 'admin' }, data.accessToken || data.token);
       }
       router.push("/system-admin");
+      router.refresh();
     } catch {
       setError("Login failed");
     } finally {

@@ -40,7 +40,7 @@ export function middleware(request: NextRequest) {
 
   if (slug) {
     // Skip internal paths
-    if (pathname.startsWith("/_next") || pathname.startsWith("/api") || pathname.startsWith("/static")) {
+    if (pathname.startsWith("/_next") || pathname.startsWith("/api") || pathname.startsWith("/static") || pathname.startsWith("/_vercel")) {
       const res = NextResponse.next();
       res.headers.set("x-tenant-slug", slug);
       return res;
