@@ -27,7 +27,7 @@ export function PublicNavbar() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <Button variant="ghost" size="sm" asChild className="hidden sm:inline-flex">
-            <Link href="/login">Sign in</Link>
+            <Link href="/find-workspace">Sign in</Link>
           </Button>
           <Button size="sm" asChild>
             <Link href="/create-workspace">Create workspace</Link>
