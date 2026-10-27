@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       });
     }
     return res;
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: "Login failed" }, { status: 500 });
   }
 }

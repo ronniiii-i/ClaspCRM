@@ -12,6 +12,9 @@ export default function TenantLoginPage() {
   const params = useParams();
   const router = useRouter();
   const tenant = params?.tenant as string | undefined;
+  const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+  const protocol = process.env.NEXT_PUBLIC_ROOT_PROTOCOL || "http";
+  const apexFindWorkspaceUrl = `${protocol}://${rootDomain}/find-workspace`;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -37,15 +40,24 @@ export default function TenantLoginPage() {
       }
 
       const data = await response.json();
+      if (!data?.accessToken || !data?.user) {
+        setError("Login failed. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      localStorage.setItem("token", data.accessToken);
+      localStorage.setItem("auth_user", JSON.stringify(data.user));
+
       if (data?.user?.role?.isTenantAdmin && data?.user?.tenantStatus === "PAST_DUE") {
-        router.push(`/${tenant}/settings/billing`);
+        router.push("/settings/billing");
         return;
       }
       if (data?.user?.tenantStatus === "PAST_DUE" || data?.user?.tenantStatus === "SUSPENDED") {
-        router.push(`/${tenant}/account-locked`);
+        router.push("/account-locked");
         return;
       }
-      router.push(`/${tenant}/dashboard`);
+      router.push("/dashboard");
     } catch {
       setError("Invalid credentials");
       setLoading(false);
@@ -77,7 +89,7 @@ export default function TenantLoginPage() {
               <Link href={`/${tenant}/forgot-password`} className="underline underline-offset-4 hover:text-foreground">
                 Forgot password?
               </Link>
-              <Link href="/find-workspace" className="underline underline-offset-4 hover:text-foreground">
+              <Link href={apexFindWorkspaceUrl} className="underline underline-offset-4 hover:text-foreground">
                 Find a different workspace
               </Link>
             </div>
