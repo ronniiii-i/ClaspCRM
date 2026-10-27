@@ -46,7 +46,7 @@ export default function TenantLoginPage() {
         return;
       }
       router.push(`/${tenant}/dashboard`);
-    } catch (err) {
+    } catch {
       setError("Invalid credentials");
       setLoading(false);
     }

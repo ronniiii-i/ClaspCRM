@@ -45,15 +45,17 @@ export function middleware(request: NextRequest) {
       res.headers.set("x-tenant-slug", slug);
       return res;
     }
-    if (pathname.startsWith("/system-admin") || pathname.startsWith("/find-workspace") || pathname.startsWith("/create-workspace") || pathname.startsWith("/register") || pathname === "/login") {
+    if (pathname.startsWith("/system-admin") || pathname.startsWith("/find-workspace") || pathname.startsWith("/create-workspace") || pathname.startsWith("/register")) {
       return new NextResponse("Not Found", { status: 404 });
     }
     // Rewrite to [tenant] tree
     const rewriteUrl = request.nextUrl.clone();
     if (pathname.startsWith(`/${slug}`)) {
       rewriteUrl.pathname = pathname.replace(`/${slug}`, "") || "/";
+    } else {
+      rewriteUrl.pathname = `/${slug}${pathname === "/" ? "" : pathname}`;
     }
-    rewriteUrl.pathname = `/${slug}${rewriteUrl.pathname === "/" ? "" : rewriteUrl.pathname}`.replace(`/${slug}`, `/[tenant]`) || "/[tenant]";
+    rewriteUrl.pathname = rewriteUrl.pathname.replace(`/${slug}`, `/[tenant]`) || "/[tenant]";
     if (rewriteUrl.pathname === "/[tenant]") rewriteUrl.pathname = "/[tenant]/";
     const res = NextResponse.rewrite(rewriteUrl);
     res.headers.set("x-tenant-slug", slug);
@@ -65,9 +67,9 @@ export function middleware(request: NextRequest) {
     const res = NextResponse.next();
     return res;
   }
-  if (pathname === "/login") {
-    return NextResponse.redirect(new URL("/find-workspace", request.url));
-  }
+  // if (pathname === "/login") {
+  //   return NextResponse.redirect(new URL("/find-workspace", request.url));
+  // }
   return NextResponse.next();
 }
 
