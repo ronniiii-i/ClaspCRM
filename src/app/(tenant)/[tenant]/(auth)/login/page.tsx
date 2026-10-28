@@ -57,7 +57,7 @@ export default function TenantLoginPage() {
         router.push("/account-locked");
         return;
       }
-      router.push("/dashboard");
+      router.push(`/${tenant}/dashboard`);
     } catch {
       setError("Invalid credentials");
       setLoading(false);
