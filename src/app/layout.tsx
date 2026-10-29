@@ -1,5 +1,4 @@
-// src/app/layout.tsx
-import type { Metadata } from "next";
+// import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { geistSans, geistMono } from "@/lib/fonts";
@@ -10,12 +9,9 @@ import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 
-import { generatePageMetadata } from "@/lib/seo";
+import { defaultMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = generatePageMetadata({
-  title: "Clasp Workspace Intranet",
-  description: "The ultimate CRM for your business",
-});
+export const metadata = defaultMetadata;
 
 export default function RootLayout({
   children,
