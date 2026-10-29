@@ -10,7 +10,7 @@ export default function PrivacyPage() {
         </div>
         <div className="flex flex-col gap-4 text-base leading-7 text-muted-foreground">
           <p>
-            ClaspCRM is designed with tenant isolation as a core principle. Your workspace data is separated at the database
+            Clasp Workspace is designed with tenant isolation as a core principle. Your workspace data is separated at the database
             level and access is strictly controlled by permissions.
           </p>
           <p>

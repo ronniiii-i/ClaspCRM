@@ -54,8 +54,8 @@ export async function login(
   };
 
   if (typeof window !== "undefined") {
-    localStorage.setItem("token", formattedResponse.accessToken);
-    localStorage.setItem("auth_user", JSON.stringify(formattedResponse.user));
+    localStorage.setItem("clasp_token_v3", formattedResponse.accessToken);
+    localStorage.setItem("auth_user_v3", JSON.stringify(formattedResponse.user));
   }
 
   return formattedResponse;
@@ -67,7 +67,7 @@ export function getToken(request?: NextRequest): string | null {
   }
 
   if (typeof window !== "undefined") {
-    return localStorage.getItem("token");
+    return localStorage.getItem("clasp_token_v3");
   }
 
   return null;
@@ -106,7 +106,7 @@ export const setupTokenRefresh = (expiresInSeconds: number) => {
         const newExpiresIn = decoded.exp - Math.floor(Date.now() / 1000);
 
         if (typeof window !== "undefined") {
-          localStorage.setItem("token", accessToken);
+          localStorage.setItem("clasp_token_v3", accessToken);
         }
 
         setupTokenRefresh(newExpiresIn);
@@ -175,8 +175,8 @@ export async function logout(): Promise<void> {
   if (inactivityTimer) clearTimeout(inactivityTimer);
   if (refreshTimer) clearTimeout(refreshTimer);
 
-  localStorage.removeItem("token");
-  localStorage.removeItem("auth_user");
+  localStorage.removeItem("clasp_token_v3");
+  localStorage.removeItem("auth_user_v3");
   sessionStorage.clear();
 
   void fetch("/api/auth/logout", {

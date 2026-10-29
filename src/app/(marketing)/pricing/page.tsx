@@ -6,7 +6,7 @@ const plans = [
   {
     name: "Starter",
     price: "Free during trial",
-    description: "Explore ClaspCRM with your team on a 14-day trial.",
+    description: "Explore Clasp Workspace with your team on a 14-day trial.",
     features: ["Dynamic departments", "Custom roles", "Core workspace modules", "Email support"],
     cta: "Create your Workspace",
     href: "/create-workspace",

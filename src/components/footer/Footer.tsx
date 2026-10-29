@@ -21,7 +21,7 @@ const Footer = () => {
                 />
               </svg>
               <span className="ml-2 text-xl font-bold text-white">
-                ClaspCRM
+                Clasp Workspace
               </span>
             </div>
             <p className="text-gray-300 text-base">
@@ -145,7 +145,7 @@ const Footer = () => {
         </div>
         <div className="mt-12 border-t border-gray-700 pt-8">
           <p className="text-base text-gray-400 text-center">
-            &copy; {new Date().getFullYear()} ClaspCRM. All rights reserved.
+            &copy; {new Date().getFullYear()} Clasp Workspace. All rights reserved.
           </p>
         </div>
       </div>

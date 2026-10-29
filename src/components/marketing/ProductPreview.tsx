@@ -9,7 +9,7 @@ export function ProductPreview() {
             <span className="h-2 w-2 rounded-full bg-muted-foreground/40" />
             <span className="h-2 w-2 rounded-full bg-muted-foreground/40" />
           </div>
-          <div className="text-xs text-muted-foreground">acme.claspcrm.com/dashboard</div>
+          <div className="text-xs text-muted-foreground">acme.claspworkspace.com/dashboard</div>
         </div>
         <div className="grid grid-cols-[220px_1fr]">
           <aside className="hidden border-r border-border p-4 sm:flex sm:flex-col sm:gap-3">

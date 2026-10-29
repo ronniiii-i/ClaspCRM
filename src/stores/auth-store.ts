@@ -12,7 +12,7 @@ import {
 } from "@/lib/auth";
 import type { AuthUser } from "@/lib/modules";
 
-const CACHED_USER_KEY = "auth_user";
+const CACHED_USER_KEY = "auth_user_v3";
 
 export interface AuthStore {
   token: string | null;
@@ -73,7 +73,7 @@ function persistUser(user: AuthUser): void {
 
 function clearStorage(): void {
   if (typeof window === "undefined") return;
-  localStorage.removeItem("token");
+  localStorage.removeItem("clasp_token_v3");
   localStorage.removeItem(CACHED_USER_KEY);
 }
 

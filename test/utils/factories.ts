@@ -7,7 +7,7 @@ import type { AuthUser, Module, Role } from '@/lib/modules';
 export function buildUser(overrides: Partial<AuthUser> = {}): AuthUser {
   return {
     id: 'user-1',
-    email: 'admin@claspcrm.com',
+    email: 'admin@claspworkspace.com',
     name: 'Test User',
     role: 'ADMIN' as Role,
     roleEnhanced: false,
@@ -41,8 +41,8 @@ export function buildModule(
  * without hitting the network.
  */
 export function seedSession(user: AuthUser, token = 'test-token'): void {
-  window.localStorage.setItem('token', token);
-  window.localStorage.setItem('auth_user', JSON.stringify(user));
+  window.localStorage.setItem('clasp_token_v3', token);
+  window.localStorage.setItem('auth_user_v3', JSON.stringify(user));
 }
 
 /** Clears any session state between tests. */

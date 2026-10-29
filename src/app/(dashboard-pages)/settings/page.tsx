@@ -37,7 +37,7 @@ export default function SettingsPage() {
         <div className="p-5">
           <h2 className="font-semibold">Appearance</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Choose how ClaspCRM looks on your device
+            Choose how Clasp Workspace looks on your device
           </p>
         </div>
         <div className="p-5">
@@ -106,7 +106,7 @@ export default function SettingsPage() {
           {[
             {
               label: "In-app notifications",
-              description: "Alerts and updates shown inside ClaspCRM",
+              description: "Alerts and updates shown inside Clasp Workspace",
               defaultOn: true,
             },
             {

@@ -94,7 +94,7 @@ function signInAs(
 ) {
   const user = {
     id: 'user-1',
-    email: 'user@claspcrm.com',
+    email: 'user@claspworkspace.com',
     name: 'Test User',
     role: overrides.role ?? 'STAFF',
     isVerified: true,

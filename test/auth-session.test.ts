@@ -17,7 +17,7 @@ describe('auth session', () => {
     it('stores the token and the user in localStorage', async () => {
       const user = buildUser({
         role: 'STAFF',
-        email: 'staff@claspcrm.com',
+        email: 'staff@claspworkspace.com',
       });
       global.fetch = jest.fn().mockResolvedValue({
         ok: true,
@@ -27,11 +27,11 @@ describe('auth session', () => {
         }),
       }) as unknown as typeof fetch;
 
-      await login('staff@claspcrm.com', 'Password123!');
+      await login('staff@claspworkspace.com', 'Password123!');
 
-      expect(window.localStorage.getItem('token')).toBe('jwt-token');
-      expect(window.localStorage.getItem('auth_user')).toContain(
-        'staff@claspcrm.com',
+      expect(window.localStorage.getItem('clasp_token_v3')).toBe('jwt-token');
+      expect(window.localStorage.getItem('auth_user_v3')).toContain(
+        'staff@claspworkspace.com',
       );
     });
 
@@ -45,9 +45,9 @@ describe('auth session', () => {
         }),
       }) as unknown as typeof fetch;
 
-      await login('staff@claspcrm.com', 'Password123!');
+      await login('staff@claspworkspace.com', 'Password123!');
 
-      const stored = JSON.parse(window.localStorage.getItem('auth_user') as string);
+      const stored = JSON.parse(window.localStorage.getItem('auth_user_v3') as string);
       expect(stored.roleEnhanced).toBe(true);
     });
 
@@ -61,9 +61,9 @@ describe('auth session', () => {
         }),
       }) as unknown as typeof fetch;
 
-      await login('admin@claspcrm.com', 'Password123!');
+      await login('admin@claspworkspace.com', 'Password123!');
 
-      const stored = JSON.parse(window.localStorage.getItem('auth_user') as string);
+      const stored = JSON.parse(window.localStorage.getItem('auth_user_v3') as string);
       expect(stored.tenantId).toBe('tenant-abc');
     });
 
@@ -74,7 +74,7 @@ describe('auth session', () => {
       }) as unknown as typeof fetch;
 
       await expect(
-        login('staff@claspcrm.com', 'wrong-password'),
+        login('staff@claspworkspace.com', 'wrong-password'),
       ).rejects.toThrow('Invalid credentials');
     });
   });
@@ -85,15 +85,15 @@ describe('auth session', () => {
     });
 
     it('returns the stored token', () => {
-      window.localStorage.setItem('token', 'abc');
+      window.localStorage.setItem('clasp_token_v3', 'abc');
       expect(getToken()).toBe('abc');
     });
   });
 
   describe('logout', () => {
     it('clears the token and the cached user', async () => {
-      window.localStorage.setItem('token', 'abc');
-      window.localStorage.setItem('auth_user', '{}');
+      window.localStorage.setItem('clasp_token_v3', 'abc');
+      window.localStorage.setItem('auth_user_v3', '{}');
 
       global.fetch = jest.fn().mockResolvedValue({
         ok: true,
@@ -102,8 +102,8 @@ describe('auth session', () => {
 
       await logout();
 
-      expect(window.localStorage.getItem('token')).toBeNull();
-      expect(window.localStorage.getItem('auth_user')).toBeNull();
+      expect(window.localStorage.getItem('clasp_token_v3')).toBeNull();
+      expect(window.localStorage.getItem('auth_user_v3')).toBeNull();
     });
   });
 });

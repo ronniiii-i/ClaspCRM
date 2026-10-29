@@ -47,11 +47,11 @@ export default function ContactPage() {
             Contact
           </h1>
           <p className="max-w-md text-lg text-pretty text-muted-foreground">
-            Have questions about ClaspCRM or want to discuss your workspace setup? Send us a message.
+            Have questions about Clasp Workspace or want to discuss your workspace setup? Send us a message.
           </p>
           <div className="mt-4 flex flex-col gap-2 text-sm text-muted-foreground">
-            <p>Support: support@claspcrm.com</p>
-            <p>General: hello@claspcrm.com</p>
+            <p>Support: support@claspworkspace.com</p>
+            <p>General: hello@claspworkspace.com</p>
           </div>
         </div>
         <Card className="border-border">

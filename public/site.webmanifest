@@ -1,7 +1,7 @@
 {
-  "name": "ClaspCRM",
-  "short_name": "ClaspCRM",
-  "description": "ClaspCRM is a complete business management solution built by Roni Egbu.",
+  "name": "Clasp Workspace",
+  "short_name": "Clasp Workspace",
+  "description": "Clasp Workspace is a complete business management solution built by Roni Egbu.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

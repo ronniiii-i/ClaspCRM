@@ -1,10 +1,10 @@
-# ClaspCRM
+# Clasp Workspace
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Next.js](https://img.shields.io/badge/Next.js-14.0+-black?logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue?logo=typescript)](https://www.typescriptlang.org/)
 
-Modern CRM frontend built with Next.js, TypeScript, and Tailwind CSS.
+Modern Clasp Workspace frontend built with Next.js, TypeScript, and Tailwind CSS.
 
 ## ✨ Features
 
@@ -34,8 +34,8 @@ Modern CRM frontend built with Next.js, TypeScript, and Tailwind CSS.
 ### Installation
 
 ```bash
-git clone https://github.com/your-username/crm-frontend.git
-cd crm-frontend
+git clone https://github.com/your-username/clasp-workspace.git
+cd clasp-workspace
 npm install
 ```
 
@@ -63,7 +63,7 @@ npm start
 ## 📂 Project Structure
 
 ```tree
-crm-frontend/
+clasp-workspace/
 ├── src/
 │   ├── app/               # App router
 │   ├── components/        # Reusable components

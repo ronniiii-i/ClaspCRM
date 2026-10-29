@@ -22,6 +22,6 @@ export const marketingCopy = {
   ],
   builtFor: {
     title: "Built for operators",
-    body: "ClaspCRM stays out of your way. No bloated feature lists, no decorative noise—just a focused foundation you can shape to fit your business as it evolves.",
+    body: "Clasp Workspace stays out of your way. No bloated feature lists, no decorative noise—just a focused foundation you can shape to fit your business as it evolves.",
   },
 } as const;

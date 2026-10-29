@@ -61,8 +61,8 @@ test.describe('authenticated flows', () => {
     await page.waitForURL('**/dashboard', { timeout: 30_000 });
 
     await page.evaluate(() => {
-      localStorage.removeItem('token');
-      localStorage.removeItem('auth_user');
+      localStorage.removeItem('clasp_token_v3');
+      localStorage.removeItem('auth_user_v3');
     });
 
     await page.goto('/dashboard');

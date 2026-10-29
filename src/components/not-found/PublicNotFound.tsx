@@ -8,7 +8,7 @@ export function PublicNotFound() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6 text-center">
       <p className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
-        ClaspCRM
+        Clasp Workspace
       </p>
       <h1 className="mt-4 text-7xl font-black tracking-tight">404</h1>
       <h2 className="mt-2 text-2xl font-semibold">Page not found</h2>

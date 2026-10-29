@@ -10,7 +10,7 @@ export function PublicNavbar() {
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6 lg:px-8">
         <div className="flex items-center gap-6">
           <Link href="/" className="text-sm font-semibold tracking-tight">
-            ClaspCRM
+            Clasp Workspace
           </Link>
           <nav className="hidden items-center gap-5 text-sm text-muted-foreground md:flex">
             <Link href="/pricing" className="transition-colors hover:text-foreground">

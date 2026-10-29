@@ -13,7 +13,7 @@ import "./globals.css";
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = generatePageMetadata({
-  title: "ClaspCRM Intranet",
+  title: "Clasp Workspace Intranet",
   description: "The ultimate CRM for your business",
 });
 

@@ -46,8 +46,8 @@ export default function TenantLoginPage() {
         return;
       }
 
-      localStorage.setItem("token", data.accessToken);
-      localStorage.setItem("auth_user", JSON.stringify(data.user));
+      localStorage.setItem("clasp_token_v3", data.accessToken);
+      localStorage.setItem("auth_user_v3", JSON.stringify(data.user));
 
       if (data?.user?.role?.isTenantAdmin && data?.user?.tenantStatus === "PAST_DUE") {
         router.push("/settings/billing");

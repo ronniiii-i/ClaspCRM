@@ -156,7 +156,7 @@ describe('Sidebar', () => {
   describe('session', () => {
     it('hydrates the user from the stored session', () => {
       seedSession(buildUser({ name: 'Stored User' }));
-      expect(window.localStorage.getItem('auth_user')).toContain('Stored User');
+      expect(window.localStorage.getItem('auth_user_v3')).toContain('Stored User');
     });
   });
 });

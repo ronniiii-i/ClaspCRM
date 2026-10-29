@@ -10,11 +10,11 @@ export default function TermsPage() {
         </div>
         <div className="flex flex-col gap-4 text-base leading-7 text-muted-foreground">
           <p>
-            By using ClaspCRM, you agree to use the service responsibly and in compliance with applicable laws. Workspaces
+            By using Clasp Workspace, you agree to use the service responsibly and in compliance with applicable laws. Workspaces
             remain the responsibility of their administrators.
           </p>
           <p>
-            ClaspCRM is provided as-is with the goal of delivering a secure, flexible foundation for managing your
+            Clasp Workspace is provided as-is with the goal of delivering a secure, flexible foundation for managing your
             business processes.
           </p>
         </div>
