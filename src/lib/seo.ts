@@ -1,40 +1,43 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://claspworkspace.work.gd";
+const AUTHOR_NAME = "Princess Roni Egbu";
+const AUTHOR_URL = "https://roniegbu.vercel.app";
 
 export const defaultMetadata: Metadata = {
-  metadataBase: new URL("https://claspworkspace.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Clasp Workspace | Built by Roni Egbu",
-    template: "%s | Clasp Workspace by Roni Egbu",
+    default: "Clasp Workspace | One Place for Your Entire Team & Business",
+    template: "%s | Clasp Workspace",
   },
   description:
-    "Clasp Workspace is a complete business management solution built by Roni Egbu, a fullstack developer passionate about creating scalable software.",
+    "Clasp Workspace is an all-in-one business management platform that brings your departments, projects, tasks, finances, and team docs together into one customizable space.",
   keywords: [
+    // Brand & Author
+    "Clasp Workspace",
     "Princess Roni Egbu",
     "Roni Egbu",
     "Princess Egbu",
-    "CRM",
-    "B2B",
-    "B2C",
-    "SaaS",
-    "Business Management",
+
+    // Everyday Business Concepts
+    "Team Workspace",
     "Business Management Software",
-    "Business Management System",
-    "Business Management Tools",
-    "Fullstack Developer Portfolio",
-    "Clasp Workspace",
-    "Enterprise Tools",
-    "Software as a Service",
-    "Next.js Projects",
-    "NestJS Projects",
-    "Fullstack Portfolio",
-    "Portfolio",
-    "Software Engineer",
+    "All-In-One Team Platform",
+    "Project & Task Tracker",
+    "Department Workspace",
+    "Expense & Budget Tracking",
+    "Company Wiki & Documentation",
+    "Custom Team Workflows",
+    "Team Collaboration Tool",
+
+    // Portfolio Context
+    "Fullstack Software Engineering Showcase",
     "Software Engineer Portfolio",
-    
   ],
-  authors: [{ name: "Roni Egbu", url: "https://roniegbu.vercel.app" }],
-  creator: "Roni Egbu",
-  publisher: "Roni Egbu",
+  authors: [{ name: AUTHOR_NAME, url: AUTHOR_URL }],
+  creator: AUTHOR_NAME,
+  publisher: AUTHOR_NAME,
   robots: {
     index: true,
     follow: true,
@@ -51,17 +54,17 @@ export const defaultMetadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://claspworkspace.com",
-    siteName: "Clasp Workspace by Roni Egbu",
-    title: "Clasp Workspace | Built by Roni Egbu",
+    url: SITE_URL,
+    siteName: "Clasp Workspace",
+    title: "Clasp Workspace | Run Your Business in One Flexible Space",
     description:
-      "Manage your business smarter with Clasp Workspace — a CRM built by Roni Egbu, fullstack developer and software engineer.",
+      "Manage projects, track departmental budgets, organize team docs, and streamline daily operations in one simple workspace built by Roni Egbu.",
     images: [
       {
-        url: "https://claspworkspace.com/og-image.png",
-        width: 1905,
-        height: 870,
-        alt: "Screenshot of Clasp Workspace dashboard built by Roni Egbu",
+        url: `${SITE_URL}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "Clasp Workspace — All-in-one business management platform built by Roni Egbu",
       },
     ],
   },
@@ -69,54 +72,51 @@ export const defaultMetadata: Metadata = {
     card: "summary_large_image",
     site: "@ronniiii_i",
     creator: "@ronniiii_i",
-    title: "Clasp Workspace | Built by Roni Egbu",
+    title: "Clasp Workspace | One Place for Your Entire Team & Business",
     description:
-      "Manage your business smarter with Clasp Workspace — built by Roni Egbu.",
-    images: ["https://claspworkspace.com/og-image.png"],
+      "Organize team tasks, track budgets, write company docs, and run your departments smoothly in one workspace.",
+    images: [`${SITE_URL}/og-image.png`],
   },
-//   icons: {
-//     icon: "/favicon.ico",
-//     shortcut: "/favicon-16x16.png",
-//     apple: "/apple-touch-icon.png",
-//     other: [
-//       {
-//         rel: "mask-icon",
-//         url: "/safari-pinned-tab.svg",
-//         color: "#5bbad5",
-//       },
-//     ],
-//   },
   manifest: "/site.webmanifest",
-  category: "Portfolio",
+  category: "Business",
   applicationName: "Clasp Workspace",
 
   other: {
-    "application/ld+json": JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: "Clasp Workspace",
-      url: "https://claspworkspace.com",
-      author: {
-        "@type": "Person",
-        name: "Roni Egbu",
-        url: "https://roniegbu.vercel.app",
+    "application/ld+json": JSON.stringify([
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        name: "Clasp Workspace",
+        url: SITE_URL,
+        applicationCategory: "BusinessApplication",
+        operatingSystem: "All",
+        browserRequirements: "Requires JavaScript. Requires HTML5.",
+        description:
+          "An all-in-one platform for teams to manage departments, track tasks, handle finances, and share company documentation.",
+        author: {
+          "@type": "Person",
+          name: AUTHOR_NAME,
+          url: AUTHOR_URL,
+        },
+        creator: {
+          "@type": "Person",
+          name: AUTHOR_NAME,
+        },
       },
-      description:
-        "Clasp Workspace is a business management solution built by Roni Egbu, a fullstack developer passionate about scalable software.",
-      publisher: {
-        "@type": "Person",
-        name: "Roni Egbu",
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "Clasp Workspace",
+        url: SITE_URL,
+        author: {
+          "@type": "Person",
+          name: AUTHOR_NAME,
+          url: AUTHOR_URL,
+        },
       },
-      inLanguage: "en-US",
-      potentialAction: {
-        "@type": "SearchAction",
-        target: "https://claspworkspace.com/search?q={search_term_string}",
-        "query-input": "required name=search_term_string",
-      },
-    }),
+    ]),
   },
 };
-
 
 export function generatePageMetadata({
   title,
@@ -131,17 +131,20 @@ export function generatePageMetadata({
   url?: string;
   type?: "WebPage" | "AboutPage" | "ContactPage" | "FAQPage" | "Service";
 }) {
+  const metaTitle = title
+    ? `${title} | Clasp Workspace`
+    : defaultMetadata.title;
+  const metaDesc = description || defaultMetadata.description;
+  const metaUrl = url || SITE_URL;
+
   return {
-    title: title ? `${title} | Clasp Workspace by Roni Egbu` : defaultMetadata.title,
-    description: description || defaultMetadata.description,
+    title: metaTitle,
+    description: metaDesc,
     openGraph: {
       ...defaultMetadata.openGraph,
-      title: title
-        ? `${title} | Clasp Workspace by Roni Egbu`
-        : defaultMetadata.openGraph?.title,
-      description: description || defaultMetadata.openGraph?.description,
-      url: url || defaultMetadata.openGraph?.url,
-      type: "website",
+      title: metaTitle,
+      description: metaDesc,
+      url: metaUrl,
       images: image
         ? [
             {
@@ -155,21 +158,18 @@ export function generatePageMetadata({
     },
     twitter: {
       ...defaultMetadata.twitter,
-      title: title
-        ? `${title} | Clasp Workspace by Roni Egbu`
-        : defaultMetadata.twitter?.title,
-      description: description || defaultMetadata.twitter?.description,
+      title: metaTitle,
+      description: metaDesc,
       images: image ? [image] : defaultMetadata.twitter?.images,
     },
     other: {
       "application/ld+json": JSON.stringify({
         "@context": "https://schema.org",
         "@type": type,
-        name: title,
-        url,
-        description,
+        name: title || "Clasp Workspace",
+        url: metaUrl,
+        description: metaDesc,
       }),
     },
   };
 }
-
