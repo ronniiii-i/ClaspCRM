@@ -11,7 +11,7 @@ Disallow: /profile
 Disallow: /admin
 
 # Host
-Host: https://claspworkspace.com
+Host: https://claspworkspace.work.gd
 
 # Sitemaps
-Sitemap: https://claspworkspace.com/sitemap.xml
+Sitemap: https://claspworkspace.work.gd/sitemap.xml

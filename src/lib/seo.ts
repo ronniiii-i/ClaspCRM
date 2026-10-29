@@ -5,22 +5,23 @@ const SITE_URL =
 const AUTHOR_NAME = "Princess Roni Egbu";
 const AUTHOR_URL = "https://roniegbu.vercel.app";
 
+const DEFAULT_TITLE =
+  "Clasp Workspace | One Place for Your Entire Team & Business";
+const DEFAULT_DESCRIPTION =
+  "Clasp Workspace is an all-in-one business management platform that brings your departments, projects, tasks, finances, and team docs together into one customizable space.";
+
 export const defaultMetadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Clasp Workspace | One Place for Your Entire Team & Business",
+    default: DEFAULT_TITLE,
     template: "%s | Clasp Workspace",
   },
-  description:
-    "Clasp Workspace is an all-in-one business management platform that brings your departments, projects, tasks, finances, and team docs together into one customizable space.",
+  description: DEFAULT_DESCRIPTION,
   keywords: [
-    // Brand & Author
     "Clasp Workspace",
     "Princess Roni Egbu",
     "Roni Egbu",
     "Princess Egbu",
-
-    // Everyday Business Concepts
     "Team Workspace",
     "Business Management Software",
     "All-In-One Team Platform",
@@ -30,8 +31,6 @@ export const defaultMetadata: Metadata = {
     "Company Wiki & Documentation",
     "Custom Team Workflows",
     "Team Collaboration Tool",
-
-    // Portfolio Context
     "Fullstack Software Engineering Showcase",
     "Software Engineer Portfolio",
   ],
@@ -56,9 +55,8 @@ export const defaultMetadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: "Clasp Workspace",
-    title: "Clasp Workspace | Run Your Business in One Flexible Space",
-    description:
-      "Manage projects, track departmental budgets, organize team docs, and streamline daily operations in one simple workspace built by Roni Egbu.",
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
     images: [
       {
         url: `${SITE_URL}/og-image.png`,
@@ -72,15 +70,13 @@ export const defaultMetadata: Metadata = {
     card: "summary_large_image",
     site: "@ronniiii_i",
     creator: "@ronniiii_i",
-    title: "Clasp Workspace | One Place for Your Entire Team & Business",
-    description:
-      "Organize team tasks, track budgets, write company docs, and run your departments smoothly in one workspace.",
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
     images: [`${SITE_URL}/og-image.png`],
   },
   manifest: "/site.webmanifest",
   category: "Business",
   applicationName: "Clasp Workspace",
-
   other: {
     "application/ld+json": JSON.stringify([
       {
@@ -91,8 +87,7 @@ export const defaultMetadata: Metadata = {
         applicationCategory: "BusinessApplication",
         operatingSystem: "All",
         browserRequirements: "Requires JavaScript. Requires HTML5.",
-        description:
-          "An all-in-one platform for teams to manage departments, track tasks, handle finances, and share company documentation.",
+        description: DEFAULT_DESCRIPTION,
         author: {
           "@type": "Person",
           name: AUTHOR_NAME,
@@ -130,37 +125,47 @@ export function generatePageMetadata({
   image?: string;
   url?: string;
   type?: "WebPage" | "AboutPage" | "ContactPage" | "FAQPage" | "Service";
-}) {
-  const metaTitle = title
-    ? `${title} | Clasp Workspace`
-    : defaultMetadata.title;
-  const metaDesc = description || defaultMetadata.description;
+}): Metadata {
+  const metaTitle = title ? `${title} | Clasp Workspace` : DEFAULT_TITLE;
+  const metaDesc = description || DEFAULT_DESCRIPTION;
   const metaUrl = url || SITE_URL;
+  const metaImages = image
+    ? [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: title || "Clasp Workspace",
+        },
+      ]
+    : [
+        {
+          url: `${SITE_URL}/og-image.png`,
+          width: 1200,
+          height: 630,
+          alt: "Clasp Workspace",
+        },
+      ];
 
   return {
     title: metaTitle,
     description: metaDesc,
     openGraph: {
-      ...defaultMetadata.openGraph,
+      type: "website",
+      locale: "en_US",
+      siteName: "Clasp Workspace",
       title: metaTitle,
       description: metaDesc,
       url: metaUrl,
-      images: image
-        ? [
-            {
-              url: image,
-              width: 1200,
-              height: 630,
-              alt: title || "Clasp Workspace",
-            },
-          ]
-        : defaultMetadata.openGraph?.images,
+      images: metaImages,
     },
     twitter: {
-      ...defaultMetadata.twitter,
+      card: "summary_large_image",
+      site: "@ronniiii_i",
+      creator: "@ronniiii_i",
       title: metaTitle,
       description: metaDesc,
-      images: image ? [image] : defaultMetadata.twitter?.images,
+      images: metaImages.map((img) => img.url),
     },
     other: {
       "application/ld+json": JSON.stringify({
