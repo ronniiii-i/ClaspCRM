@@ -1,117 +1,118 @@
-// src/middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { jwtDecode } from "jwt-decode";
-// import { getToken } from "./lib/auth";
 
-const publicRoutes = [
-  "/",
-  "/login",
-  "/register",
-  "/verify-email",
-  "/forgot-password",
-  "/reset-password",
-  "/terms",
-  "/privacy",
-  "/about",
-  "/contact",
-  "/pricing",
-  "/faq",
-  "/blog",
-  "/features",
-  "/demo",
-  "/docs",
-  "/support",
-];
+const RESERVED = new Set(["www", "api", "app", "admin", "system", "system-admin", "login"]);
+const ROOT_ROUTES = new Set([
+  "about",
+  "contact",
+  "create-workspace",
+  "dashboard",
+  "find-workspace",
+  "forgot-password",
+  "pricing",
+  "privacy",
+  "profile",
+  "register",
+  "reset-password",
+  "settings",
+  "terms",
+  "user-management",
+  "verify-email",
+]);
 
-const roleBasedRoutes = {
-  adminOnly: ["/admin"],
-  managerPlus: ["/reports", "/analytics"],
-};
+function getRootDomain(): string {
+  const configuredDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+  return configuredDomain.replace(/^https?:\/\//, "").replace(/\/+$/, "").toLowerCase();
+}
 
-export default async function middleware(request: NextRequest) {
-  // Get token from HTTP-only cookie (accessible in middleware)
-  const token = request.cookies.get("access_token")?.value;
+function getSlugFromHost(host: string): string | null {
+  if (!host) return null;
+  const rootDomain = getRootDomain();
+  const hostname = host.toLowerCase().split(":")[0];
+  const rootHostname = rootDomain.split(":")[0];
+
+  if (hostname === "localhost" || hostname === rootHostname || hostname === `www.${rootHostname}`) {
+    return null;
+  }
+
+  if (hostname.endsWith(`.${rootHostname}`)) {
+    const parts = hostname.split(".");
+    if (parts.length === rootHostname.split(".").length + 1) {
+      const slug = parts[0];
+      if (RESERVED.has(slug)) return null;
+      if (/^[a-z0-9-]+$/.test(slug)) return slug;
+    }
+    return null;
+  }
+
+  return null;
+}
+
+function isValidSlug(slug: string): boolean {
+  if (RESERVED.has(slug)) return false;
+  return /^[a-z0-9-]+$/.test(slug);
+}
+
+export function middleware(request: NextRequest) {
+  const host = request.headers.get("host") || "";
+  const slug = getSlugFromHost(host);
   const { pathname } = request.nextUrl;
 
-  console.log(`Middleware: Processing request for ${pathname}`);
-  console.log(`Middleware: Token from cookie: ${token ? token.substring(0, 10) + '...' : 'None'}`);
-
-  // Skip middleware for static files and API routes
-  if (pathname.startsWith("/_next/") || pathname.startsWith("/api/")) {
-    return NextResponse.next();
-  }
-
-  const isPublicRoute = publicRoutes.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`)
-  );
-
-  // Handle unauthenticated access to protected routes
-  if (!isPublicRoute && !token) {
-    console.log(`Middleware: No token and not public route, redirecting to /login from ${pathname}`);
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  // Handle authenticated access to auth routes
-  if (
-    token &&
-    (pathname === "/login" ||
-      pathname === "/register" ||
-      pathname === "/forgot-password" ||
-      pathname === "/reset-password" ||
-      pathname === "/verify-email")
-  ) {
-    console.log(`Middleware: Token present on auth route (${pathname}), redirecting to /dashboard`);
-    const dashboardUrl = new URL("/dashboard", request.url);
-    return NextResponse.redirect(dashboardUrl);
-  }
-
-  // Verify token and check roles for protected routes
-  if (token && !isPublicRoute) {
-    try {
-      const decoded = jwtDecode<{ role: string }>(token);
-      const userRole = decoded.role;
-      console.log(`Middleware: Token decoded, user role: ${userRole}`);
-
-      // Admin-only routes
-      if (
-        roleBasedRoutes.adminOnly.some(
-          (route) => pathname === route || pathname.startsWith(`${route}/`)
-        ) &&
-        userRole !== "ADMIN"
-      ) {
-        console.log(`Middleware: Access denied for ${pathname} (Admin only), redirecting to /dashboard`);
-        return NextResponse.redirect(new URL("/dashboard", request.url));
-      }
-
-      // Manager+ routes (HOD, ADMIN)
-      if (
-        roleBasedRoutes.managerPlus.some(
-          (route) => pathname === route || pathname.startsWith(`${route}/`)
-        ) &&
-        !["ADMIN", "HOD"].includes(userRole)
-      ) {
-        console.log(`Middleware: Access denied for ${pathname} (Manager+ only), redirecting to /dashboard`);
-        return NextResponse.redirect(new URL("/dashboard", request.url));
-      }
-    } catch (error) {
-      console.error("Middleware: Token verification failed:", error);
-      // If token is invalid or expired, clear the cookie and redirect to login
-      const response = NextResponse.redirect(new URL("/login", request.url));
-      response.cookies.delete("access_token"); // Clear the invalid cookie
-      const url = new URL(response.url);
-      url.searchParams.set("error", "invalid_token");
-      response.headers.set('Location', url.toString());
-      return response;
+  // If on tenant subdomain
+  if (slug && isValidSlug(slug)) {
+    // Skip internal paths
+    if (pathname.startsWith("/_next") || pathname.startsWith("/api") || pathname.startsWith("/static") || pathname.startsWith("/_vercel")) {
+      const res = NextResponse.next();
+      res.headers.set("x-tenant-slug", slug);
+      return res;
     }
+    // Block non-tenant routes on tenant subdomains
+    if (pathname.startsWith("/system-admin") || pathname.startsWith("/find-workspace") || pathname.startsWith("/create-workspace") || pathname.startsWith("/register")) {
+      return new NextResponse("Not Found", { status: 404 });
+    }
+
+    if (pathname === "/") {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = request.cookies.has("access_token") ? "/dashboard" : "/login";
+      return NextResponse.redirect(redirectUrl);
+    }
+
+    // Tenant URLs are canonical on the subdomain, never as /{slug}/... paths.
+    if (pathname === `/${slug}` || pathname.startsWith(`/${slug}/`)) {
+      const strippedPath = pathname.slice(slug.length + 1) || "/";
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = strippedPath;
+      return NextResponse.redirect(redirectUrl);
+    }
+
+    // The dynamic tenant route is internal; keep the tenant subdomain in the
+    // browser URL while routing to /{tenant}/...
+    const rewriteUrl = request.nextUrl.clone();
+    rewriteUrl.pathname = `/${slug}${pathname}`;
+    const res = NextResponse.rewrite(rewriteUrl);
+    res.headers.set("x-tenant-slug", slug);
+    return res;
   }
 
-  console.log(`Middleware: Access granted for ${pathname}`);
+  // Apex domain
+  const firstPathSegment = pathname.split("/")[1];
+  if (firstPathSegment && !ROOT_ROUTES.has(firstPathSegment) && isValidSlug(firstPathSegment)) {
+    const rootDomain = getRootDomain();
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.host = `${firstPathSegment}.${rootDomain}`;
+    redirectUrl.pathname = pathname.slice(firstPathSegment.length + 1) || "/";
+    return NextResponse.redirect(redirectUrl);
+  }
+  if (pathname.startsWith("/system-admin")) {
+    const res = NextResponse.next();
+    return res;
+  }
+  if (pathname === "/login") {
+    return NextResponse.redirect(new URL("/find-workspace", request.url));
+  }
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };

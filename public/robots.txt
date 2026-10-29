@@ -9,10 +9,9 @@ Disallow: /verify-email
 Disallow: /dashboard
 Disallow: /profile
 Disallow: /admin
-Disallow: /api
 
 # Host
-Host: https://claspcrm.vercel.app
+Host: https://claspworkspace.com
 
 # Sitemaps
-Sitemap: https://claspcrm.vercel.app/sitemap.xml
+Sitemap: https://claspworkspace.com/sitemap.xml

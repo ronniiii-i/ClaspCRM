@@ -5,6 +5,7 @@ export type DashboardData = {
   metrics: Metric[];
   departmentPerformance?: DepartmentPerformance[];
   teamMetric?: TeamMetric[];
+  teamMetrics?: TeamMetric[];
   personalMetrics?: PersonalMetric[];
   auditLog?: AuditLogEntry[];
   tasks?: Task[];

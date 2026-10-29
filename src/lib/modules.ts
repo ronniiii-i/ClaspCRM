@@ -15,16 +15,37 @@ export interface Module {
   icon?: string | LucideIcon | undefined;
 }
 
+export interface RoleSummary {
+  id: string;
+  name: string;
+  slug: string;
+  rank?: number;
+  dataScope?: string;
+  isTenantAdmin?: boolean;
+}
+
 export interface AuthUser {
   id: string;
   email: string;
   name: string;
-  role: Role;
-  avatar?: string;
+  /** Phase 2 returns a role object; older sessions stored an enum string. */
+  role: Role | RoleSummary;
+  roleId?: string;
+  roleEnhanced?: boolean;
+  avatar?: string | null;
+  avatarUrl?: string | null;
+  status?: string;
   isVerified: boolean;
-  department: { id: string; name: string } | null;
-  managedDepartment: { id: string; name: string } | null;
-  accessibleModules: Module[]; // Add this
+  tenantId?: string;
+  tenantSlug?: string;
+  tenantName?: string;
+  tenantStatus?: string;
+  departmentId?: string | null;
+  /** `type` is the canonical DepartmentType enum and is preferred for routing. */
+  department: { id: string; name?: string; key?: string; type?: string } | null;
+  managedDepartment: { id: string; name?: string; key?: string; type?: string } | null;
+  accessibleModules?: Module[];
+  createdAt?: string;
 }
 
 export interface PermissionCheck {

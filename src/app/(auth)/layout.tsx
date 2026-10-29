@@ -1,15 +1,12 @@
-// src/app/(auth)/layout.tsx
 import type { Metadata } from "next";
-import { ThemeProvider } from "@/components/ThemeProvider";
 import { defaultMetadata } from "@/lib/seo";
-import PublicNavbar from "@/components/navbar/PublicNavbar";
-import Footer from "@/components/Footer";
-
+import { PublicNavbar } from "@/components/navbar/PublicNavbar";
+import { PublicFooter } from "@/components/footer/PublicFooter";
 
 export const metadata: Metadata = {
   ...defaultMetadata,
-  title: "Sign In | ClaspCRM by Roni Egbu",
-  description: "Sign in to manage your ClaspCRM account, built by Roni Egbu.",
+  title: "Sign In | Clasp Workspace",
+  description: "Sign into your Clasp Workspace account.",
 };
 export default function AuthLayout({
   children,
@@ -18,13 +15,11 @@ export default function AuthLayout({
 }) {
   return (
     <>
-      <ThemeProvider>
-        <PublicNavbar />
-        <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
-          {children}
-        </main>
-        <Footer />
-      </ThemeProvider>
+      <PublicNavbar />
+      <main className="min-h-screen bg-background text-foreground">
+        {children}
+      </main>
+      <PublicFooter />
     </>
   );
 }

@@ -4,13 +4,16 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { geistSans, geistMono } from "@/lib/fonts";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { PromptProvider } from "@/components/providers/PromptProvider";
+import { QueryProvider } from "@/components/providers/QueryProvider";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = generatePageMetadata({
-  title: "ClaspCRM Intranet",
+  title: "Clasp Workspace Intranet",
   description: "The ultimate CRM for your business",
 });
 
@@ -25,10 +28,15 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground antialiased`}
         suppressHydrationWarning
       >
-        <ThemeProvider>{children} </ThemeProvider>
+        <ThemeProvider>
+          <QueryProvider>
+            <PromptProvider>{children}</PromptProvider>
+          </QueryProvider>
+          <Toaster richColors closeButton position="top-right" />
+        </ThemeProvider>
       </body>
       <Analytics />
       <SpeedInsights />

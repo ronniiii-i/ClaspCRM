@@ -1,23 +1,29 @@
 import { Metadata } from "next";
 
 export const defaultMetadata: Metadata = {
-  metadataBase: new URL("https://claspcrm.vercel.app"),
+  metadataBase: new URL("https://claspworkspace.com"),
   title: {
-    default: "ClaspCRM | Built by Roni Egbu",
-    template: "%s | ClaspCRM by Roni Egbu",
+    default: "Clasp Workspace | Built by Roni Egbu",
+    template: "%s | Clasp Workspace by Roni Egbu",
   },
   description:
-    "ClaspCRM is a complete business management solution built by Roni Egbu, a frontend developer passionate about creating scalable software.",
+    "Clasp Workspace is a complete business management solution built by Roni Egbu, a fullstack developer passionate about creating scalable software.",
   keywords: [
     "Princess Roni Egbu",
     "Roni Egbu",
+    "Princess Egbu",
     "CRM",
+    "B2B",
+    "B2C",
+    "SaaS",
     "Business Management",
-    "Project Management",
-    "HR Management",
-    "Frontend Developer Portfolio",
-    "ClaspCRM",
+    "Business Management Software",
+    "Business Management System",
+    "Business Management Tools",
+    "Fullstack Developer Portfolio",
+    "Clasp Workspace",
     "Enterprise Tools",
+    "Software as a Service",
     "Next.js Projects",
     "NestJS Projects",
     "Fullstack Portfolio",
@@ -45,17 +51,17 @@ export const defaultMetadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://claspcrm.vercel.app",
-    siteName: "ClaspCRM by Roni Egbu",
-    title: "ClaspCRM | Built by Roni Egbu",
+    url: "https://claspworkspace.com",
+    siteName: "Clasp Workspace by Roni Egbu",
+    title: "Clasp Workspace | Built by Roni Egbu",
     description:
-      "Manage your business smarter with ClaspCRM — a CRM built by Roni Egbu, frontend developer and software engineer.",
+      "Manage your business smarter with Clasp Workspace — a CRM built by Roni Egbu, fullstack developer and software engineer.",
     images: [
       {
-        url: "https://claspcrm.vercel.app/og-image.png",
+        url: "https://claspworkspace.com/og-image.png",
         width: 1905,
         height: 870,
-        alt: "Screenshot of ClaspCRM dashboard built by Roni Egbu",
+        alt: "Screenshot of Clasp Workspace dashboard built by Roni Egbu",
       },
     ],
   },
@@ -63,10 +69,10 @@ export const defaultMetadata: Metadata = {
     card: "summary_large_image",
     site: "@ronniiii_i",
     creator: "@ronniiii_i",
-    title: "ClaspCRM | Built by Roni Egbu",
+    title: "Clasp Workspace | Built by Roni Egbu",
     description:
-      "Manage your business smarter with ClaspCRM — built by Roni Egbu.",
-    images: ["https://claspcrm.vercel.app/og-image.png"],
+      "Manage your business smarter with Clasp Workspace — built by Roni Egbu.",
+    images: ["https://claspworkspace.com/og-image.png"],
   },
 //   icons: {
 //     icon: "/favicon.ico",
@@ -82,21 +88,21 @@ export const defaultMetadata: Metadata = {
 //   },
   manifest: "/site.webmanifest",
   category: "Portfolio",
-  applicationName: "ClaspCRM",
+  applicationName: "Clasp Workspace",
 
   other: {
     "application/ld+json": JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebSite",
-      name: "ClaspCRM",
-      url: "https://claspcrm.vercel.app",
+      name: "Clasp Workspace",
+      url: "https://claspworkspace.com",
       author: {
         "@type": "Person",
         name: "Roni Egbu",
         url: "https://roniegbu.vercel.app",
       },
       description:
-        "ClaspCRM is a business management solution built by Roni Egbu, a frontend developer passionate about scalable software.",
+        "Clasp Workspace is a business management solution built by Roni Egbu, a fullstack developer passionate about scalable software.",
       publisher: {
         "@type": "Person",
         name: "Roni Egbu",
@@ -104,7 +110,7 @@ export const defaultMetadata: Metadata = {
       inLanguage: "en-US",
       potentialAction: {
         "@type": "SearchAction",
-        target: "https://claspcrm.vercel.app/search?q={search_term_string}",
+        target: "https://claspworkspace.com/search?q={search_term_string}",
         "query-input": "required name=search_term_string",
       },
     }),
@@ -126,12 +132,12 @@ export function generatePageMetadata({
   type?: "WebPage" | "AboutPage" | "ContactPage" | "FAQPage" | "Service";
 }) {
   return {
-    title: title ? `${title} | ClaspCRM by Roni Egbu` : defaultMetadata.title,
+    title: title ? `${title} | Clasp Workspace by Roni Egbu` : defaultMetadata.title,
     description: description || defaultMetadata.description,
     openGraph: {
       ...defaultMetadata.openGraph,
       title: title
-        ? `${title} | ClaspCRM by Roni Egbu`
+        ? `${title} | Clasp Workspace by Roni Egbu`
         : defaultMetadata.openGraph?.title,
       description: description || defaultMetadata.openGraph?.description,
       url: url || defaultMetadata.openGraph?.url,
@@ -142,7 +148,7 @@ export function generatePageMetadata({
               url: image,
               width: 1200,
               height: 630,
-              alt: title || "ClaspCRM",
+              alt: title || "Clasp Workspace",
             },
           ]
         : defaultMetadata.openGraph?.images,
@@ -150,7 +156,7 @@ export function generatePageMetadata({
     twitter: {
       ...defaultMetadata.twitter,
       title: title
-        ? `${title} | ClaspCRM by Roni Egbu`
+        ? `${title} | Clasp Workspace by Roni Egbu`
         : defaultMetadata.twitter?.title,
       description: description || defaultMetadata.twitter?.description,
       images: image ? [image] : defaultMetadata.twitter?.images,
