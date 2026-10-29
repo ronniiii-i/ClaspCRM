@@ -57,7 +57,7 @@ export default function TenantLoginPage() {
         router.push("/account-locked");
         return;
       }
-      router.push(`/${tenant}/dashboard`);
+      router.push("/dashboard");
     } catch {
       setError("Invalid credentials");
       setLoading(false);
@@ -86,7 +86,7 @@ export default function TenantLoginPage() {
               {loading ? "Signing in..." : "Sign in"}
             </Button>
             <div className="flex flex-col items-center gap-2 text-sm text-muted-foreground">
-              <Link href={`/${tenant}/forgot-password`} className="underline underline-offset-4 hover:text-foreground">
+              <Link href="/forgot-password" className="underline underline-offset-4 hover:text-foreground">
                 Forgot password?
               </Link>
               <Link href={apexFindWorkspaceUrl} className="underline underline-offset-4 hover:text-foreground">

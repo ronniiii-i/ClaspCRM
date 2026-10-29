@@ -5,6 +5,7 @@ import { useParams, usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useAuthStore } from "@/stores/auth-store";
 import { cn } from "@/lib/utils";
+import { isTenantAdminRole } from "@/lib/format";
 
 function getTenantPath(pathname: string, tenant: string) {
   const prefix = `/${tenant}`;
@@ -20,7 +21,10 @@ export function Sidebar() {
   const tenant = params?.tenant as string | undefined;
   const { user } = useAuthStore();
   const activeRef = useRef<HTMLAnchorElement>(null);
-  const isTenantAdmin = (user as any)?.role?.isTenantAdmin || user?.role === "ADMIN";
+  // Phase 2 stores a role object; older cached sessions stored an enum string.
+  const isTenantAdmin = isTenantAdminRole(
+    user?.role as unknown as { isTenantAdmin?: boolean; slug?: string } | string,
+  );
   const tenantPath = tenant ? getTenantPath(pathname || "", tenant) : pathname || "/";
 
   useEffect(() => {
@@ -34,21 +38,25 @@ export function Sidebar() {
     { name: "Department Overviews", href: "/departments" },
     { name: "User Management", href: "/user-management" },
     { name: "Settings", href: "/settings" },
+    { name: "My profile", href: "/profile" },
   ];
 
-  const navItems = isTenantAdmin ? adminNav : [];
+  // Everyone gets their own profile; management surfaces are admin-only.
+  const navItems = isTenantAdmin ? adminNav : [{ name: "My profile", href: "/profile" }];
 
   return (
     <aside className="hidden w-64 flex-col border-r border-border md:flex">
       <div className="flex h-14 items-center px-6">
-        <Link href={tenant ? `/${tenant}/dashboard` : "/"} className="text-sm font-semibold tracking-tight">
+        <Link href="/dashboard" className="text-sm font-semibold tracking-tight">
           ClaspCRM
         </Link>
       </div>
       <nav className="flex-1 overflow-y-auto px-3 py-2">
         <ul className="flex flex-col gap-1">
           {navItems.map((item) => {
-            const href = tenant ? `/${tenant}${item.href}` : item.href;
+            // Tenant URLs are canonical on the subdomain, so never prefix the
+            // workspace slug here: it would add a needless redirect per click.
+            const href = item.href;
             const isActive = tenantPath === item.href || (item.href !== "/dashboard" && tenantPath.startsWith(item.href));
             return (
               <li key={item.href}>

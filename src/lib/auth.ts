@@ -39,20 +39,18 @@ export async function login(
 
   const data = await res.json();
 
+  // Keep the full server payload (tenantName/tenantSlug/tenantStatus/avatar…)
+  // rather than flattening it, so the workspace name and account details are
+  // available everywhere without another round trip.
   const formattedResponse = {
-    accessToken: data.accessToken,
+    accessToken: data.accessToken as string,
     user: {
-      id: data.user.id,
-      email: data.user.email,
-      name: data.user.name,
-      role: data.user.role,
+      ...data.user,
       roleEnhanced: data.user.roleEnhanced ?? false,
-      isVerified: data.user.isVerified,
-      tenantId: data.user.tenantId,
-      department: data.user.department || null,
-      managedDepartment: data.user.managedDepartment || null,
-      accessibleModules: data.user.accessibleModules || [],
-    },
+      department: data.user.department ?? null,
+      managedDepartment: data.user.managedDepartment ?? null,
+      accessibleModules: data.user.accessibleModules ?? [],
+    } as AuthUser,
   };
 
   if (typeof window !== "undefined") {
@@ -172,25 +170,22 @@ export function triggerActivity() {
 // ─── Logout ───────────────────────────────────────────────────────────────────
 
 export async function logout(): Promise<void> {
-  try {
-    await fetch("/api/auth/logout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-    });
-  } catch {
-    // Swallow network errors — client-side cleanup must still happen
-  } finally {
-    if (typeof window !== "undefined") {
-      if (inactivityTimer) clearTimeout(inactivityTimer);
-      if (refreshTimer) clearTimeout(refreshTimer);
+  if (typeof window === "undefined") return;
 
-      localStorage.removeItem("token");
-      localStorage.removeItem("auth_user");
+  if (inactivityTimer) clearTimeout(inactivityTimer);
+  if (refreshTimer) clearTimeout(refreshTimer);
 
-      document.cookie =
-        "access_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Lax;";
+  localStorage.removeItem("token");
+  localStorage.removeItem("auth_user");
+  sessionStorage.clear();
 
-      window.location.href = "/login";
-    }
-  }
+  void fetch("/api/auth/logout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    keepalive: true,
+  }).catch(() => {
+    // The local session is already cleared; the redirect must not be delayed.
+  });
+
+  window.location.replace("/login");
 }

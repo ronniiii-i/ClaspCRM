@@ -4,6 +4,7 @@ import { useTheme } from "next-themes";
 import { Moon, Sun, Monitor, Lock, LogOut, User } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
+import { roleLabel } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -17,8 +18,10 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const { user, logout } = useAuth();
 
+  const roleValue =
+    typeof user?.role === "string" ? user.role : user?.role?.slug ?? user?.role?.name;
   const department =
-    user?.role === "HOD" ? user.managedDepartment : user?.department;
+    roleValue === "HOD" ? user?.managedDepartment : user?.department;
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -74,7 +77,7 @@ export default function SettingsPage() {
             <span className="text-muted-foreground">Email</span>
             <span className="font-medium truncate">{user?.email ?? "—"}</span>
             <span className="text-muted-foreground">Role</span>
-            <span className="font-medium">{user?.role ?? "—"}</span>
+            <span className="font-medium">{roleLabel(user?.role)}</span>
             <span className="text-muted-foreground">Department</span>
             <span className="font-medium">
               {department?.name ?? "Not assigned"}

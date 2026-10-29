@@ -24,7 +24,7 @@ export default function TenantForgotPasswordPage() {
         headers: { "Content-Type": "application/json", "X-Tenant-Slug": tenant || "" },
         body: JSON.stringify({ email }),
       });
-    } catch (err) {
+    } catch {
       // ignore
     }
     setStatus("success");

@@ -1,12 +1,14 @@
 "use client";
 
 import { useAuthStore } from "@/stores/auth-store";
+import { isTenantAdminRole } from "@/lib/format";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function DepartmentsOverviewPage() {
   const { user } = useAuthStore();
-  const role: any = user?.role;
-  const isTenantAdmin = role?.isTenantAdmin || role === "ADMIN";
+  const isTenantAdmin = isTenantAdminRole(
+    user?.role as unknown as { isTenantAdmin?: boolean; slug?: string } | string,
+  );
 
   return (
     <div className="flex flex-col gap-6">

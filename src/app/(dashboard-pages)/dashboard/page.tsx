@@ -16,6 +16,7 @@ import { ItHodDashboard } from "./_components/it-hod-view";
 import { HrHodDashboard } from "./_components/hr-hod-view";
 import { SalesHodDashboard } from "./_components/sales-hod-view";
 import { SupportHodDashboard } from "./_components/support-hod-view";
+import { roleSlug } from "@/lib/format";
 
 // Maps whatever the DB returns (human-readable name or enum key) to the
 // Department enum that DashboardScope expects.
@@ -56,23 +57,29 @@ export default function DashboardPage() {
     user?.managedDepartment?.type ?? user?.department?.type ?? rawDeptName;
   const department = resolveDepartmentEnum(rawDeptType);
 
+  const role = user?.role;
+  const slug = roleSlug(role);
+  const isAdmin =
+    (role && typeof role === "object" && role.isTenantAdmin) ||
+    slug === "admin" ||
+    slug === "tenant_admin";
+  const isHod = slug === "hod" || slug === "department_head";
+  const isLead = slug === "lead" || slug === "team_lead";
+
   function buildScope(): DashboardParams {
-    switch (user?.role) {
-      case "ADMIN":
-        return { scope: "organization" } as const;
-
-      case "HOD":
-        return {
-          scope: "department",
-          department: department || undefined,
-        };
-
-      case "LEAD":
-        return { scope: "team", teamId: user.id } as const;
-
-      default:
-        return { scope: "individual", userId: user?.id ?? "" } as const;
+    if (isAdmin) {
+      return { scope: "organization" } as const;
     }
+    if (isHod) {
+      return {
+        scope: "department",
+        department: department || undefined,
+      };
+    }
+    if (isLead) {
+      return { scope: "team", teamId: user?.id } as const;
+    }
+    return { scope: "individual", userId: user?.id ?? "" } as const;
   }
 
   // Shares the cache key with the role view below, so this does not issue a
@@ -87,33 +94,33 @@ export default function DashboardPage() {
     return <DashboardSkeleton />;
   }
 
-  switch (user.role) {
-    case "ADMIN":
-      return <AdminDashboard />;
-
-    case "HOD":
-      // One HOD view per department, all reading the same scoped endpoint.
-      switch (department) {
-        case Department.FINANCE:
-          return <FinanceHodDashboard department={Department.FINANCE} />;
-        case Department.ACCOUNTING:
-          return <FinanceHodDashboard department={Department.ACCOUNTING} />;
-        case Department.IT:
-          return <ItHodDashboard />;
-        case Department.HR:
-          return <HrHodDashboard />;
-        case Department.SALES:
-          return <SalesHodDashboard />;
-        case Department.CUSTOMER_SUPPORT:
-          return <SupportHodDashboard />;
-        default:
-          return <HodDashboard department={department} />;
-      }
-
-    case "LEAD":
-      return <TeamLeadDashboard teamId={user.id} />;
-
-    default:
-      return <StaffDashboard userId={user.id} />;
+  if (isAdmin) {
+    return <AdminDashboard />;
   }
+
+  if (isHod) {
+    // One HOD view per department, all reading the same scoped endpoint.
+    switch (department) {
+      case Department.FINANCE:
+        return <FinanceHodDashboard department={Department.FINANCE} />;
+      case Department.ACCOUNTING:
+        return <FinanceHodDashboard department={Department.ACCOUNTING} />;
+      case Department.IT:
+        return <ItHodDashboard />;
+      case Department.HR:
+        return <HrHodDashboard />;
+      case Department.SALES:
+        return <SalesHodDashboard />;
+      case Department.CUSTOMER_SUPPORT:
+        return <SupportHodDashboard />;
+      default:
+        return <HodDashboard department={department} />;
+    }
+  }
+
+  if (isLead) {
+    return <TeamLeadDashboard teamId={user?.id ?? ""} />;
+  }
+
+  return <StaffDashboard userId={user?.id ?? ""} />;
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/stores/auth-store";
 import { cn } from "@/lib/utils";
+import { isTenantAdminRole } from "@/lib/format";
 
 const tabs = [
   { name: "General", href: "/settings" },
@@ -19,8 +20,9 @@ export default function SettingsLayout({
 }) {
   const pathname = usePathname();
   const { user } = useAuthStore();
-  const role: any = user?.role;
-  const isTenantAdmin = role?.isTenantAdmin || role === "ADMIN" || (user as any)?.isTenantAdmin;
+  const isTenantAdmin = isTenantAdminRole(
+    user?.role as unknown as { isTenantAdmin?: boolean; slug?: string } | string,
+  );
   const visibleTabs = isTenantAdmin ? tabs : tabs.slice(0, 1);
 
   return (

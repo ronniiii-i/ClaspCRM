@@ -47,7 +47,7 @@ export default function CreateWorkspacePage() {
         const apiBase = process.env.NEXT_PUBLIC_API || "http://localhost:3030";
         const response = await fetch(`${apiBase}/public/workspaces/${trimmed}`);
         setSlugAvailable(response.status === 404);
-      } catch (err) {
+      } catch {
         setSlugAvailable(null);
       }
     }, 400);

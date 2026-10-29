@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 
-export default function TenantLayout(props: any) {
-  const children = props.children;
-  // Enforce header match if present (Next will set via middleware)
+export default function TenantLayout({ children }: { children: ReactNode }) {
+  // Tenant-host requests are rewritten into this segment by the middleware.
   return <>{children}</>;
 }

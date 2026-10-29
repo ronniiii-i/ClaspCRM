@@ -38,7 +38,7 @@ export default function ResetPasswordPage() {
         throw new Error("Failed to reset");
       }
       setStatus("success");
-    } catch (err) {
+    } catch {
       setError("Invalid or expired reset link");
       setStatus("error");
     }

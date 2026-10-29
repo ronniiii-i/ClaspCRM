@@ -25,8 +25,19 @@ export function useAuth() {
     void initialize();
   }, [initialize]);
 
-  const hasRole = (requiredRoles: string[]) =>
-    user ? requiredRoles.includes(user.role) : false;
+  const hasRole = (requiredRoles: string[]) => {
+    const role = user?.role;
+    if (!role) return false;
+    const values =
+      typeof role === "string"
+        ? [role]
+        : [role.slug, role.name].filter(Boolean) as string[];
+    return values.some((value) =>
+      requiredRoles.some(
+        (required) => required.toLowerCase() === value.toLowerCase(),
+      ),
+    );
+  };
 
   const getPrimaryDepartment = (): AuthUser["department"] => {
     if (!user) return null;

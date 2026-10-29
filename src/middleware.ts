@@ -71,6 +71,12 @@ export function middleware(request: NextRequest) {
       return new NextResponse("Not Found", { status: 404 });
     }
 
+    if (pathname === "/") {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = request.cookies.has("access_token") ? "/dashboard" : "/login";
+      return NextResponse.redirect(redirectUrl);
+    }
+
     // Tenant URLs are canonical on the subdomain, never as /{slug}/... paths.
     if (pathname === `/${slug}` || pathname.startsWith(`/${slug}/`)) {
       const strippedPath = pathname.slice(slug.length + 1) || "/";
@@ -82,7 +88,7 @@ export function middleware(request: NextRequest) {
     // The dynamic tenant route is internal; keep the tenant subdomain in the
     // browser URL while routing to /{tenant}/...
     const rewriteUrl = request.nextUrl.clone();
-    rewriteUrl.pathname = pathname === "/" ? `/${slug}` : `/${slug}${pathname}`;
+    rewriteUrl.pathname = `/${slug}${pathname}`;
     const res = NextResponse.rewrite(rewriteUrl);
     res.headers.set("x-tenant-slug", slug);
     return res;

@@ -7,12 +7,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
+interface InvitationPreview {
+  tenantName?: string;
+  invitedByName?: string;
+  roleName?: string;
+}
+
 export default function InviteAcceptPage() {
   const params = useParams();
   const router = useRouter();
   const tenant = params?.tenant as string | undefined;
   const token = params?.token as string | undefined;
-  const [invite, setInvite] = useState<any>(null);
+  const [invite, setInvite] = useState<InvitationPreview | null>(null);
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<"loading" | "ready" | "submitting" | "success" | "error">("loading");
@@ -32,7 +38,7 @@ export default function InviteAcceptPage() {
         const data = await response.json();
         setInvite(data.invitation);
         setStatus("ready");
-      } catch (err) {
+      } catch {
         setStatus("error");
       }
     }

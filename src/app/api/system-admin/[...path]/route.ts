@@ -2,12 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 const API_BASE = process.env.NEXT_PUBLIC_API || "http://localhost:3030";
 
-async function handler(req: NextRequest, context: any) {
+async function handler(
+  req: NextRequest,
+  context: { params: Promise<{ path?: string[] }> },
+) {
   const token = req.cookies.get("sys_access_token")?.value;
   if (!token) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
-  const params = typeof context?.params?.then === "function" ? await context.params : context?.params;
+  const params = await context.params;
   const path = Array.isArray(params?.path) ? params.path.join("/") : "";
   const url = new URL(req.url);
   const target = `${API_BASE}/system-admin/${path}${url.search}`;
@@ -27,7 +30,7 @@ async function handler(req: NextRequest, context: any) {
       status: res.status,
       headers: { "Content-Type": res.headers.get("content-type") || "application/json" },
     });
-  } catch (e: any) {
+  } catch {
     return NextResponse.json({ message: "Proxy error" }, { status: 502 });
   }
 }

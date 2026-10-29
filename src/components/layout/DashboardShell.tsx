@@ -13,7 +13,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       <Sidebar />
       <div className="flex flex-1 flex-col">
         <header className="flex h-14 items-center justify-between border-b border-border px-6">
-          <div className="text-sm text-muted-foreground">{(user as any)?.tenant?.name || (user as any)?.tenantName || ""}</div>
+          <div className="text-sm text-muted-foreground">{user?.tenantName || ""}</div>
           <div className="flex items-center gap-2">
             <ThemeToggle />
             <div className="text-sm text-muted-foreground">{user?.name}</div>

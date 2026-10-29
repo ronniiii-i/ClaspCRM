@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
       return response;
     }
     return NextResponse.json(data);
-  } catch (e: any) {
+  } catch {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 }

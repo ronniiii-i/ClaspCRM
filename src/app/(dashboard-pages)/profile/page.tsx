@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import Image from "next/image";
+import { roleLabel } from "@/lib/format";
 
 export default function ProfilePage() {
   const { user, token, refreshUserData, isLoading } = useAuth();
@@ -33,8 +34,10 @@ export default function ProfilePage() {
 
   const displayAvatar =
     avatarUrl || `https://picsum.photos/seed/${user.id}/200/200`;
+  const roleValue =
+    typeof user.role === "string" ? user.role : user.role?.slug ?? user.role?.name;
   const department =
-    user.role === "HOD" ? user.managedDepartment : user.department;
+    roleValue === "HOD" ? user.managedDepartment : user.department;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,7 +93,7 @@ export default function ProfilePage() {
           <p className="font-semibold text-lg truncate">{user.name}</p>
           <p className="text-sm text-muted-foreground truncate">{user.email}</p>
           <div className="flex flex-wrap items-center gap-2 mt-2">
-            <Badge variant="secondary">{user.role}</Badge>
+            <Badge variant="secondary">{roleLabel(user.role)}</Badge>
             {department && <Badge variant="outline">{department.name}</Badge>}
             {user.isVerified ? (
               <Badge className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-0">
@@ -166,12 +169,12 @@ export default function ProfilePage() {
           <h2 className="font-semibold">Role & Department</h2>
           <div className="grid grid-cols-2 gap-y-3 text-sm">
             <span className="text-muted-foreground">Role</span>
-            <span className="font-medium">{user.role}</span>
+            <span className="font-medium">{roleLabel(user.role)}</span>
             <span className="text-muted-foreground">Department</span>
             <span className="font-medium">
               {department?.name ?? "Not assigned"}
             </span>
-            {user.role === "HOD" && (
+            {roleValue === "HOD" && (
               <>
                 <span className="text-muted-foreground">Position</span>
                 <span className="font-medium">Head of Department</span>

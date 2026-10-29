@@ -34,7 +34,7 @@ export default function ContactPage() {
 
       setStatus("success");
       (event.currentTarget as HTMLFormElement).reset();
-    } catch (error) {
+    } catch {
       setStatus("error");
     }
   }

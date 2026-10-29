@@ -1,45 +1,41 @@
 "use client";
 
 import { useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { useAuthStore } from "@/stores/auth-store";
+import { isTenantAdminRole } from "@/lib/format";
 
 export default function TenantAppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const params = useParams();
   const router = useRouter();
-  const tenant = params?.tenant as string | undefined;
   const { user, token, isLoading, initialize } = useAuthStore();
 
   useEffect(() => {
     initialize();
   }, [initialize]);
 
+  const locked =
+    user?.tenantStatus === "PAST_DUE" || user?.tenantStatus === "SUSPENDED";
+
   useEffect(() => {
     if (!isLoading && !token) {
-      router.push(`/${tenant}/login`);
-    } else if (!isLoading && user) {
-      const tenantStatus = (user as any).tenantStatus || (user as any).tenantStatus;
-      if (tenantStatus === "PAST_DUE" || tenantStatus === "SUSPENDED") {
-        if ((user as any).role?.isTenantAdmin || (user as any).role === "ADMIN" || (user as any).isTenantAdmin) {
-          router.push(`/${tenant}/settings/billing`);
-        } else {
-          router.push(`/${tenant}/account-locked`);
-        }
-      }
+      router.push("/login");
+    } else if (!isLoading && user && locked) {
+      router.push(
+        isTenantAdminRole(user.role) ? "/settings/billing" : "/account-locked",
+      );
     }
-  }, [isLoading, token, user, tenant, router]);
+  }, [isLoading, token, user, locked, router]);
 
   if (isLoading || !token || !user) {
     return null;
   }
 
-  const tenantStatus = (user as any).tenantStatus;
-  if (tenantStatus === "PAST_DUE" || tenantStatus === "SUSPENDED") {
+  if (locked) {
     return null;
   }
 

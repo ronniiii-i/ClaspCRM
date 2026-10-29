@@ -1,23 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/auth-store";
+import { formatDate } from "@/lib/format";
 
 const API_BASE = process.env.NEXT_PUBLIC_API || "http://localhost:3030";
 
+interface BillingInfo {
+  status?: string;
+  plan?: string;
+  trialExpiresAt?: string | null;
+  gracePeriodEndsAt?: string | null;
+  seatCount?: number;
+  tenant?: { status?: string; seatCount?: number };
+}
+
 export default function BillingSettingsPage() {
   const { token } = useAuthStore();
-  const [billing, setBilling] = useState<any>(null);
+  const [billing, setBilling] = useState<BillingInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    load();
-  }, []);
-
-  const load = async () => {
+  const load = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch(`${API_BASE}/tenant/billing`, {
@@ -25,14 +31,18 @@ export default function BillingSettingsPage() {
       });
       if (res.ok) {
         const data = await res.json();
-        setBilling(data.billing || data);
+        setBilling((data.billing || data) as BillingInfo);
       }
     } catch {
       setBilling(null);
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const contact = async () => {
     setMessage("");
@@ -64,11 +74,11 @@ export default function BillingSettingsPage() {
         {loading && <p className="text-sm text-muted-foreground">Loading...</p>}
         {!loading && billing && (
           <div className="flex flex-col gap-2 text-sm">
-            <div>Status: {billing.status || billing.tenant?.status}</div>
+            <div>Status: {billing.status || billing.tenant?.status || "—"}</div>
             <div>Plan: {billing.plan || "TRIAL"}</div>
-            <div>Trial expires: {billing.trialExpiresAt || "-"}</div>
-            <div>Grace period ends: {billing.gracePeriodEndsAt || "-"}</div>
-            <div>Seats: {billing.seatCount || billing.tenant?.seatCount || 0}</div>
+            <div>Trial expires: {formatDate(billing.trialExpiresAt)}</div>
+            <div>Grace period ends: {formatDate(billing.gracePeriodEndsAt)}</div>
+            <div>Seats: {billing.seatCount ?? billing.tenant?.seatCount ?? 0}</div>
           </div>
         )}
         <div className="flex items-center gap-2">

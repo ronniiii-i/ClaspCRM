@@ -1,35 +1,9 @@
-"use client";
-
-import { useAuthStore } from "@/stores/auth-store";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-export default function DashboardPage() {
-  const { user } = useAuthStore();
-
-  const role: any = user?.role;
-  const isTenantAdmin = role?.isTenantAdmin || role === "ADMIN";
-  const dataScope = role?.dataScope;
-
-  return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-        <p className="text-sm text-muted-foreground">
-          {isTenantAdmin ? "Global metrics" : `Scope: ${dataScope || "SELF"}`}
-        </p>
-      </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="border-border">
-          <CardHeader>
-            <CardTitle className="text-base">Overview</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              Dashboard views are driven by role data scope. Configure roles and permissions in Settings.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-}
+/**
+ * The dashboard implementation lives in the apex `(dashboard-pages)` route
+ * group. Tenant workspaces are the canonical way to reach the app, so the
+ * tenant route renders that same implementation rather than a placeholder.
+ *
+ * Every data request made by the dashboard is scoped by the caller's JWT
+ * tenant, so rendering it under a subdomain does not widen data access.
+ */
+export { default } from "../../../../(dashboard-pages)/dashboard/page";

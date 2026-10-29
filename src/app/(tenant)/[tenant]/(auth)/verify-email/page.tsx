@@ -23,7 +23,7 @@ export default function VerifyEmailPage() {
           body: JSON.stringify({ token }),
         });
         setStatus(response.ok ? "success" : "error");
-      } catch (err) {
+      } catch {
         setStatus("error");
       }
     }
