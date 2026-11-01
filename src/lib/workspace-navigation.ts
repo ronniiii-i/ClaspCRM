@@ -140,3 +140,24 @@ export function findActiveGroupKey(
   );
   return active?.key ?? null;
 }
+
+/**
+ * Resolve the canonical `/dept/<dept>/<module>` parameters for a module
+ * definition. Older catalogue rows may omit `department`, so the path is the
+ * fallback.
+ */
+export function moduleLocation(definition: {
+  key: string;
+  path: string;
+  department?: { key?: string } | null;
+}): { deptKey: string; moduleKey: string } {
+  if (definition.department?.key) {
+    return { deptKey: definition.department.key, moduleKey: definition.key };
+  }
+
+  const match = /^\/dept\/([^/?#]+)\/([^/?#]+)/.exec(definition.path);
+  return {
+    deptKey: match?.[1] ?? "",
+    moduleKey: definition.key || match?.[2] || "",
+  };
+}

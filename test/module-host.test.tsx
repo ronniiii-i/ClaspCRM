@@ -7,6 +7,27 @@ jest.mock('@/hooks/workspace/useModuleDefinition', () => ({
   useModuleDefinition: jest.fn(),
 }));
 
+jest.mock('@/hooks/workspace/useWorkspaceRecords', () => ({
+  useWorkspaceRecords: () => ({
+    data: {
+      data: [],
+      meta: { page: 1, pageSize: 20, total: 0, totalPages: 1 },
+      scope: 'DEPARTMENT',
+    },
+    isPending: false,
+    isError: false,
+    isFetching: false,
+    error: null,
+    refetch: jest.fn(),
+  }),
+  useWorkspaceRecordMutations: () => ({
+    create: { mutate: jest.fn(), isPending: false, error: null },
+    update: { mutate: jest.fn(), isPending: false, error: null },
+    remove: { mutate: jest.fn(), isPending: false, error: null },
+    transition: { mutate: jest.fn(), isPending: false, error: null },
+  }),
+}));
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { useModuleDefinition } = require('@/hooks/workspace/useModuleDefinition');
 const mockDefinition = useModuleDefinition as jest.Mock;
@@ -62,7 +83,9 @@ describe('ModuleHost', () => {
     expect(
       screen.getByText('Scope: Department — Finance'),
     ).toBeInTheDocument();
-    expect(screen.getByText('Module ready')).toBeInTheDocument();
+    expect(
+      screen.getByText('No records match the current filters.'),
+    ).toBeInTheDocument();
   });
 
   it('renders a not-found state for a 404', () => {
