@@ -20,12 +20,25 @@ export interface EffectivePermissionsResponse {
   enhanced: boolean;
 }
 
+function modulesFromResponse(payload: unknown): Module[] {
+  if (Array.isArray(payload)) return payload as Module[];
+
+  if (payload && typeof payload === "object") {
+    const body = payload as Record<string, unknown>;
+    const modules = body.modules ?? body.accessibleModules ?? body.data;
+    if (Array.isArray(modules)) return modules as Module[];
+  }
+
+  throw new Error("ACL modules response did not contain a module list");
+}
+
 export class ACLService {
   static async getAccessibleModules(token: string): Promise<Module[]> {
-    return apiRequest<Module[]>(`/auth/acl/modules`, {
+    const payload = await apiRequest<unknown>(`/auth/acl/modules`, {
       token,
       errorMessage: "ACL request failed",
     });
+    return modulesFromResponse(payload);
   }
 
   static async checkPermission(

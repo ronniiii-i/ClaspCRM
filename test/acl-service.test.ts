@@ -60,6 +60,31 @@ describe('ACLService', () => {
     });
   });
 
+  describe('getAccessibleModules', () => {
+    it('unwraps a module list returned in the ACL response', async () => {
+      const modules = [{ id: 'module-finance', name: 'Finance' }];
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ modules }),
+      }) as unknown as typeof fetch;
+
+      await expect(
+        ACLService.getAccessibleModules('token'),
+      ).resolves.toEqual(modules);
+    });
+
+    it('rejects a response without a module list', async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ permissions: [] }),
+      }) as unknown as typeof fetch;
+
+      await expect(
+        ACLService.getAccessibleModules('token'),
+      ).rejects.toThrow(/did not contain a module list/);
+    });
+  });
+
   describe('checkPermission', () => {
     it('returns true when the backend grants the permission', async () => {
       global.fetch = jest.fn().mockResolvedValue({
