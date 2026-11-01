@@ -1,6 +1,6 @@
 export const marketingCopy = {
   hero: {
-    title: "The CRM that adapts to your company's DNA.",
+    title: "The workspace that adapts to your company's DNA.",
     subtitle:
       "Don't force your team into rigid software. Build dynamic departments, custom roles, and isolated workspaces tailored to your operations.",
     primaryCta: "Create your Workspace",

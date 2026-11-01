@@ -12,7 +12,7 @@ export default function AboutPage() {
         </div>
         <div className="flex flex-col gap-6 text-base leading-7 text-muted-foreground">
           <p>
-            Most CRMs force every team into the same structure. Clasp Workspace takes the opposite approach—giving you the tools to
+            Most workspaces force every team into the same structure. Clasp Workspace takes the opposite approach—giving you the tools to
             model your company as it actually exists. Define departments, create roles with precise permissions, and keep
             data isolated where it needs to be.
           </p>

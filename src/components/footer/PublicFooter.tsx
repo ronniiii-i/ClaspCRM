@@ -7,7 +7,7 @@ export function PublicFooter() {
         <div className="flex flex-col gap-2">
           <p className="text-sm font-semibold tracking-tight">Clasp Workspace</p>
           <p className="text-sm text-muted-foreground">
-            The CRM that adapts to your company&apos;s DNA.
+            The workspace that adapts to your company&apos;s DNA.
           </p>
         </div>
         <nav className="grid grid-cols-2 gap-8 text-sm sm:grid-cols-3">
