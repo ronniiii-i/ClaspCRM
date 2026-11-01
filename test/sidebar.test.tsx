@@ -141,7 +141,7 @@ describe('Sidebar', () => {
       expect(screen.getByText('IT')).toBeInTheDocument();
     });
 
-    it('hides group headings for non-administrators', async () => {
+    it('shows group headings for non-administrators too', async () => {
       setSession(buildUser({ role: 'HOD' }));
 
       render(<Sidebar />);
@@ -149,7 +149,8 @@ describe('Sidebar', () => {
       await waitFor(() => {
         expect(screen.getByText('Invoices')).toBeInTheDocument();
       });
-      expect(screen.queryByText('Finance')).not.toBeInTheDocument();
+      expect(screen.getByText('Finance')).toBeInTheDocument();
+      expect(screen.getByText('IT')).toBeInTheDocument();
     });
   });
 

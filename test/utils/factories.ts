@@ -26,13 +26,18 @@ export function buildModule(
   name: string,
   path: string,
   group?: string,
+  overrides: Partial<Module> = {},
 ): Module {
   return {
     id,
+    key: id,
     name,
     path,
-    icon: 'LayoutDashboard',
+    icon: 'layout-dashboard',
+    order: 0,
+    actions: ['VIEW'],
     ...(group ? { group } : {}),
+    ...overrides,
   } as Module;
 }
 

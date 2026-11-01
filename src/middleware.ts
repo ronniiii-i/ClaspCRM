@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getLegacyDepartmentPath } from "@/lib/legacy-departments";
 
 const RESERVED = new Set(["www", "api", "app", "admin", "system", "system-admin", "login"]);
+
 const ROOT_ROUTES = new Set([
   "about",
   "contact",
   "create-workspace",
   "dashboard",
+  "dept",
   "find-workspace",
   "forgot-password",
   "pricing",
@@ -58,6 +61,15 @@ export function middleware(request: NextRequest) {
   const slug = getSlugFromHost(host);
   const { pathname } = request.nextUrl;
 
+  // Legacy department URLs redirect before the subdomain rewrite so the
+  // canonical `/dept/...` path reaches the dynamic module route.
+  const legacyPath = getLegacyDepartmentPath(pathname);
+  if (legacyPath) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = legacyPath;
+    return NextResponse.redirect(redirectUrl);
+  }
+
   // If on tenant subdomain
   if (slug && isValidSlug(slug)) {
     // Skip internal paths
@@ -94,7 +106,11 @@ export function middleware(request: NextRequest) {
     return res;
   }
 
-  // Apex domain
+  // Apex domain. Department modules need a tenant subdomain for context.
+  if (pathname === "/dept" || pathname.startsWith("/dept/")) {
+    return NextResponse.redirect(new URL("/find-workspace", request.url));
+  }
+
   const firstPathSegment = pathname.split("/")[1];
   if (firstPathSegment && !ROOT_ROUTES.has(firstPathSegment) && isValidSlug(firstPathSegment)) {
     const rootDomain = getRootDomain();

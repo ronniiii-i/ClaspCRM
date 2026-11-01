@@ -1,4 +1,5 @@
 import { Module, Permission } from "@/lib/modules";
+import { apiRequest } from "./api-client";
 
 export interface PermissionSource {
   type: "ROLE" | "GROUP" | "OVERRIDE";
@@ -20,32 +21,11 @@ export interface EffectivePermissionsResponse {
 }
 
 export class ACLService {
-  private static async fetchWithAuth<T>(
-    url: string,
-    token?: string,
-  ): Promise<T> {
-    const headers: HeadersInit = { "Content-Type": "application/json" };
-    if (token) headers["Authorization"] = `Bearer ${token}`;
-
-    const response = await fetch(url, {
-      headers,
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error(
-        `ACL request failed: ${response.status} ${response.statusText}`,
-      );
-    }
-
-    return response.json() as Promise<T>;
-  }
-
   static async getAccessibleModules(token: string): Promise<Module[]> {
-    return this.fetchWithAuth<Module[]>(
-      `${process.env.NEXT_PUBLIC_API}/auth/acl/modules`,
+    return apiRequest<Module[]>(`/auth/acl/modules`, {
       token,
-    );
+      errorMessage: "ACL request failed",
+    });
   }
 
   static async checkPermission(
@@ -53,9 +33,9 @@ export class ACLService {
     moduleId: string,
     action: Permission,
   ): Promise<boolean> {
-    const result = await this.fetchWithAuth<{ hasPermission: boolean }>(
-      `${process.env.NEXT_PUBLIC_API}/auth/acl/check-permission/${moduleId}/${action}`,
-      token,
+    const result = await apiRequest<{ hasPermission: boolean }>(
+      `/auth/acl/check-permission/${encodeURIComponent(moduleId)}/${encodeURIComponent(action)}`,
+      { token, errorMessage: "ACL request failed" },
     );
     return result.hasPermission;
   }
@@ -63,9 +43,9 @@ export class ACLService {
   static async getEffectivePermissions(
     token: string,
   ): Promise<EffectivePermissionsResponse> {
-    return this.fetchWithAuth<EffectivePermissionsResponse>(
-      `${process.env.NEXT_PUBLIC_API}/auth/acl/permissions`,
+    return apiRequest<EffectivePermissionsResponse>(`/auth/acl/permissions`, {
       token,
-    );
+      errorMessage: "ACL request failed",
+    });
   }
 }

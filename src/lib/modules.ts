@@ -4,15 +4,39 @@ import * as LucideIcons from "lucide-react";
 export type Permission = 'VIEW' | 'CREATE' | 'EDIT' | 'DELETE'; // Or import from a shared types package
 export type Role = 'ADMIN' | 'HOD' | 'LEAD' | 'STAFF'; // Or import
 
+export type ModuleType =
+  | 'DASHBOARD_VIEW'
+  | 'DATA_TABLE'
+  | 'KANBAN_BOARD'
+  | 'DOCUMENT_HUB'
+  | 'FORM_BUILDER';
+
+export type DataScope = 'TENANT' | 'DEPARTMENT' | 'TEAM' | 'SELF';
+
+export interface ModuleDepartment {
+  id: string;
+  key: string;
+  name: string;
+  sortOrder: number;
+}
+
 export interface Module {
   id: string;
+  /** Stable module key used by canonical `/dept/<dept>/<module>` paths. */
+  key?: string;
   path: string;
   name: string;
-  permissions: {
-    [key in Role]?: Permission[]; // Allows for optional roles
-  };
-  department?: string;
+  type?: ModuleType;
+  targetEntity?: string | null;
+  group?: string;
+  order?: number;
+  actions?: Permission[];
+  dataScope?: DataScope;
+  isNavigable?: boolean;
+  department?: string | ModuleDepartment;
   icon?: string | LucideIcon | undefined;
+  /** @deprecated legacy role map retained for cached sessions. */
+  permissions?: Partial<Record<Role, Permission[]>>;
 }
 
 export interface RoleSummary {
