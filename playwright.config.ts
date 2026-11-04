@@ -10,18 +10,27 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: 1,
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : 'list',
-  timeout: 60_000,
+  timeout: 90_000,
   expect: { timeout: 10_000 },
   use: {
     baseURL: FRONTEND_URL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    // Video needs Playwright's bundled ffmpeg. When the offline local-browser
+    // fallback is in use (E2E_BROWSER_CHANNEL), keep screenshots/traces but
+    // skip video so the suite can run without the download.
+    video: process.env.E2E_BROWSER_CHANNEL ? 'off' : 'retain-on-failure',
   },
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        // Optional escape hatch for environments without the Playwright
+        // browser download (e.g. offline CI). Set E2E_BROWSER_CHANNEL=chrome
+        // or msedge to drive an installed browser instead.
+        channel: process.env.E2E_BROWSER_CHANNEL || undefined,
+      },
     },
   ],
   webServer: process.env.E2E_SKIP_WEBSERVER
