@@ -9,9 +9,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuthStore();
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
+    <div className="flex h-screen overflow-hidden bg-background text-foreground">
       <Sidebar />
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-14 items-center justify-between border-b border-border px-6">
           <div className="text-sm text-muted-foreground">{user?.tenantName || ""}</div>
           <div className="flex items-center gap-2">
@@ -22,7 +22,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             </Button>
           </div>
         </header>
-        <main className="flex-1 px-6 py-6">{children}</main>
+        <main className="min-h-0 flex-1 overflow-y-auto px-6 py-6">{children}</main>
       </div>
     </div>
   );

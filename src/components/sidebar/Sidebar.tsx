@@ -143,13 +143,13 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="hidden w-64 flex-col border-r border-border md:flex">
+    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-border md:flex">
       <div className="flex h-14 items-center px-6">
         <Link href="/dashboard" className="text-sm font-semibold tracking-tight">
           Clasp Workspace
         </Link>
       </div>
-      <nav className="flex-1 overflow-y-auto px-3 py-2">
+      <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-2">
         <ul className="flex flex-col gap-3">
           {groups.map((group) => (
             <SidebarGroup

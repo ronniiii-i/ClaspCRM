@@ -45,8 +45,17 @@ export default function CreateWorkspacePage() {
     const timer = setTimeout(async () => {
       try {
         const apiBase = process.env.NEXT_PUBLIC_API || "http://localhost:3030";
-        const response = await fetch(`${apiBase}/public/workspaces/${trimmed}`);
-        setSlugAvailable(response.status === 404);
+        const response = await fetch(
+          `${apiBase}/public/workspaces/${encodeURIComponent(trimmed)}`,
+        );
+        if (response.status === 404) {
+          setSlugAvailable(true);
+        } else if (response.ok) {
+          setSlugAvailable(false);
+        } else {
+          // Availability cannot be determined when the API is unavailable.
+          setSlugAvailable(null);
+        }
       } catch {
         setSlugAvailable(null);
       }
